@@ -1,0 +1,751 @@
+* 1 更新系统
+   可用
+   # slackpkg update
+   # slackpkg upgrade-all
+* 2 查看系统中安装的中文字体
+   fc-list :lang=zh-cn
+* 3 增加虚拟网卡
+   可在 /etc/dhclient.conf 文件中通过添加 alias 语句，则可获得多个虚拟
+   网卡.
+* 4 firefox 安装插件
+   可在 ~/.mozilla/plugins 中添加。若无此目录，则可手动添加。
+* 5 更新库
+   有时安装完某个库时，需要 ldconfig 来更新.
+* 6 Slackware13.37安装 Chrome
+  成功安装后可能会提示缺少几个库，我通过安抓过 ORBit2 和 Pam 解决了问
+  题。
+* 7 pho
+  终端下查看图片软件.
+* 8 scrot
+  安装时需要 giblib 库，记着 configure 时一定要用
+  $ ./configure --prefix=/usr/local
+  configure scrot 时用
+  $ ./configure --with-giblib-prefix=/usr/local
+  基本用法：
+  scrot file.png 直接抓取整个桌面。
+  scrot -bs  file.png ，选项 b 使 scrot 在抓取窗口时一同将外边框抓取
+  下来，而 s 选项则让用户选择所要抓取的是何窗口。
+  scrot -s file.png，在执行此命令后，使用鼠标拖拽的矩形区域将被 scrot
+  抓取下来。
+  scrot -cd 10 file.png 延时10秒抓取图片。
+  scrot -t 50% file.png 在抓取图像时生成该图像的缩略图，选项 t 将此功
+  能打开，其后的 50% 为原图的缩放百分比。
+  scrot -q 70 file.jpg 其中 q 选项用于更改所抓图像的品质，其数值介于
+  1-100之间，默认是75。数值越大，意味着图像品质越高;同时，图像的压缩
+  率也就越低，占用空间越大。
+  scrot file.png -e 'mv $f ~/images/' 将抓取到的图像移动到 ~/images/
+  目录下。
+* 9 查看系统已安装的中文字体
+   fc-list :lang=zh-cn
+* 10 ftp 工具
+   用 FileZilla，下载二进制版本，然后把缺少的库装好后执行 ldconfig。
+* 11 powertop
+   查看剩余电量。
+* 12 htop
+   top 的改进版，查看进程。
+* 13 sbopkg
+   slackbuilds.org 包浏览和下载工具。
+* 14 iftop
+   实时流量监测.
+* 15 taskwarrior
+   任务安排。
+* 16 fbsetbg
+   fluxbox 下设置桌面背景的命令。 
+* 17、添加或删除共享库
+   此时要运行下如下命令更新下
+   # ldconfig
+* 18、改变 runlevel
+   slackware 下是在 /etc/inittab 文件中修改。
+* 19、终端显示中文
+   可用 fbterm
+* 20、slackware 开机加速
+   一般与 /etc/rc.d/rc.M 、 /etc/rc.d/rc.inet1 和 /etc/lilo.conf 这三
+   个文件相关。
+   slackware 的启动脚本都在 /etc/inittab 和 /etc/rc.d/ 目录下。每个
+   runlevel 在 /etc/rc.d/ 下都有相应的脚本，在这个目录下也有一些其它的
+   服务的守护进程脚本，如 apache 的 rc.httpd, mysql 的 rc.mysqld。
+   若开始时进入的是3 level 即 multi user mode,那么运行 /etc/rc.d/rc.M
+   脚本，可通过修改这个文件来改变系统启动时运行的程序。可把关于
+   ldconfig 和 fc-cache 的这两段代码注释掉，以后在更新共享库或是更新字
+   体时再手动运行这两个程序。对于剩下的部分，可根据自己的需要把其中一
+   些自己开机不需要的守护进程注释掉。
+   大部分的 Linux 发行版都会把 DHCP IP 在开机启动时自动运行，这会影响
+   开机速度，slackware 下可把 /etc/rc.d/rc.inet1 中的
+   echo "/etc/rc.d/rc.inet1:  /sbin/dhcpcd -d -t 60 ${DHCP_OPTIONS} ${1}" | $LOGGER
+   /sbin/dhcpcd -d -t 60 ${DHCP_OPTIONS} ${1}
+   后添加 & ,即
+   echo "/etc/rc.d/rc.inet1:  /sbin/dhcpcd -d -t 60 ${DHCP_OPTIONS} ${1}" | $LOGGER
+   /sbin/dhcpcd -d -t 60 ${DHCP_OPTIONS} ${1} &
+   即通过后台来运行，而不是等待运行完这个程序后再启动别的程序，并行执
+   行。
+   lilo 引导 slackware 启动时会出现 "Loading
+   Linux..............................."
+   这样的形式，可在 /etc/lilo.conf 中的
+   # Start LILO global section
+   boot = /dev/hda
+   下添加
+   compact
+* 21、system and lilo rescure(chroot)
+   Boot your system with the Slackware install DVD or first CD using
+   whatever kernel options you need to see your hard disk. Once logged
+   in and presented with the console, mount your root partition to
+   /mnt with the following command (assuming your root partion is
+   /dev/sda4. Use cfdisk to locate your root partition if needed.)
+   mount /dev/sda4 /mnt
+   Once the root partion is mounted, mount any additional needed
+   partitions such as /boot into the filesystem. For example, if your
+   /boot partition is /dev/hda1, run this command
+   mount /dev/hda1 /mnt/boot
+   Lastly, chroot into the system with this command
+   chroot /mnt
+   Once chrooted, you may edit configuration files, rerun lilo,
+   install or remove packages, and any number of things just as though
+   you had booted your system. Once finished, simply type exit and
+   reboot.
+* 22、dstat
+* 23、slackpkg 用法
+   记住，可修改 /etc/slackpkg/mirrors 来从 DVD 中下载软件。
+   配置文件是 /etc/slackpkg/slackpkg.conf ，下载的软件默认保存位置是
+   /var/cache/packages/
+** 1、多台机器拥有相同的软件配置
+    先在一台机器上安装 slackware 和软件（必须通过 slackpkg 来安装或系
+    统安装时安装的软件），然后运行
+    # slackpkg generate-template NAME
+    其中 NAME 是自己起的名字，此时会生成一个软件目录文件，位于
+    /etc/slackpkg/templates 中，然后在其它的机器上安装 slackware 系统，
+    此时可通过 DVD 或网络来下载软件，然后运行
+    # slackpkg install-template NAME
+    即可自动获得相同的软件。
+** 2、安装官方源新增的软件
+    # slackpkg install-new
+    若想安装所有新增的软件，可通过
+    # slackpkg install slackware
+** 3、只下载不安装
+    通过
+    # slackpkg download 软件名
+    下载的默认保存位置是 /var/cache/packages/ ,可通过
+    /etc/slackpkg/slackpkg.conf 来修改默认的下载保存位置。
+* 24、查看系统温度
+   sensors
+* 25、查看二进制程序的依赖关系
+   $ objdump -x 程序 | grep NEEDED
+   or
+   $ readelf -d 程序
+   or
+   $ ldd 程序
+   但这些不会跟踪 runtime dependencies，这种依赖指的是编译时不需要这种
+   包，但在程序运行时得载入。
+* 26、重装 windows 后如何恢复 lilo？
+   有两种方法。
+   1) 通过 Slackware 的 LiveDVD 进入安装界面，设置 / 分区时，不格式化，在安装程
+   序部分，选个小点儿的包安装，然后安装 lilo 即可。
+   2）先备份当前的 MBR (Master Boot Record)，可用如下方法：
+   # dd if=/dev/hda of=/home/flyer/boot.mbr bs=512 count=1
+   然后找个 liveCD，挂载上 boot.mbr 保存的分区，如我保存在 /home 分区
+   下，即 sda7,然后输入： 
+   # dd if=/mnt/sda7/flyer/boot.mbr of=/dev/hda bs=512 count=1
+   这时重写了 MBR，重启电脑即可。
+* 27、把普通用户加入到如下组中
+   1) audio - access to audio Devices
+   2) cdrom - access to cdrom/dvds
+   3) floppy - access to floppy drives
+   4) plugdev - access to flash drives
+   5) video - access to framebuffer devices(/dev/fb0)
+   6) power - allows users to control HAL suspend, hybernate, and
+      shutdown
+   7) netdev - allows users to control wicd for wireless networking
+   The correct list sometimes changes with Slackware version upgrates,
+   so see CHANGES_AND_HINTS.TXT for updated information.
+* 28、How do I get CPU frequency scaling?
+   Change "CPUFREQ=battery" to "CPUFREQ=on" in /etc/rc.d/rc.modules
+* 29、fluxbox 修改时间显示
+   在 toolbar 中单击右键，选中 Edit Clock Format，然后修改，参数为：
+   %a - abbreviated weekday name according to the current locale
+   %A - full weekday name according to the current locale
+   %b - abbreviated month name according to the current locale
+   %B - full month name according to the current locale
+   %c - preferred date and time representation for the current locale
+   %C - century number (the year divided by 100 and truncated to an
+   integer, range 00 to 99)
+   %d - day of the month as a decimal number (range 01 to 31)
+   %D - same as %m/%d/%y
+   %e - day of the month as a decimal number, a single digit is
+   preceded by a space (range '1' to '31')
+   %G - The 4-digit year corresponding to the ISO week number (see
+   %V). This has the same format and value as %Y, except that if the
+   ISO week number belongs to the previous or next year, that year is
+   used instead.
+   %h - same as %b
+   %H - hour as a decimal number using a 24-hour clock (range 00 to
+   23)
+   %l - hour as a decimal number using a 12-hour clock (range 01 to
+   12)
+   %j - day of the year as a decimal number (range 001 to 366)
+   %m - month as a decimal number (range 01 to 12)
+   %M - minute as a decimal number
+   %n - newline character
+   %p - either 'a.m.' or 'p.m.' according to the given time value, or the
+   corresponding strings for the current locale
+   %r - time in a.m. and p.m. notation
+   %R - time in 24 hour notation
+   %S - second as a decimal number
+   %t - tab character
+   %T - current time, equal to %H:%M:%S
+   %u - weekday as a decimal number [1,7] with 1 representing Monday 
+* 30、How do I get audio working?
+   1)Is your user account a member of the audio group?
+   2) Have you run *alsamixer* to set your volume levels, which may be
+      muted and/or zeroed by default?
+   3)Have you run *alsactl store* to save your volume settings? 
+* 31、How can I avoid crashes when I log out?
+  This happens to some people who use KDM.
+  Uncomment (remove the hash from) the /#TerminateServer=ture/ line
+  in /etc/kde/kdm/kdmrc to solve it.
+* 32、dia 画图软件
+* 33、Virtualbox
+** 1、VirtualBox设置共享文件夹
+  虚拟系统是 linux ,则在虚拟的系统下输入
+  $ sudo mount -t vboxsf 主系统下共享文件夹 /mnt
+  (前提是要装好Virtualbox Guest Additions，若提示vboxsf参数错误，改下"
+  主系统下共享文件夹"的大小写)
+** 2、添加支持 USB、PXE扩展
+    先去 Virutalbox 官网下载 Virtualbox_extension_pack,然后打开
+    Virtualbox，File->Preferences->Extensions，然后按提示安装即可。有
+    时安装失败是因为权限不够，可以 root 身份打开 Virtualbox 来安装扩展。
+    Virtualbox 有很多扩展，可以学学看。
+* 34、修改 Linux 环境变量
+** 1、永久修改
+    修改 /etc/profile 或 ~/.profile，采用如下格式 
+    export TMP=tmpfs
+    然后运行 
+    # source /etc/profile
+    即可立即生效，某则重启时才会生效.
+** 2、临时修改
+    采用如下格式时，只对当前 shell 临时有效，关闭该 shell 后失效:
+    $ export TMP=tmpfs
+    使用如下命令可删除指定的环境变量
+    $ unset TMP=tmpfs
+* 35、更新 bashrc 或 profile
+  可用 source 命令，也可重启电脑.
+* 36、distcc
+** 1、简介
+    Distcc 是一个分布式编译软件，与 gcc 配合使用，将编译任务分布到网络中
+    的参与主机。它包含一个服务器 distccd 和一个客户端程序。
+** 2、安装
+    ./autogen.sh       # If "configure" does not already exist.
+    ./configure
+    make
+    make check         # Optional! Should have python >= 2.4 installed.
+    make install       # You may need to use "sudo" for this command.
+    make installcheck  # Optional! Should have python >= 2.4 installed.
+** 3、使用
+    可用 root 身份或普通用户身份启动 distccd，采用如下格式:
+    # distccd --daemon --allow IP地址
+    或
+    $ distccd --daemon --allow IP地址
+    然后在 ~/.bashrc 中添加如下语句：
+    export DISTCC_HOSTS="mymachine other_machine"
+    其中, "mymachine" 指主机机器的 HOSTNAME,"other_machine" 指其它机器的
+    HOSTNAME.注意，排在前面的机器似乎会先工作，即可把配置高的机器放在最
+    前面。然后通过如下命令更新 .bashrc
+    $ source ~/.bashrc
+    但这种方式对于不同的机器可能不能起到效果，Slackware 可添加到
+    ~/.profile 中，若
+    $ echo $DISTCC_HOSTS
+    仍显示为空的话，就手动添加：
+    $ export DISTCC_HOSTS="mymachine other_machine"
+    解压源码包，进入源码包目录，先 configure,用如下格式:
+    $ CC=distcc ./configure
+    然后使用 make 编译，可采用如下格式
+    $ make -j num
+    其中 "num" 指 gcc 一次需要编译多少内容，在 distcc 工作的机器中平均分
+    配这些任务。
+    可用如下命令来实时关注 distcc 的工作状态
+    $ distccmon-text 2
+    其中， '2' 为隔多少时间刷新一遍显示结果。
+** 4、注意事项
+    若能保持对 distcc 集群中的所有节点使用相同版本的 gcc，则 distcc 程序
+    可获得最佳工作状态;若这些节点使用的是不同版本，则可能导致编译不稳定，
+    甚至可能导致编译过程完全失败。
+* 37、与模块相关的命令
+  insmod, rmmod, lsmod, modprobe, modinfo
+* 38、git
+** 1、修改默认的编辑器
+   在工作目录中的 ./.git/config 中的 [core] 中添加
+   editor = 编辑器
+   即可.
+* 39、使用 Alien 的 Slackware 包
+   http://connie.slackware.com/~alien/slackbuilds/ 
+   从这个网站上下载，具体步骤看这个网页的介绍。
+* 40、更新 ~/.Xresources 配置
+  更新完后，可通过
+  $ xrdb .Xresources
+  来启动刚配置的效果。
+* 41、slackware 安装字体（感觉还是有些问题)
+  先安装字体，在字体所在目录依次执行
+  # mkfontscale
+  # mkfontdir
+  # fc-cache -f
+  然后在 /etc/X11/xorg.conf-vesa 和 /etc/fonts/fonts.conf 中添加自己
+  所在路径，接着执行下
+  # fc-cache -fv 即可。
+* 42、查看磁盘大小
+   使用 df 命令可查看所有分区的大小和使用情况。
+   使用 du 可查看具体的目录的大小的情况。
+* 43、查看硬件相关信息
+  可用 
+  # dmidecode 参数
+  具体用法 man 一下。
+* 44、查看连接在 PCI 总线上所有硬件的信息
+  # lspci
+* 45、挂载相关
+** 1、加载的模块
+   查看当前加载的模块
+   # lsmod
+   加载新的模块
+   # insmod 模块
+   或
+   # modprobe  模块
+   卸载模块
+   # rmmod 模块
+** 2、查看当前设备，包括插入的外设，如 U 盘
+  $ cat /proc/partitions
+  或
+  # fdisk -l
+  查看已挂载设备，可用
+  # mount
+  或 
+  # mount -l
+  或
+  $ cat /proc/mounts
+  或
+  $ cat /etc/mtab 
+** 3、查看使用某个挂载设备的进程
+   # fuser 挂载点
+** 4、自动挂载
+   这与 hal 服务相关，可在 /etc/dbus-1/system.d/hal.conf 中配置 hal 的
+   相关信息。
+** 5、设置显示编码
+   挂载后可能发现设备显示的是乱码，可在 mount 命令后加参数 -o
+   codepage=数字 或 -o iocharset=编码类型 ，codepage 指定文件系统的代
+   码页，简体中文代码页是 936, iocharset 指定字符集，简体中文一般用
+   cp936、gb2312、utf8
+** 6、增加普通用户权限
+   默认挂载的设备，普通用户是不能写的，有的设置没有读的权限，这是由于
+   umask 的设置造成的，可在 mount 后加参数 -o umask=000 ，这样普通用户
+   就有了对此挂载设备的所有权限。
+** 7、挂载光盘
+   # mount /dev/cdrom 挂载点 -t iso9660 -o loop
+** 8、把已挂载设备挂载在另一个位置
+   # mount --bind old_dir new_dir
+   取消这个操作，可用 
+   # mount --move old_dir new_dir
+   注意，第二个命令中的 old_dir 和 new_dir 是相对当前操作而言的。
+** 9、kill 与设备相关的进程
+   有时 mount 的设备无法卸载，可使用 
+   $ fuser -k 设备名
+   直接 kill 掉所有与该设备应用相关的进程，然后就可卸载了。
+   或用
+   $ fuser -k 挂载点
+   有时后者更有用。
+* 46、无线网络
+  我的电脑在 Slackware 下需要支持 ath5k 模块才能使用无线网卡，但指示灯
+  不亮，可使用 wicd 来使用无线网络，命令依次为
+  # wicd
+  # wicd-client
+* 47、扫描网络服务端口
+  可用 nmap 命令。
+* 48、磁盘恢复工具
+  TestDisk.
+* 49、查找某个变量或函数
+  可用 grep 命令，形如：
+  $ grep var(or function) file
+* 50、根据名字终止进程
+  假如进程名字是 prog，可用如下方式终止该进程：
+  # pkill prog
+* 51、fluxbox 永久设置桌面背景
+  在 ~/.fluxbox/init 中添加
+  session.screen0.rootCommand: fbsetbg -f 图片位置
+* 52、安装 wireshark
+  安装后运行下
+  # ld-config
+  后即可使用 wireshark
+* 53、查看系统信息
+  $ cat /proc/cpuinfo
+  查看 CPU 信息
+  $ cat /proc/meminfo
+  查看内存信息
+  $ cat /proc/ioports
+  查看 I/O 端口
+  $ cat /proc/swaps
+  查看交换分区信息
+  $ cat /proc/interrupts
+  查看中断信息
+  $ cat /proc/partitions
+  查看磁盘分区
+  $ cat /proc/bus/usb/devices
+  查看 USB 设备
+  $ cat /proc/bus/input/devices
+  查看输入设备:键盘鼠标 
+  $ cat /proc/bus/pci/devices
+  查看系统负载
+  # lspci
+  查看 PCI 设备
+  # lsusb
+  查看 USB 设备
+  # vmstat
+  报告虚拟内存统计信息
+  # fdisk -l
+  查看分区信息
+  # hdparm -i /dev/sda
+  查看磁盘参数
+  # df -h
+  查看分区信息
+  # dmidecode
+  读取系统 DMI 表来显示硬件和 BIOS 信息
+  # lsmod
+  当前加载的驱动
+  # dmesg
+  查看开机检查的硬件,可使用 grep 过滤: eth, cpu, mem, pci, usb, vga, sda...
+  # uptime 
+  查看系统负载 
+  $ cat /etc/issue
+  查看当前 OS 版本信息
+  $ getconf LONG_BIT
+  查看 CPU 运行模式,结果若为 32 表示当前 CPU 运行在 32 bit 模式下,但不代表 CPU 不支持 64 bit.
+  $ cat /proc/cpuinfo | grep flags | grep 'lm' | wc -l
+  查看 CPU 是否支持 64 bit,若结果大于 0,说明支持 64 bit 计算,其中 'lm' 指 long mode, 支持 lm 则是 64 bit.
+  $ lscpu
+  查看 CPU 信息概要
+* 54、slackware 固定 /etc/resolv.conf
+  由 
+  $ man 5 rc.inet1.conf
+  可知，通过在 /etc/rc.d/rc.inet1.conf 的网卡下添加
+  DHCP_KEEPRESOLV[0]="yes"
+  即可。
+  但这个似乎有问题，可修改 /etc/dhcpcd.conf，在其中添加
+  nohook resolv.conf
+* 55、查看常用函数的实现
+  在 gcc 源码包中带的有。
+* 56、帮助文档
+  /usr/doc 其中 Linux-FAQs Linux-HOWTOs Linux-PAMs 挺有用的。
+* 57、查看目录的含义
+  $ man 7 hier
+* 58、搜索命令
+  常用的有 which、whereis、find、slocate,其中 which 和 whereis 只能搜索程序，不
+  能搜索其它文件。slocate 是通过数据库来搜索某个文件或程序，更新数据库用如下命
+  令:
+  # updatedb
+* 59、网络配置命令 netconfig
+* 60、slackware 安装新内核
+  /System.map/ : The system map file for this kernel
+  /bzImage/ : The actual kernel image
+  /config/ : The source configuration file for this kernel
+  How to install a new kernel: 
+  To use a kernel, copy the *System.map* and *config*
+  files to your */boot* directory and copy the kernel image to
+  */boot/vmlinuz*. Run */sbin/lilo(8)* to install LILO for the new kernel, and
+  then reboot your system. That's all there is to installing a new kernel.
+  The kernels that end with a *.i* are IDE kernels. That is, they include no SCSI
+  support in the base kernel. The kernels that end with *.s* are SCSI
+  kernels. They include all the IDE support in *.i* kernels, plus SCSI support.
+* 61、modules
+  Kernel modules are another name for device drivers that can be inserted into a
+  running kernel.
+  Modules are stored in the */lib/modules/kernelversion* directory on your
+  system. They can be loaded at boot time through the *rc.modules* file. To see a
+  list of modules that are currently active, use the *lsmod(1)* command.
+  To remove a module, you use the *rmmod(1)* command. Modules can be loaded by the
+  *modprobe(1)* or *insmod(1)* command. *modprobe* is usually safer because it
+  will load any modules that the one you're trying to load depends on.
+  Users can use the kernel autoloader for module management. By default, Slackware
+  includes *kmod* in its kernels. *kmod* is a kernel option that enables the
+  kernel to automatically load modules as they are requested. For more information
+  on *kmod* and how it is configured, see */usr/src/linux/Documentation/kmod.txt*.
+* 62、strings 命令
+  查看文件中的字符串，也包括可执行文件。
+* 63、与环境变量相关的程序
+  set、unset、export
+* 64、screen
+  It's a terminal emulator that has virtual terminal like capabilities.
+  All *screen* commands are prefixed with a CTRL+A keystroke, e.g., CTRL+A+C
+  creating a new terminal session, CTRL+A+N switching to the next terminal,
+  CTRL+A+P switching to the previous terminal.
+* 65、查询指定用户信息(可以是远程用户)
+  $ finger 用户或邮箱
+* 66、网络工具
+** 1、host
+** 2、nslookup
+** 3、dig
+** 4、traceroute
+** 5、ncftp
+   ftp 工具，增强了一些功能。
+** 6、聊天工具
+   wall
+   talk
+   ytalk
+   write
+* 67、压缩与解压缩
+** gzip 
+   $ gzip -9 filename
+   会获得最大的压缩率. gzip 压缩文件后会覆盖掉原来的文件.
+** bzip2
+   用法同 gzip,压缩率也比 gzip 好,但压缩时比较占 CPU.
+** tar
+** zip
+** unzip
+** p7zip
+** 7z
+* 68、Slackware 包管理
+** pkgtool
+** installpkg
+** removepkg
+** upgradepkg
+** rpm2tgz/rpm2targz
+* 69、关机和重启方法
+  有三类关机和重启方法：
+  第一类是使用 shutdown 命令：
+  # shutdown -h now
+  直接关机
+  # shutdown -h time
+  在 time 秒后关机.
+  # shutdown -r now
+  立即重启.
+  # shutdown -r time
+  在 time 秒后重启。
+  第二类是使用 halt 和 reboot 命令:
+  # reboot
+  立即重启电脑。
+  # halt
+  立即关机。
+  第三类是使用 telinit 命令：
+  # telinit 0
+  立即关机。
+  # telinit 6
+  立即重启。
+* 70、crontab 
+  可用
+  $ crontab -e
+  来修改要执行的命令。在 root 下执行这个命令添加预执行的程序时，发现最终没有添加
+  进去，不知什么原因，可进入 /var/spool/cron/crontabs/ 目录下修改 root 文件来实
+  现。
+  在 crontab 中设置执行脚本会出现问题，因为 crond 只载入三个环境变量 HOME、USER、
+  SHELL，一般的解决方法是在输入命令时先转到脚本所在的目录然后再执行。
+* 71、有用的命令
+  netstat 显示网络状态
+  vmstat  显示虚拟内存状态
+  iostat  显示 I/O 状态
+  basename 字符串参数的基本名称
+  expr    做运算
+* 72、随机数
+  在 bash、ksh 等 shell 解释器中有个环境变量 RANDOM，是个随机数，可以用来产生随
+  机数。
+* 73、使输出反白显示
+  在 
+  $ tput smso
+  和
+  $ tput rmso
+  之间添加的数据都会反白显示。该技巧在 shell 脚本中比较有用。
+* 75、数制转换
+  命令行下可用 printf 命令，如把十进制数转化为八进制数：
+  $ printf %o 十进制数
+  把十进制转化为十六进制:
+  $ printf %x 十进制数
+
+* 76、强大的计算工具
+  命令行下有个可计算任意精度的程序 bc.
+* 77、删除重复的行 uniq
+  这个命令可删除文件中上下挨着的重复的行。
+  若显示当前文件中的非重复的行，用
+  $ cat 文件名 | uniq
+  若想把文件中挨着的重复的行删去后保存入另一个文件中，用 
+  $ uniq 原文件 新的文件
+
+* 78、sed 删除文件中的空白行
+  $ cat 文件 | sed /^$/d
+* 79、对输出的文本不显示前几行
+  当在终端上显示某些文本内容而不想要前几行时，以不显示第一行为例，使用如下命令:
+  $ cat 文件 | tail +2
+  其中 tail 的参数为不显示的前几行加 1.
+* 80、程序流程图软件
+  dia
+* 81、diff
+  除了可以比较文件的不同，还可以制作补丁，后者用户很大。
+  $ diff -uN old new > old.patch
+  比较 old 和 new 文件的不同，对 old 文件制作补丁。
+  $ patch -p0 < old.patch
+  向 old 文件打入补丁。
+  $ patch -RE -p0 < old.patch
+  去除补丁，恢复成原来的文件。
+* 82、交互式 python 的增强工具
+  ipython
+* 83、stat
+  查看文件和文件系统的状态。
+* 84、通过 inode 删除文件或重命名文件
+  有时文件名不好打出来，删除这个文件很麻烦，此时就可以通过 inode 来删除这个文件，
+  命令为：
+  $ find . -inum inode号 -exec rm {} \;
+  重命名文件
+  $ find . -inum inode号 -exec mv {} 新名 \;
+* 85、磁盘检测工具
+  smartmontools
+  基本用法：
+  先运行 smartd 后台程序。
+  1993 年之后的硬盘一般都支持 SMART (Self Monitoring  Analysis and Reporting
+  Technology 自动检测分析及报告技术)。
+  检测磁盘是否支持 SMART 技术：
+  # smartctl -i <device>
+  若磁盘不支持，则可开启：
+  # smartctl --smart=on --offlineauto=on --saveauto=on <device>>
+  检查磁盘状况，若显示 PASSED，则良好，若显示 FAILURE，则磁盘有问题：
+  # smartctl -H <device>
+  显示磁盘详细状况
+  # smartctl -A <device>
+  显示结果解释：FLAG是标记，标准数值(VALUE)应当小于或等於关键值(THRESH)。WHEN_FAILED 代表错误
+  信息，上面显示的WHEN_FAILED纵行是空行，说明硬盘没有故障。如果WHEN_FAILED显示数
+  字，表明硬盘磁道可能有比较大的坏道。
+  后台检测硬盘，消耗时间短 
+  # smartctl -t short <device> 
+  后台检测硬盘，消耗时间长   
+  # smartctl -t long <device> 
+  前台检测硬盘，消耗时间短
+  # smartctl -C -t short <device> 
+  前台检测硬盘，消耗时间长
+  # smartctl -C -t long <device> 
+  终止后台检测
+  # smartctl -X <device>
+* 86、磁盘无法引导
+  可能有以下原因：
+  1、分区表坏了，在 linux 下通过 fdisk 命令无法检测出磁盘信息。但可以试着用
+  dmesg 命令查看相应的磁盘信息，找相应的驱动模块来引导起磁盘。
+  2、磁盘接口坏了，这时可换个壳试试。
+  3、磁盘芯片坏了，表现是磁盘无转动的声音。
+  前两种情况还有机会读取磁盘中的信息，第三种情况就无法读取磁盘信息了。
+* 87、搭建 DNS 服务器
+  可以尝试使用 dnsmasq.
+* 88、openbox 改变 workplace
+  按着 Ctrl-Shift ，通过左右键来选取 workplace
+  若此时光标在一个进程上，如 Emacs 上，则 Emacs 被移动到制定的 workplace 中。
+
+* 89、文件编码转换
+  convmv
+* 90、分大文件和拼装文件
+  用 lxsplit 命令。
+* 91、mplayer 加载字幕
+  mplayer 可自动加载同目录下的名字相同的电影的字幕(后缀不同)。
+  也可用如下方式指定:
+  $ mplayer 电影名 -sub 字幕
+  有时会出现乱码，可用
+  $ mplayer 电影名 -sub 字幕 -subcp 编码方式(如 gbk)
+* 92、slackware 禁止长时间不动电脑时屏幕变黑
+  在 ~/.xinitrc 文件中添加如下语句:
+  /usr/bin/xset -dpms
+  /usr/bin/xset s off
+* 93、mysql 设置密码
+  # mysqladmin -u root password "yourpassword"
+* 94、查看文件编码
+  enca
+* 95、wget 用法
+  $ wget -c URL
+  继续下载 URL，用在当中断时再下载文件。
+  $ test.org --spider URL
+  wget 作为爬虫，检测 URL 是否存在，但不下载。
+  $ wget -4 URL
+  $ wget -6 URL
+  前者是只连接 IPv4 地址，后者是只连接 IPv6 地址。
+  $ wget --user=名字 --password=密码 URL
+  若 ftp 或其它下载需要用户名和密码时，用这种方式。
+  $ wget -p 目录 URL
+  指定下载的文件储存在指定目录中。
+  -r 
+  参数指明递归下载
+  -l 深度
+  指明下载的最大深度，默认的下载最大深度是 5.
+* 96、kill 僵死的进程
+  有时关闭进程后通过 ps 命令发现它依然存在，且加了  <defunct> 信息，通过 kill -9
+  也无法把它结束，此时，有两种方法可以试试:
+  法一:
+  在 /proc 目录下找到该进程，删除它所在的目录
+  法二:
+  通过如下命令查看僵死进程的父进程
+  $ ps anl | grep "Z"
+  然后 kill 掉该僵死进程的父进程，则它会被 init 进程"等待"，理论上会自动被结束。
+  若这两种方法都不行，则重启系统。
+  容易出现这种情况的是 Firefox，主要是因为:
+  Firefox is trying to get more bits for its random number pool by calling
+  netstat, a fairly common kludge on other OSes. 
+* 97、保存当前的声音设置
+  # alsactl store
+* 98、修改键盘映射
+  用 xmodmap 命令。
+  可先建立 ~/.xmodmap 文件，然后在 ~/.profile 中添加
+  xmodmap ~/.xmodmap
+  语句，这样每次启动时都会修改键盘映射。
+  按键名称在 /usr/include/X11/keysymdef.h 中定义。
+* 99、抓包分析包的工具
+  tcpdump.
+* 100、网络流量监测工具
+  nethogs
+  可以显示每个进程的带宽占用程度。
+* 101、thunderbird
+** 1、载入 gmail 联系人
+   下载 gContactSync 插件。
+* 102、python 包管理器
+  pip
+* 103、netbeans 乱码
+  先把 .ttf 字体文件复制到在 JAVAPATH/jre/lib/fonts/fallback/ 目录下，没有这个目
+  录自行建立一个，然后修改 netbeans.conf 文件，在 
+  netbeans_default_options 最后添加如下语句:
+  -J-Duser.language=zh -J-Duser.country=CNs -J-Dfile.encoding=UTF-8
+* 104、CL 环境
+  在 emacs 下，可用 SLIME.
+   也可以用 SBCL.
+
+* 105、emacs 中退出 slime
+  按下逗号，在提示中输入 "quit".
+* 106、kde 开机自动启动工具
+  把想要开机启动的程序放在 ~/.kde/Autostart 目录下。
+* 107、kde 使用
+  一般先要把 virtuoso-t、nepomuk 和 akonadi 都 kill 掉，它们太占 cpu 资源了，而
+  且对于普通用户用处并不太大。
+  还有，要在 "System Settings"->"Application Appearance"->"Sytle" 中调整 CPU 的
+  使用方式,还要把 "System Setting" 中的 "Desktop Search" 关于 nepomuk 去除掉。
+* 108、配置声音
+  通过 alsamixer 工具.
+* 109、下载 JCC 和 PyLucenen
+  $ svn co http://svn.apache.org/repos/asf/lucene/pylucene/trunk/jcc jcc
+  $ svn co http://svn.apache.org/repos/asf/lucene/pylucene/
+  安装 JCC 和 PyLucene 时，就按照官网上的教程.
+  最好从 http://apache.etoak.com//lucene/pylucene/ 下载，通过 svn 下载 make 时有
+  问题。
+* 110、linux 下的 Evernote
+  Nixnote
+* 111、web 开发
+  Heroku 支持 web 上的 ruby、python、java 等开发。
+  Python web 开发还可以用 cgi、mod_python、WSGI.
+* 112、升级 jdk 后找不到 libjava.so
+  遇到这种问题，是系统找不到这个库的路径，先通过
+  $ locate libjava.so
+  定位它的位置，然后直接复制到 /lib 目录下。
+  一个原则:缺哪个库，找到后放到 /lib 目录下……
+* 113、矢量画图工具
+  Inkscape.
+
+* 114、Dnsmasq
+  提供 DNS 缓存和 DHCP 服务功能。
+* 115、书签同步工具
+  xmarks
+* 116、curl
+  它可使用简单的正则表达式。
+  显示网页信息:
+  $ curl 网页地址
+  保存网页:
+  $ curl 网页地址 -o 保存命名
+  以网页地址为名保存网页:
+  $ curl -O 网页地址
+* 117、laptop-mode
+  让 Linux 内核调整为为 laptop 优化的。
+  有这样的软件。
+
+* 118、cpu frequecy
+  软件 powernowd 可以调节 CPU 频率。
