@@ -1,0 +1,5 @@
+* PDO
+** PDO::prepare 和 PDO::execute
+   在通过 prepare() 时， '?' 不能加任何引号。在 execute() 时，不能使用 SQL 的默
+   认函数，这点儿在添加当前日期时尤其明显。若要添加日期，先通过 date() 函数建立
+   一个指定格式的日期，然后加入到 execute() 语句中。
