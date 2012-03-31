@@ -3,3 +3,49 @@
    在通过 prepare() 时， '?' 不能加任何引号。在 execute() 时，不能使用 SQL 的默
    认函数，这点儿在添加当前日期时尤其明显。若要添加日期，先通过 date() 函数建立
    一个指定格式的日期，然后加入到 execute() 语句中。
+* stream_select()
+  和 Linux 下的 select() 系统调用作用一样，看 PHP 手册时看不明白，通过 man
+  select 更容易理解些。
+  Linux 下 select() 原型:
+  int select(int nfds, 
+             fd_set *readfds, 
+	     fd_set *writefds, 
+	     fd_set *exceptfds,
+	     struct timeval *timeout);
+ 
+  对比 PHP 下的 stream_select() 原型:
+  int stream_select(array &$read, 
+                    array &$write, 
+		    array &$except, 
+		    int $tv_sec [, int $tv_usec = 0]);
+
+  可知，我需要通过 select() 理解 stream_select() 的作用，$read、$write、$except
+  和限定时间。
+
+  select() allow a program to monitor multiple file descriptors, waiting until
+  one or more of the file descriptors become "ready" for some class of I/O
+  operation (e.g., input possible). A file descriptor is considered ready if it
+  is possible to perform the corresponding I/O operation (e.g., read(2)) without
+  blocking.
+  
+  Three independent sets of file descriptors are watched. Those listed in
+  /readfds/ will be watched to see if characters become available for reading
+  (more precisely, to see if a read will not block; in particular, a file
+  descriptor is also ready on end-of-file), those in /writefds/ will be watched
+  to see if a write will not block, and those in /exceptfds/ will be watched for
+  exceptions. On exit, the sets are modified in place to indicate which file
+  descriptors actually changed status. Each of the three file descriptors sets
+  may be specified as *NULL* if no file descriptors are to be watched for the
+  corresponding class of events.
+
+  /timeout/ is an upper bound on the amount of time elapsed before select()
+  returns. If both fields of the /timeval/ structure are zero, then select()
+  returns immediatly.(This is useful for polling). If /timeout/ is *NULL* (no
+  timeout), select() can block indefinitely.
+
+  On success, select() returns the number of file descriptors contained in the
+  three returned descriptor sets (that is, the total number of bits that are set
+  in /readfds/, /writefds/, /exceptfds/) which may be zero if the timeout
+  expires before anything interesting happends. On error, -1 is returned, an
+  errno is set appropriately; the sets and timeout become undefined, so do not
+  rely on their contents after an error.
