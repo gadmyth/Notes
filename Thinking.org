@@ -599,6 +599,29 @@
 ** 19、刺探(probe)和扫描(scan) 
    刺探(probe) 是企图连接到一个单独的服务端口或获得该端口的响应。
    扫描(scan) 是到一个不同服务端口的集合的一系列的刺探。扫描常自动进行。
+** 20、查看网站对爬虫的限制 robots.txt
+   可通过如下例的格式来查看:
+
+   http://www.dangdang.com/robots.txt
+
+   可能的显示结果是:
+
+   User-agent: *
+   Disallow: /
+   Allow: /reader/play
+
+   解释: The "User-agent: *" means this section applies to all robots. The
+   "Disallow: /" tells the robot that it should not visit any pages on the site.
+   "Allow: /reader/play" tells the robot that it could visit the pages of
+   '/reader/play'.
+
+   There are two important considerations when using '/robots.txt':
+   1) robots can ignore your /robots.txt. Especially malware robots that scan
+      the web for security vulnerabilities, and email address harvesters used by
+      spammers will pay no attentino.
+   2) the /robots.txt file is a publicly avaiable file. Anyone can see what
+      sections of your server you don't want robots to use.
+   So don't try to use /robots.txt to hide information.
 * 虚拟技术
 * 计算机启动过程
 ** Lilo 和 Grub
