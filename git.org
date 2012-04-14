@@ -1,0 +1,137 @@
+* 基本概念
+** 三种状态
+   对于任何一个文件，在 git 内都只有三种状态:已提交(committed)，已修改(modified)，
+   已暂存(staged).已提交表示该文件已经被安全地保存在本地数据库中;已修改表示修改
+   了某个文件，但还没有提交保存;已暂存表示把已修改的文件放在下次提交时要保存的清
+   单中。
+** git 的工作流程:
+   1)在工作目录中修改某些文件
+   2)对这些修改的了的文件作快照，并保存到暂存区域
+   3)提交更新，将保存在暂存区域的文件快照转储到 git 目录中。
+** 配置文件
+   /etc/gitconfig
+   对所有用户都使用的配置，使用 git config 时加上 --system 参数可修改此文件.
+   ~/.gitconfig
+   当前用户的配置文件，使用 git config 时加上 --global 参数可修改此文件.
+   .git/config
+   当前工作目录下的配置文件，只对此项目有用.
+* 基本配置
+  $ git config --global user.name "用户名"
+  $ git config --global user.email "用户邮箱"
+  前两个是必需的，下面的是可选的.
+  $ git config --global core.editor 你喜欢的编辑器
+  默认的编辑器是 vi/vim.
+  $ git config --global merge.tool 差异分析工具
+  可使用 vimdiff、kdiff3、tkdiff、meld、xxdiff、emerge、gvimdiff、ecmerge、
+  opendiff 等合并工具。
+  $ git config --list
+  查看配置信息.
+  $ git config 配置信息名
+  可查看某个具体的配置信息，如
+  $ git config user.name
+* 获取帮助
+  $ git help 命令
+  $ git 命令 --help
+  $ man git-命令
+* 向 github.com 推送
+  现在 github.com 上建立一个 repository,然后在 git 项目的当前文件夹下
+  $ git remote add origin git@github.com:username/建立的仓库名.git
+  $ git push -u origin master
+  以后每次推送该项目时，只需
+  $ git push -u origin master
+* 从 github.com 取回
+  在项目目录下 
+  $ git pull -u origin master
+* 建立自己的仓库
+  $ git init
+  这是初次建立仓库时要做的。
+  $ git add 文件
+  $ git commit -m "描述信息"
+  以上是建立仓库的一般方法。
+  若用
+  $ git commit
+  则会调用配置中设定的编辑器来添加信息。
+  若使用 git commit 时加上参数 -a ，则 git 会自动把所有已经跟踪过的文件暂存起来
+  一并提交，从而跳过 git add 步骤。
+  git add 后可接要跟踪的文件或目录的路径，若是目录的话，就说明要递归跟踪所有该目
+  录下的文件。
+  git add 命令根据目标文件的状态不同，它的效果也不同：可以用它开始跟踪新文件，或
+  把已跟踪的文件放到暂存区，还能用于合并时把有冲突的文件标记为已解决状态等。
+* 从仓库克隆
+  git 收取的是项目历史的所有数据(每个文件的每个版本)，服务器上有的数据克隆后本地
+  也都有了。如
+  $ git clone git://github.com/schacon/grit.git
+  默认的目录名是克隆的目录名，也可自己指定，如
+  $ git clone git://github.com/schacon/grit.git 新的目录名
+* 记录每次更新到仓库
+  工作目录下的所有文件都不外乎两种状态：已跟踪或未跟踪。
+  已跟踪的文件是指本来就被纳入版本控制管理的文件，在上次快照中有它们的记录，工作
+  一段时间后，它们的状态可能是未更新，已修改或已被放入暂存区。
+  而所有其他文件都属于未跟踪文件。它们既没有上次更新时的快照，也不在当前的暂存区
+  域。
+  初次克隆某个仓库时，工作目录中的所有文件都属于已跟踪文件，且状态为未修改。
+* 检查当前文件状态
+  $ git status
+  最好在每次提交前用这个命令来检查下当前项目中的文件状态，然后再 commit.
+* 忽略某些文件
+  通过在当前项目的根目录下建立 .gitignore 文件来忽略某些不需纳入 git 管理的文件，
+  如某些自动生成的临时文件等。要养成一开始设置好 .gitignore 文件的习惯，以免将来
+  误提交无用的文件。
+  该文件的编辑规范:
+  1)所有空行或以 # 开头的行都会被 git 忽略
+  2)可使用标准的 glob 模式匹配
+  3)匹配模式最后跟反斜杠(/)说明要忽略的是目录
+  4)要忽略指定模式以外的文件或目录，可在模式前加上 ! 取反
+  glob 模式指 shell 所使用的简化了的正则表达式，如
+  1) * 匹配零个或任意多个任意字符
+  2) [abc] 匹配任何一个在放括号中的字符
+  3) ? 只匹配一个任意字符
+  4) [0-9] 表示匹配在某个范围内的字符或数值
+  有几个例子要记住:
+  /TODO          仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
+  build/         忽略 build/ 目录下的所有文件
+  doc/*.txt      忽略 doc 第一级子目录下的以 .txt 结尾的文件，但不忽略第二级等子
+                 目录下的文件.
+* 删除文件
+** 从跟踪目录中删除且删除磁盘上的该文件
+   $ git rm 文件
+   若先在磁盘上删除了该文件，则再执行该命令也可。再次提交后就不会再跟踪管理该文
+   件。
+   若删除之前修改过且已经放到暂存区中，则必须要加 -f 参数，以防误删除文件后丢失
+   修改的内容。
+
+** 仅从跟踪目录中删除但不删除磁盘上的文件
+   $ git rm --cached 文件
+   若想在 git 命令中使用正则表达式，则要用如 \* 的形式，因为 git 有自己的文件模
+   式扩展匹配。这样做后，可把这些文件置于仓库根目录下的 .gitignore 文件中。
+* 移动文件
+  如下两种形式等同:
+  
+  $ git mv README.txt README
+  
+  或
+
+  $ mv README.txt README
+  $ git rm README.txt
+  $ git add README
+* 查看提交历史
+  $ git log
+  还可加些参数，常用的有:
+  -p 展开显示每次提交的内容差异
+  -num 仅显示最近 num 次的更新
+  在做代码审查或要快速浏览其他协作者提交的更新都做了哪些改动时，可使用以上两个选
+  项。
+  --stat 仅显示简要的增改行数统计
+  --pretty=[oneline|short|full|fuller|format] 指定使用特殊的方式显示提交历史
+  其中的 format 可定制要显示的记录格式，这样的输出便于后期编程提取分析，如
+  $ git log --pretty=format:"%h - %an, %ar : %s"
+  具体的使用方法可参考手册:
+  $ git help log
+  其中会有两个概念可能会混淆：作者(author)和提交者(committer). *作者* 指的是实际
+  作出修改的人， *提交者* 指的是最后将此工作成果提交到仓库的人。
+
+* 链接
+  git 简易指南
+  http://rogerdudler.github.com/git-guide/index.zh.html
+  why git is bettern than X
+  http://zh-cn.whygitisbetterthanx.com/#git-is-fast

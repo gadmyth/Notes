@@ -1,0 +1,215 @@
+* 1、设置环境变量
+  从 java 官网上下载 jdk，安装后设置 JAVA_HOME,即 jdk 所在位置。
+  在 /etc/profile 和 ~/.profile 中都添加如下语句
+
+  export JAVA_HOME=/usr/lib/jdk1.6.0_25
+  export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:CLASSPATH
+  export PATH=$JAVA_HOME/bin:$PATH:
+
+  然后分别运行
+  # source /etc/profile
+  $ source ~/.profile
+  使得环境变量生效。
+* 2、运行 java 程序
+  $ javac 程序.java
+  此时会生成一个 .class 文件，假如名字是 hello.class，然后运行
+  $ java hello 
+  即可.
+  这样的步骤本质上是先将 Java 代码编译成字节码，然后在 JVM 上运行。
+* 3、有用的函数
+** 1、print 和 println
+   System.out.print () 和 System.out.println () 几乎一样，只是前者打印时不会自
+   动换行，后者打印时会自动换行。
+* 4、+ 
+  可以重载，若两端都是字符串类型，则表示连接字符串，之间无空白;若两端为数字，则
+  表示加法运算。其中前者可与 System.out.print () 或 System.out.println () 函数
+  结合使用，输出长形式的句子。
+* 5、Primitive Data Types
+  除了这 8 种基本的数据类型，其余的都是用 object 来表示。
+  byte (8 bits), short (16 bits), int (32 bits), long (64 bits)
+  float (32 bits), double (64 bits)
+  char
+  boolean
+  这 8 种类型在所有的硬件平台上的大小都一样，前 6 种且都是 signed 类型。
+  Java 默认所有的整型数字为 int 型，除非在数字后面加上 L/l (指明为 long)。
+  Java 默认所有的浮点数字为 double 型，除非在数字后面加上 F/f (指明为 float 型).
+* 6、applet/application
+  Java 有两种类型的程序，如题。
+  A Java /applet/ is a Java program that is intended to be embedded into an
+  HTML document, transported across a network, and executed using a Web browse.
+  A Java /application/ is a stand-alone program that can be executed using a
+  Java interpreter.
+* 7、Character set
+  Java uses the 16-bit Uniccode character set to represent character data.
+* 8、复制 object
+  object 存储的是引用，即生成的 object 的地址。若把 obj1 复制给 obj2，实际上
+  obj2 此时存储的是 obj1 指向的 object 的地址， obj1 和 obj2 变成了同一个
+  object 的不同别名，修改任意一个对另一个都有影响。
+
+* 9、javadoc 自动生成文档
+* 10、与 Java 包相关的环境变量
+  CLASSPATH
+
+* 11、函数参数传递
+  通过引用进行传递，故若传入的是对象，则会直接作用于原来的对象。
+* 12、移动操作符
+  <<、>> 是带有符号的移动，对于 <<，左移时最右端补零，对于 >>,若是正数，则左端补
+  零，若是负数，则左端补一。
+  >>> 是无符号移动，不管是正数还是负数，移动时左端都补一。
+  If you shift a *char*, *byte*, or *short*, it will be prompted to *int* before
+  the shift takes place, and the result will be an *int*. Only the five
+  low-order bits of the right-hand side will be used. This prevents you from
+  shifting more than the number of bits in an *int*. If you're operating on a
+  *long*, you'll get a *long* result. Only the six low-order bits of the
+  right-hand side will be used, so you can't shift more than the number of bits
+  in a *long*.
+  Shifts can be combined with the equal sigh (<<= or >>= or >>>=). The lvalue is
+  replaced by the lvalue shifted by the rvalue. There is a problem, however,
+  with the unsigned right shift combined with assignment. If you use it with
+  *byte* or *short*, you don't get the correct results. Instead, these are
+  promoted to *int* and right shifted, but then truncated as they are assigned
+  back into their variables, so you get -1 in those cases.
+* 13、数值转换
+** 1、float、double 转换为 int
+   若使用 (int)数值 的方法转换，则默认是采用 truancate 方法，即把小数点后的全部
+   截取掉，可使用 Math.round(数值) 方法来实现 round 方法，即四舍五入。
+
+* 14、条件判断中的 true 和 false (IMPORTANT)
+  Java doesn't allow you to use a number as a boolean, even though it's allowed
+  in C and C++ (where truth is nonzero and falsehood is zero). If you want to
+  use a non-boolean in a boolean test, such as *if(a)*, you must first convert
+  it to a boolean value by using a conditional expression, such as *if(a != 0)*.
+* 15、默认的载入包
+  Java 默认的载入包是 java.lang.* ，即在每个 java 程序中，不用显式载入该包。
+* 16、随机数
+  import java.util.Random;
+  载入后，先建立 Random 的对象
+  Random rand = new Random([val]);
+  其中 val 是可选的种子，若不写，则程序每次运行时生成的随机数都不同，若设立一个
+  种子，则程序每次运行时生成的随机数都相同。
+  int ival = rand.nextInt(val);
+  float fval = rand.nextFloat(val);
+  以上两条语句分别生成 int 和 float 型的随机数，其中的 val 表示生成的随机数的上
+  界，介于 [0, val-1] 之间。
+* 17、for 的两种用法
+  Java 中 for 有两种用法，一种和 C 中的相同，另一种和 Python 中 for 的用法相同。
+  第二种用法和 Python 中的 for 的用法相似，都是遍历一个数组或 container.
+  Any method that returns an array is a candidate for use with foreach.
+  如:
+  for (float c : float_array) {};
+  for (char c : "An char array".toCharArray()) {};
+
+* 18、label
+  Java 中没有 goto 语句，但可用标签实现相同的功能。如
+
+  label_name:
+  语句
+  
+  其中可用四种形式的 continue、break、continue label_name、break label_name. 前
+  两个 continue、break 的用法同 C 中的相同，continue label_name 表示跳转到标签名
+  处运行,break label_name 表示中断从标签名下的语句块的运行.
+* 19、this
+  The *this* keyword ——which can be used only inside a non-static method—
+  produces the reference to the object that the method has been called for.
+  The *this* keyword is used only for those special cases in which you need to
+  explicitly use the reference to the current object. For example, it's often
+  used in *return* statements when you want to return the reference to the
+  current object.
+  如:
+
+  public class Leaf {
+    int i = 0;
+    
+    Leaf increment()
+    {
+        ++i;
+
+        return this;
+    }
+
+    void print()
+    {
+        System.out.println("i = " + i);
+    }
+
+    public static void main(String[] args) {
+        Leaf x = new Leaf();
+        x.increment().increment().increment().print();
+    }
+  }
+
+* 20、Calling constructors from constructors
+  In a constructor, the *this* keyword takes on a different meaning when you
+  give it an argument list. It makes  an explicit call to the constructor that
+  matches that argument list. Thus you have a straightforward way to call other
+  constructors.
+  在一个 constructor 中，只能通过 this 调用一次另一个 constructor,而且，在非
+  constructor 中，不能通过 this 调用 constructor.
+  如下面的例子:
+  
+  public class Flower {
+
+    int petalCount = 0;
+    String s = "initial value";
+
+    Flower(int petals)
+    {
+        petalCount = petals;
+        System.out.println("Constructor w/ int arg only, petalCount = "
+                           + petalCount);
+    }
+
+    Flower(String ss)
+    {
+        System.out.println("Constructor w/ stirng arg only, s = " + ss);
+    }
+
+    Flower(String s, int petals)
+    {
+        this(petals);
+        // this(s);        Can't call two!
+        this.s = s;             // Another use of "this"
+        System.out.println("String & int args");
+    }
+
+    Flower()
+    {
+        this("hi", 47);
+        System.out.println("default constructor (no args)");
+    }
+
+    void printPetalCount()
+    {
+        // this(11);      Not inside non-constructor!
+        System.out.println("petalCount = " + petalCount + " s = " + s);
+    }
+
+    public static void main(String[] args) {
+        Flower x = new Flower();
+        x.printPetalCount();
+    }
+  }
+* 21、the meaning of /static/  (IMPORTANT)
+  With the *this* keyword in mind, you can more fully understand what it means
+  to make a method *static*. It means that there is no *this* for that
+  particular method. You cannot call *non-static* methods from inside *static*
+  methods (although the reverse is possible), and you can call a *static* method
+  for the class itself, without any object. In fact, that's primarily what a
+  *static* method is for. It's as if you're creating the equivalent of a global
+  method. However, global methods are not permitted in Java, and putting the
+  *static* method inside a class allows it access to other *static* methods and
+  to *static* fields.
+  Some people argue that *static* methods are not object-oriented, since they do
+  have the semantics of a global method; with a *static* method, you don't send
+  a message to an object, since there's no *this*. This is probably a fair
+  argument, and if you find yourself using a lot of *static* methods, you should
+  probably rethink your strategy. However, *static* methods are pragmatic, and
+  there are times when you genuinely need them, so whether or not they are
+  "proper OOP" should be left to the theoreticians.
+* 22、类中变量的初始化顺序
+  一般情况下，变量的初始化是按照它在程序中出现的位置进行，但在类中，函数外所有的
+  变量按照在程序中定义的位置的顺序初始化，然后再运行构造函数等其它函数。
+* 23、Array
+** 格式
+   int[] a1;
+   The compiler doesn't allow you to tell it how big the array is.

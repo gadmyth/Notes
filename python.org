@@ -1,0 +1,1415 @@
+* 2、输出的几种表示
+** 1、输出到 stdout
+    print num  # num 表示数字
+    print var  # var 表示已定义的变量
+    print "str" 或 print 'str'  # str 表示字符串
+    print "%s is number %d" % ("Python", 1)
+    print "python is ", 1
+    print "python is ", "my love"
+** 2、输出到 stderr
+    import sys
+    print >> sys.stderr, "just a test"
+** 3、输出到指定文件
+    log = open("/tmp/log", "a")
+    print >> log, "just a test"
+    log.close()
+** 4、交互输入
+    var = raw_input("Please enter a var: ")
+    默认的类型是字符串。
+** 5、print 相关
+    print 语句默认是自动在输出后加上 '\n', 若在循环语句中想把要打印的放在同一行，
+    可用如下形式，加上 ',':
+    for item in ['item1', 'item2', 'item3', ...]:
+        print item, 
+    采用加个逗号的形式，会把输出的值后的 '\n' 字符去掉。
+    若 print 打印时采用如下形式
+    print item1, item2, ...
+    则会打印所有的，且不同的部分之间有一个空格隔开。
+* 3、把字符串转化为整数
+    int(var)
+    例
+    num = raw_input("Please enter the number : ")
+    print "Double the number %d" % (int(num) * 2)
+* 4、查看帮助文档
+   $ pydoc 名字
+   还可
+   $ pydoc -p 8000 &
+   然后在浏览器中输入
+   http://localhost:8000
+   也可在交互式输如中输入
+   >>> help(名字)
+* 5、添加注释
+   使用 #
+* 6、运算符
+** 1、算数运算符
+   +  -  *  /  //  **  
+   用 ** 可实现乘方运算。
+   // 会把结果的小数位（如果有）归零。
+   这些运算符均可与 '=' 合用，类似于 += 的形式
+** 2、逻辑运算符
+    and   or   not
+** 3、比较运算符 
+    <  <=  >  >=  ==  <>  !=
+* 7、变量
+   变量根据赋予的值自动决定类型。
+* 8、数据类型
+** 1、基本数值类型
+    1)int (signed  integers) 
+      long (long integers)
+      bool (Boolean values)
+    2)float (floating point real numbers)
+    3)complex (complex numbers)
+    当
+    import decimal
+    模块后，可使用 decimal 数值类型，因为若不加这个模块，类似于 1.1 这样的数值可
+    能会不精确。
+* 9、字符串
+** 1、表示方式
+    用单引号、双引号均可，三个引号是作为转义用。
+** 2、表示字符
+    可用 str[num] 的形式取其中的一个字符，也可用 str[from:to] 去其中从 from 到
+    to 之间的字符，包括 from 的位置处的字符，不包括 to 处的字符。字符串的首位置
+    是 0,最后一位的数字的位置是 -1.
+    ‘+’  表示字符串之间的联接， '*' 表示字符串串的重复，如 str * 2 表示字符串
+    重复两次，注意，不管哪种形式，两部分之间直接相连。
+* 10、list and tuple
+   它们类似于数组，可存储任意类型的任意长度的数据，不同之处在于， list 中的数据
+   可以修改，而 tuple 中的数据不能修改。list 用 [] 存储数据，各个数据间用 ',' 隔
+   开，tuple 用 () 存储数据，数据间用 ',' 隔开。
+   它们保存的数据的存储方法与字符串中介绍到的方法相同。
+* 11、directories
+   是 key-value 对，存储在 {} 中，不同的 key-value 对用 ',' 隔开，如
+   examp = {'name': 'zhang', 'gender': 'male'}
+   也可向其中添加，如
+   examp['new'] = 'a test'
+   取出所有 key 时，用 
+   examp.keys()
+   取出所有 value 时，用
+   examp.values()
+   使用某个 value 值时，可用 
+   examp['new']
+   若在 for 或其它语句中使用
+   for key in examp
+   时，取出的都是 key 值
+* 12、if 语句
+   if expression:
+       expression
+   或
+   if expression1:
+       expression1.1
+   else:
+       expression2
+   或
+   if expression1:
+       expression1.1
+   elif expression2:
+       expression2.1
+   else:
+       expression3
+* 13、while 语句
+   while expression1:
+       expression2
+* 14、for 语句
+   它不像 C 中的 for，在 Python 中起一个遍历的作用。
+   格式如下：
+   for item in ['item1', 'item2', 'item3', ...]:
+       expression
+   也可用 
+   for item in range(num)
+       expression
+   其中，range() 是自动产生一个 0~'num-1' 的 list 的函数。
+   也可对字符串中的字符遍历，方法是
+   for char in str
+       expression
+   char 是单个字符，str 是字符串
+   也可用 for...else... 结构，它表示当 for 遍历完全遍历后执行 else 之后的代码。
+   注: 如果对 list、tuple、dict 进行遍历，不能在 for 的语句中对这个遍历的集合进
+   行修改，否则会中断遍历。
+* 15、有用的函数
+** 1、enumerate(str)
+    一般在 for 语句中使用，每次循环返回两个值，依次是位置和字符，位置从 0 开始计
+    数。如
+    for i, ch in enumerate(str):
+        expression
+** 2、dir([obj])
+    显示 obj 的属性，若不加参数，则显示全局变量的名字。
+** 3、help([obj])
+    显示 obj 的帮助文档，若不加参数，则显示 help 的提示符，交互提供帮助服务，按
+    'q' 退出。
+** 4、int(obj)
+    把 obj 转为 整型
+** 5、len(obj)
+    返回 obj 的长度。
+** 6、open(fn, mode)
+    打开文件。
+** 7、range([start, ] stop [, step])
+    返回存储在 list 中的从 start 到 stop-1 的整型数，默认的 step 是1， 默认的
+    start 是0.
+    若 stop <= start，则返回 []
+    返回的是 list
+** 8、raw_input(str)
+    提示输入数据，
+** 9、str(obj)
+    把 obj 转化为字符串。
+** 10、type(obj)
+    显示 obj 的类型。
+** 11、print 相关
+    会自动在输出的结尾添加 '\n',若想不换行，可在改行最末添加逗号。
+** 12、数据转换
+    int()、long()、complex()、list()、str()、tuple()、unicode()、basestring()
+** 13、del
+    del obj
+    删除某个对象
+** 14、cmp
+    比较函数。
+** 15、isinstance(object, class-or-type-or-tuple)
+    判断 object 是否是后者中的类型，返回 Boolean 值.
+** 16、id(object)
+    返回 object 的整型 identity， 这个 identity 类似于地址，每个 object 的
+    identity 是唯一的。
+** 17、sorted(obj)
+    对其中的 obj 进行排序，但不改变 obj 原来的状态，若用 obj.sort() 函数，则排序
+    改变原来的状态。
+** 18、reversed(obj)
+    对 obj 逆序输出，使用时一般用 for 语句来输出，例
+    for t in reversed(obj):
+        print t, 
+** 19、enumerate()
+    例
+    albums = ['tales', 'robot', 'pyramid']
+    for i, album in enumerate(albums):
+        print i, album
+** 20、zip()
+    例
+    fn = ['ian', 'stuart', 'david']
+    ln = ['bairnson', 'elliott', 'paton']
+    for i, j in zip(fn, ln):
+        print ('%s %s' % (i, j)).title()
+** 21、sum(seq [, start])
+    计算 seq 中所有数值的和，若省略 start, 则默认从 seq 首位到末尾计算和，若指定
+    start 值，则计算 seq 从 start 到末尾的数值的和。
+** 22、xrange([start,] stop [, step])
+    作用同 range()，但返回的是 xrange object，比 range() 速度快同时更节省内存。
+    它一般只用于 for 遍历中。
+** 23、map(function, sequence [, sequence, ...]) -> list
+** 24、filter(function or None, sequence) -> list, tuple, or string
+** 25、chr(i) -> Character
+    0 <= i <= 256
+    返回数字 i 对应的 ASCII 字符
+** 26、ord(c) -> integer
+    返回字符 c 对应的 ASCII 码.
+* 16、有趣的技巧
+** 1、在类数组中中使用 for 
+    square = [x**2 for x in range(4)]
+    则最终 square = [0, 1, 4, 9]
+    square = [x**2 for x in range(4) if not x%2]
+    则最终 square = [0, 4]
+    其实，[] 中的结构是（以后一个为例）
+    for x in range(4):
+        if not x%2:
+	    x = x ** 2
+** 2、查看 class、函数等的信息
+    一般在这类中都可使用 __doc__ 属性查看相关的介绍。
+** 3、对 if-elif-else 多条语句的简化
+    比如有如下语句
+
+    if user.cmd == 'create':
+        action = 'create item'
+    elif user.cmd == 'delete':
+        action = 'delete item'
+    elif user.cmd == 'update':
+        action = 'update item'
+    else:
+        action = 'invalid choice ... try again!'
+
+    /优化1/：
+    if user.cmd in ('create', 'delete', 'update'):
+        action = '%s item' % user.cmd
+    else:
+        action = 'invalid choice ... try again!'
+
+    /优化2/:
+    msgs = {'create': 'create item',
+            'delete': 'delete item',
+            'update': 'update item'}
+    default = 'invalid choice ... try again!'
+    action = msgs.get(user.cmd, default)
+    
+    One well-known benefit of using mapping types such as dictionaries is that
+    the searching is very fast compared to a sequential lookup as in the above
+    /if-else-else/ statements or using a /for/ loop, both of which have to scan
+    the elements one at a time.
+** 4、赋值和交换数据
+    var1, var2, var3 = val1, val2, val3
+    如上，可以给多个数据这样赋值。若想交换两个数的值，可用如下形式：
+    var1, var2 = var2, var1
+** 5、实现 C 中的 (?:) 操作
+    可用如下形式
+    x if c else y
+    等同于 C 中的
+    c?x:y
+* 17、函数
+   格式为：
+   def function_name([parameters]):
+       'comment'
+       expression
+   可在定义函数时指定一些参数的具体值，这可以作为参数的默认值，如果调用函数时不
+   加参数，则默认使用这些参数值。
+* 18、module
+   创建 module 的方法与普通的 python 文件相同，只是在 import 时不加 .py
+   在载入模块后，模块的使用方法和使用类的变量、函数的方法相同。
+* 19、显示最大的 int
+   import sys
+   print sys.maxint
+* 20、随机数
+   import random
+   # [0, 1) 之间的随机数
+   print random.random()  
+   # [a, b] 之间的随机数
+   print random.randint(a, b)
+   # [a, b] 之间从 a 开始步长为 step 的数之间的随机数
+   print random.randrange(a, b, step)
+   举例，可以输出 [a, b] 之间为偶数的随机数
+   print random.randrange(a, b, 2)
+   # 由 rounding 决定从 [a, b] 或 [a, b) 中输出 float 型随机数
+   print random.uniform(a, b)
+   # 在 str 中输出随机字符,或从列表值随机输出字符串
+   print random.choice('str')
+   # 在 populaition 中输出 k 个随机值，population 可以是 str、list、dict 等
+   print random.sample(populaition, k)
+   # 对 list 中的值随机排列
+   print random.shuffle(list)
+* 21、Sequences
+** 1、包含
+    包括 strings、lists、tuples。
+** 2、Standard Type Operators
+    seq[index]
+    seq[ind1:ind2]
+    seq * expr
+    seq1 + seq2
+    obj in seq
+    obj not in seq
+** 3、直接对 Sequences 进行 index
+    比如可以 ('Flyer', 'flx')[index] 索引，这在处理函数返回值时非常有用。
+** 4、Extended Slicing with Stride Indices
+    索引的完整形式是 seq[start:stop:stride]
+    stride 指明了索引时的步长，默认是 1,若是 -1 ，则表示往前索引，可用 seq[::-1]
+    来表示逆序输出 seq.
+    slice indexing 可以超过 seq 的范围而不会报错。
+** 5、函数
+*** 1、enumerate(/iter/)
+     Take an iterable and returns an enumerate object (also an iterator) which
+     generates 2-tuple elements (index, item) of iter
+*** 2、len(/seq/)
+     Return length (number of items) of seq
+*** 3、max(iter, key-None) or max(arg0, arg1, ..., key-None)
+     Returns "largest" element in /iter/ or returns "largest" of (arg0, arg1,
+     ...); if /key/ is present, it should be a callback to pass to the *sort()*
+     method for testing
+*** 4、min(iter, key-None) or min(arg0, arg1, ..., key-None)
+     Returns "smallest" element in /iter/; returns "smallest" of (arg0, arg1,
+     ...); if /key/ is present, it should be a callback to pass to the *sort()*
+     method for testing.
+*** 5、reversed(seq)
+     Takes /sequence/ and returns an iterator that traverse that sequence in
+     reverse order.
+*** 6、sorted(iter, fun-None, key-None, reverse-False)
+     Takes an iterable /iter/ and returns a sorted list; optional arguments
+     /func, key/ and /reverse/ are the same as for the *list.sort()* built-in
+     method
+*** 7、sum(seq, init-0)
+     Returns the sum of the numbers fo /seq/ and optional /initial/ value; it is
+     equivalent to *reduce (operator, add, seq, init)*
+*** 8、zip([it0, it], ... itN)
+     Returns a list of tuples whose elements are members of each iterable passed
+     into it, i.e., [(it0[0], it1[0],...itN[0]), (it0[1],
+     it1[1],...,itN[1]),...(it0[n], it1[n], ...itN[n])], where /n/ is the
+     minimum cardinality of all of the iterables
+** 6、修改 str 类型的变量
+    只能通过给这种变量赋值或使用类似于 '+' 之类的符号修改 str 类型的值。由于 str
+    类型是 mutable 的，故修改时是创造了一个新的 str 对象，旧的对象被垃圾回收。故
+    对 str 类型中的某个字符修改时，会提示 TypeError 异常。
+** 7、清空或删除 str 类型
+    清空相当于赋了空值
+    a_string = ''
+    删除用函数 del
+    del a_string
+    一般无需显式删除 str 类型数据，因为定义它的代码结束时，str 类型会自动被回收。
+** 8、连接字符串
+    有三种方法：
+    法一：
+    使用 '+'，但这种效率不高，《Core Python Programming》 上解释为:
+    For every string that is part of a concatenation, Python has to allocate new
+    memory for all strings involved, including the result.
+    法二：
+    使用 '%'，例为
+    a_string = '%s %s' % (str1, str2)
+    法三:
+    使用 join() 方法.
+    a_string = ' '.join((str1, str2, ...))
+    可用其它的分隔符替换掉 '' 中的空格，则连接的字符串之间以这种方式分隔。
+** 9、str method
+    # 把 str 转换为大写
+    str.upper()
+** 10、regular string 和 Unicode string
+    二者在一起时，先把 regular string 转化为 Unicode string 后再进行其它的操作。
+    Unicode string 的标志是在 string 前加 u 或 U,如 u'hello'、u''
+** 11、format operator 可使用的符号
+    %c    Character (integer[ASCII value] or string of length 1)
+    %r    String conversion via *repr()* prior to formatting
+    %s    String conversion via *str()* prior to formatting
+    %d/%i Signed decimal integer
+    %u    Unsigned decimal integer
+    %x/%X (Unsigned) hexadecimal integer (lower/uppercase letters)
+    %o    (Unsigned) octal integer
+    %e/%E Exponential notation (which lowercase 'e'/uppercase 'E')
+    %f/%F Floating point real number (fraction truncates naturally)
+    %g/%G The shorter of %e and %f/%E% and %F%
+    %%    Percent character (%) unescaped
+    在 % 后加 # 作用是 add the octal leading zero ('0') or hexadecimal
+    leading'0x' or '0X', depending on whether 'x' or 'X' were used.
+    Python 支持两种输入参数的形式，一种是 tuple,另一种是 dict,输入 ke
+    Converted strings can either be used in conjunction with the *print*
+    statement to display out to the user or saved into a new string for future
+    procesing or displaying to a GUI.
+    使用 dict 的一个例子:
+    'There are %(howmany)d %(lang)s Quotation Symbols' % {'lang':'Python',
+    'howmany':3}
+    还有一种用字典的方式是使用 Template,例：
+    from string import Template
+    s = Template('There are ${howmany} ${lang} Quotation Symbols')
+    print s.substitution(lang='Python', howmany=3)
+    若使用 substitution 方法时，没注意数量的匹配，则会提示 KeyError,但可以使用
+    safe_substitute ，它只把能匹配的匹配，剩下的保持原样。 
+** 12、r/R  ur/UR
+    用在转义字符前，可打印它的字面意义，如
+    print r'\n'
+    等效于 
+    print '\\n'
+    有时打开文件时提示 IOError，一个可能原因是文件名中包含一些特殊字符，此时可在
+    文件名前用 r/R ，如
+    f = open(r'/home/flyer/readme.txt', 'r')
+    ur/UR 用法和 r/R 一样，只是 ur/UR 用于 Unicode 编码的，r/R 用于 ASCII 编码的，
+    Python 默认的是 ASCII 编码。
+** 13、string 在 Python 和 C 中的区别
+    Python 中 string 不以 NUL (\000 , ASCII 值为 0) 结尾，而 C 是。 *NUL*
+    characters are just like any of the other special backslash-escaped characters.
+** 14、encode/decode method
+    它们是 string 的 method,可以指定编码、解码方式。
+    支持的编解码方式：
+    /utf-8/ 8-bit variable length encoding (default encoding)
+    /utf-16/ 16-bit variable length encoding (little/big endian)
+    /utf-16-le/ UTF-16 but explicitly little endian
+    /utf-16-be/ UTF-16 but explicitly big endian
+    /ascii/ 7-bit ASCII codepage
+    /iso-885901/ ISO 8859-1 (Latin-1) codepage
+    /unicode escape/ (See Python Unicode Constructors for a definition)
+    /raw-unicode-escape/ (See Python Unicode Constructors for a definition)
+    /native/ Dump of the internal format used by Python
+** 15、删除 list 中某项或全部
+    删除索引指定的项
+    del list[index]
+    删除 list 中的具体项
+    list.remove(item)
+    删除整个 list
+    del list
+** 16、修改 tuple 的值
+    虽然 tuple 是 immutable，但若 tuple 含有可修改的项， 如 list、dict，则可修改
+    其中 list、dict 的部分值，不能一次全部修改。
+** 17、default tuple
+    Any set of multiple objects, comma-separated, written without identifying
+    symbols, i.e., brackets fro list, parenthese for tuples, etc., defaults to
+    tuples.
+    Any function returning multiple objects (also no enclosing symbols) is a
+    tuple. Note that enclosing symbols change a set of multiple objects returned
+    a single container object.
+** 18、单元素 tuple
+    若是用 (elem) 形式，则 Python 会把 () 认为是普通的括号，需要用 (elem,) 形式
+    表示它是个单元素 tuple,即在元素后加逗号。
+** 19、immutable 与 hashable 关系
+    Immutable objects have values that cannot be changed. That means that they
+    will always hash to the same value. That is the requirement for an object
+    being a valid dictionary key. Keys must be hashable objects, and tuples meet
+    that criteria. Lists are not eligible.
+** 20、除去 list 中重复的项
+    比如要除去 list 类型的 aList 中的重复项，可用如下代码
+    aList = list(set(aList))
+    由此我觉得如果要判断一个 list 类型数据中是否有重复的项，可通过比较通过
+    set(aList) 和 aList 的长度来判断。
+** 技巧
+*** 1、循环输出字符串，每次除去末尾一个字符(不输出原始字符串)
+     i = -1
+     for i in range(-1, -len(seq), -1):
+         print seq[:i]
+*** 2、循环输出字符串，每次除去末尾一个字符(输出原始字符串)
+     i = -1
+     for i in [None]+range(-1, -len(seq), -1):
+         print seq[:i]
+    不能用字符串的 extend() 函数，因为它返回 None。
+* 22、shadow copy and deep copy
+   Python 默认的是 shadow copy, 即把一个对象的引用传给新的变量，如先定义一个
+   obj, 然后把这个 obj 赋给另一个 obj,此时只是传递的是第一个 obj 的引用。意思是
+   对于这两个 obj，若它是个 container, 即含有其它类型的 obj，则最初赋值后，这两
+   个 obj 中的内容的 id 相同。若某个内容是 immutable，则这个内容修改后两个 obj
+   中的这个内容不同，否则，若这个内容是 mutable,则修改后这两个 obj 中的内容相同.
+   这种便利可用在不同的 obj 包含相同的数据，若更新其中的 mutable 数据，则可实现
+   数据的同步。
+   shadow copy 一般通过以下三种方式来实现：
+   1) taking a complete slice [:]
+   2) using a factory function, e.g., list(),dict(),etc.
+   3) using the *copy()* function of the *copy* module
+   若想 deep copy，即实现对不同的 obj 赋值时其中的内容的 id 均不同，则需 
+   import copy
+   new_obj = copy.deepcopy(old_obj)
+   具体的区别与用法可查看 copy 模块。
+* 23、Mapping Type
+** 1、用 dict() 创建 dict 类型数据
+    它的用法很灵活，注意领会。
+    注意以下例子的格式，至少要有两个数据, 若没有一个参数，则表明建立一个空 dict
+    类型:
+    dict((['x', 1], ['y', 2]))
+    dict(zip(('x', 'y'), (1, 2)))
+    dict([ ['x', 1], ['y', 2]]
+    dict([('xy'[i-1], i) for i in range(1, 3)])
+    dict(x=1, y=2)
+** 2、使用方法 fromkeys() 创建 dict 类型数据
+    这个方法是用来创建具有相同 value 的 dict 类型数据，若不给出 value 的值，则默
+    认是 None：
+    ddict = {}.fromkeys(('x', 'y'), -1)
+    ddict = {}.fromkeys(('x', 'y'))
+** 3、for 循环遍历
+    可不用方法 keys() 来取得 key 值，如下形式
+    for key in dict.keys
+    可直接使用如下形式
+    for key in dict
+** 4、判断某个量是否是 key
+    可用方法 has_key() 或 in、not in，最好用后者，因为前者可能会在 Python 新版本
+    中取消，用法为:
+    var in dict
+    var not in dict
+    若在，返回 True，否则返回 False.
+    若使用方法 get() ，则即使查询的量不是 dict 类型数据中的 key，也不会返回异常
+** 5、通过赋值来增加 dict 中的元素个数
+   如可直接通过如下形式像 dict 类型数据中添加新的项：
+   dict[key] = value
+** 6、cmp() 比较 dict 类型数据
+    比较顺序为：keys 数目，key，value
+** 7、len()
+    返回 key-value 对。
+** 8、排序输出 dict 的 key 值
+    由于在 dict 类型数据中，key 值无序，可以用 sorted () 函数来使 dict 类型数据
+    的 key 值有序，且用这个函数后，返回的是排序后的 key 值 tuple，但我发现新版本
+    的 Python 在建立后会自动对 key 值排序，故我觉得无须再使用这个函数获得有序的
+    key 序列。
+** 9、键冲突
+    当发生键冲突时， Python 只保留冲突的最后一个 key-value 对，冲突的 key-value
+    对会被删除。本质是对冲突的 key 的 value 重新赋值。
+** 10、按 key 或 value 进行排序
+    若直接使用 sorted() 函数对 dict 型数据进行排序，则是按照 key 来排序的，且输
+    出的是 key 的列表。
+    若想排序后输出的还是 dict 类型，则可在 sorted() 函数中使用 lambda，或使用
+    sorted() 函数中的 key 参数进行排序，如
+    sorted(dic.items(), lambda x,y: cmp(x[0], y[0]))
+    或
+    sorted(dic.items(), key=lambda d:d[0])
+    以上两种方法都是按照 key 进行排序，输出的是 dict 类型，但不改变原来的 dict
+    型数据。
+    sorted(dic.items(), lambda x,y: x[1], y[1])
+    或
+    sorted(dic.items(), key=lambda d:d[1])
+    以上两种方法都是按照 value 进行排序，输出的是 dict 类型，但不改变原来的 dict
+    型数据。
+    以上四种方法都是升序排序，若想逆序，则在 sorted() 函数最后加上 reverse = True
+* 24、Set Type
+** 1、Description
+   In mathematics, a set is any collection of distinct items, and its members
+   are often referred to as set elements. Python captures this essence in its
+   set type objects. A set object is an unordered collection of hashable
+   values. Yes, set members would make great dictionary keys. Mathematical sets
+   translate to Python set object quite effectively and testing for set
+   membership and operations such as union and intersection work in Pyton as
+   expected.
+   我遇到过的情形:
+   判断两个集合是否有交集，若有，则执行某段代码，否则，执行另一段代码。集合非空
+   为 True，否则为 False.
+** 2、创建该类型
+   可使用 set() 或 frozenset()，其中 set() 创建的类型是 mutable,而 frozenset()
+   创建的类型是 immutable.
+   它们有很多 method，具体通过 help() 来查看.
+** 3、操作
+   Membership: in, not in
+   Set Equality/Inequality: ==, !=
+   Union: |
+   Intersection: &
+   Difference/Relative Complement: -
+   Symmetric Difference: ^
+   (Union) Update: |=
+   Retention/Intersection Update: &=
+   Difference Update: -=
+   Symmetric Difference Update: ^=
+* 25、time module
+  这个 module 提供了很多与时间相关的操作，在 ipython 中通过
+  import time
+  help(time)
+  来查看。
+* 26、在 Python 源码中输入中文
+  在第一行或第二行添加如下语句
+  #coding:utf-8
+  若用 gb2312，可能会出现一些小问题，建议用 utf-8.
+* 27、pass 关键字
+  它的作用同 C 中的空语句，一般用在三个地方：
+  1) 需要使用空语句的地方
+  2) 在程序没有完善前，写出了某些模块，但暂时没有完成其中的代码，可以用这个关键
+     字，如
+     def foo_fun():
+         pass
+  3) 在异常处理中
+* 28、else 在 while 和 for 中
+  关键字 *else* 用在 *while* 和 *for* 中，表示当正常循环结束时要执行的代码，说明
+  没有被 *break* 中断。
+* 29、iterator
+** 1、Description
+   Iterators were added to Python in version 2.2 to give sequence-like objects a
+   sequence-like interface. 
+   Iterators come in handy when you are iterating over something that is not a
+   sequence but exhibits behavior that makes it seem like a sequence, for
+   example, keys of a dictionary, lines of a file, etc.
+   Advantage:
+   1) Provide an extensible iterator interface
+   2) Bring performance enhancements to list iteration
+   3) Allow for big performance improvements in dictionary iteration
+   4) Allow for the creation of a true iteration interface as opposed to
+      overriding methods originally meant for random element access
+   5) Be backward-compatible with all existing user-defined classes and
+      extension objects that emulate sequences and mappings
+   6) Result in more concise and readable code that iterates over non-sequence
+      collections (mappings and files, for instance)
+
+** 2、method
+   经过 iter() 函数变换后的对象具有 next() 方法，当遍历结束时，会产生
+   StopIteration 异常。
+
+* 30、list comprehension
+** 1、基本用法
+   有两种形式:
+   [expr for iter_var in iterable]
+   [expr for iter_var in iterable if cond_expr]
+   稍复杂的例子为：
+   [(x, y) for x in range(4) for y in range(5)]
+   The one weakness of list comps is that all of teh data have to be made
+   available in order to create the entire list. This can have negative
+   consequences if an iterator with a large dataset is involved.
+** 2、高级应用
+   比如统计 test.txt 文档中的单词数，可用如下格式：
+   f = open('test.txt', 'r')
+   len([word for line in f for word in line.split()])
+   统计 test.txt 中总的字符数
+   import os
+   os.stat('test.txt').st_size
+   统计 test.txt 中所有非空白的字符数
+   f.seek(0)
+   sum(len(word) for line in f for word in line.split())
+* 31、generator expressions
+** 1、Basic concept and format
+   A generator si a specialized function that allows you to return a value and
+   "pause" the execution of that code and resume it at a later time.
+   Instead of building a list with valuse, generator expressions return a
+   generator that "yields" after processing each item. Because of this,
+   generator expressions are much more memory efficient by performing "lazy
+   evaluation".
+   基本格式：
+   (expr for iter_var in iterable)
+   (expr for iter_var in iterable if cond_expr)
+** 2、Anvanced usage
+   以下的代码要认真理解：
+   统计 test.txt 中最长行的长度：
+   1)普通做法
+
+   f = open('test.txt', 'r')
+   longest = 0
+   while True:
+       linelen = len(f.readline().strip())
+       if not linelen:
+           break
+       if linelen > longest:
+           longest = linelen
+   f.close()
+   return longest
+
+   2)把 test.txt 的所有行同时读到内存中
+
+   f = open('test.txt', 'r')
+   longest = 0
+   allLines = f.readlines()
+   f.close()
+   for line in allLines:
+       linelen = len(line.strip())
+       if linelen > longest:
+          longest = linelen
+   return longest
+
+   3)使用 list comps 多做些事
+   
+   f = open('test.txt', 'r')
+   longest = 0
+   allLines = [x.strip() for x in f.readlines()]
+   f.close()
+   for line in allLines:
+       linelen = len(line)
+       if linelen > longest:
+           longest = linelen
+   return longest
+
+   4)使用 list comps 一次做更多的事
+
+   f = open('test.txt', 'r')
+   allLineLens = [len(x.strip()) for x in f]
+   f.close()
+   return max(allLineLens)
+
+   5)使用 generator expressions 来节省内存
+   f = open('test.txt', 'r')
+   longest = max(len(x.strip()) for x in f)
+   f.close()
+   return longest
+
+   6)更简化的结构
+
+   return max(len(x.strip()) for x in open('test.txt'))
+* 32、list 化为 str
+  有时为了输出的形式更好看，需要把 list 转化为 str 类型，方法为:
+  a_string = ''
+  for i in aList:
+     a_string = ''.join((a_string, str(i)))
+* 33、根据已知格式来格式化输出
+  如已知如下格式:
+  name    phone
+  flyer   150
+  其中 'name' 和 'phone' 是标题，下面的都是程序要计算出的数据，需要与各自的栏目
+  左对齐，则可用
+  print 'name', ' '*4, 'phone'
+  print name_fun()
+  print ' '*(4 - len(name_fun()) + len('name')),
+  print phone_fun()
+  其中 name_fun() 和 phone_fun() 是要自己输出的数据，若它们返回的是数字，则要通
+  过 str() 函数进行转换。
+* 34、File and I/O
+** 1、Basic concepts
+   Files are simply a contiguous sequence of bytes. Anywhere data need to be
+   sent usually involves a byte stream of some sort, whehter the stream occurs
+   as individual bytes or blocks of data.
+   *File methods* come in four differnt categories: Input, output, movement within
+   a file, and miscellaneous.
+   Python makes /stdin, stdout, stderr/ avaiable to you from the *sys*
+   module. Once you import *sys*, you have access to these files as *sys.stdin*
+   *sys.stdout* *sys.stderr*. The /print/ statement normally outputs to
+   *sys.stdout* while the /raw_input()/ built-in function receives its input
+   from *sys.stdin*.
+** 2、Operation
+*** 1、open()
+    file_object = open(file_name, access_mode='r', buffering=-1)
+    'file_name' can be a relative or absolute/full pathname.
+    | File Mode | Operation                                                    |
+    |-----------+--------------------------------------------------------------|
+    | r         | Open for read                                                |
+    | rU or U   | Open for read with Universal NEWLINE support                 |
+    | w         | Open for write (truncate if necessary)                       |
+    | a         | Open for append (always works from EOF, create if necessary) |
+    | r+        | Open for read and write                                      |
+    | w+        | Open for read and write (see /w/ above)                      |
+    | a+        | Open for read and write (see /a/ above)                      |
+    | rb        | Open for binary read                                         |
+    | wb        | Open for binary write (see /w/ above)                        |
+    | ab        | Open for binary append (see /a/ above)                       |
+    | rb+       | Open for binary read and write (see /r+/ above)              |
+    | wb+       | Open for binary read and write (see /w+/ above)              |
+    | ab+       | Open for binary read and write (see /a+/ above)              |
+    The optional argument, /buffering/, is used to indicate the type of
+    buffering that should be performed when accessing the file. A value of *0*
+    means *no buffering* should occur, a value of *1* singals *line buffering*,
+    and any value greater than *1* indicates *buffered I/O* with the given value
+    as the buffer size. The lack of or a negative value indicates that the
+    system default scheme should be used, which is *line buffering* for any
+    teletype or tty-like device and normal buffering for everything else. Under
+    normal circumstances, a /buffering/ value is not given, thus using the
+    system default.
+
+*** 2、file()
+    file() 的用法和 open() 完全一样，可以互相替换。建议用法:
+    Generally, the accepted style is that you use /open()/ for reading/writing
+    files, while /file()/ is best used when you want to show that you are
+    dealing with file objects, i.e., if /instance(f, file)/.
+*** 3、os Module Attributes to Aid in Multiplatform Development
+    *os* Module
+    | Attribute | Description                                           |
+    |-----------+-------------------------------------------------------|
+    | linesep   | String used to separate lines in a file               |
+    | sep       | String used to separate file pathname componets       |
+    | pathsep   | String used to delimit a set of file pathnames        |
+    | curdir    | String name for current working directory             |
+    | pardir    | String name for parent (of current working directory) |
+    Regardless of your platform, these variables will be set to the correct
+    values when you import the /os/ module.
+*** 4、Methods for File Objects
+    | File Object Method              | Operation                                                                                                                                                                                      |
+    |---------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | fobj.close()                    | Closes /fobj/                                                                                                                                                                                  |
+    | fobj.fineno()                   | Returns integer file descriptor for /fobj/                                                                                                                                                     |
+    | fobj.flush()                    | Flushes internal buffer for /fobj/                                                                                                                                                             |
+    | fobj.isatty()                   | Returns True if /fobj/ is a tty-like device and False otherwise                                                                                                                                |
+    | fobj.next()                     | Returns the next line in the file or raises /StopIteration/ if no more lines are avaiable                                                                                                      |
+    | fobj.read(size=-1)              | Reads /size/ bytes of file, or all remaining bytes if /size/ not given or is negative, as a string and return is                                                                               |
+    | fobj.readinto(buf, size)        | Reads /size/ bytes from /fobj/ into buffer /buf/ (unsupported)                                                                                                                                 |
+    | fobj.readline(size=-1)          | Reads and returns one line from /fobj/ (including line-ending Characters), either one full line or a maximum of /size/ characters                                                              |
+    | fobj.readlines(sizhint=0)       | Reads and returns all lines from /fobj/ as a list (includes all line termination characters); if /sizhint/ given and > 0, whole lines are returned consisting of approximately /sizhint/ bytes |
+    | fobj.xreadlines()               | Meant for iteration, returns lines in /fobj/ read as chunks in a more efficient way than /readlines()/                                                                                         |
+    | fobj.seek(off, whence=0)        | Moves to a location within /fobj//off/ bytes offset from /whence/ (0==beginning, 1==current location, 2==end of file)                                                                          |
+    | fobj.tell()                     | Returns current location within /fobj/                                                                                                                                                         |
+    | fobj.truncate(size=file.tell()) | Truncates /fobj/ to at most /size/ bytes, the default being the current file location                                                                                                          |
+    | fobj.write(str)                 | Writes string /str/ to /fobj/                                                                                                                                                                  |
+    | fobj.writeline(seq)             | Writes /seq/ of strings to /fobj/; /seq/ should be an iterable producing strings                                                                                                               |
+*** 5、File Built-in Attributes
+    | File Object Attribute | Description                                                                                                                                                                |
+    |-----------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | fobj.closed           | True if /fobj/ is closed and False otherwise                                                                                                                               |
+    | fobj.encoding         | Encoding that this file uses when Unicode strings are written to file, they will be converted to byte strings using /fobj.encoding/;                                       |
+    | fobj.encoding         | a value of /None/ indicates that the system default encoding for converting Unicode strings should be used                                                                 |
+    | fobj.mode             | Access mode with which /fobj/ was opened                                                                                                                                   |
+    | fobj.name             | Name of /fobj/                                                                                                                                                             |
+    | fobj.newlines         | /None/ if no line separators have been read, a stirng consisting of one type of line separator, or a tuple containing all types of line termination characters read so far |
+    | fobj.softspace        | /0/ if space explicitly required with /print/, /1/ otherwise; rarely used by the programmer, generally for internal use only                                               |
+** 3、Command-Line Arguments
+   The *sys* module provides access to any command-line arguments via
+   *sys.argv*.
+   | sys.argv      | the list of command-line arguments              |
+   | len(sys.argv) | the number of command-line arguments (aka argc) |
+   用之前，要先
+   import sys
+   另外，还有两个 module 用来处理命令行参数， *getopt* 和 *optparse*.
+** 4、File System
+   可通过 *os module* 和 *os.path* module 来访问本地的 File System.
+   Access to your file system occurs mostly through the Python *os* module. This
+   module serves as the primary interface to your operating system facilities
+   and service form Python.
+   In addition to managing processes and the process execution envirionment, the
+   *os* module performs most of the major file system operations that the
+   application developer may wish to take advantage of. These features include
+   removing and renaming files, traversing the directory tree, and managing file
+   accessibilty.
+   具体用法可通过 help() 来查看。
+** 5、Persistent Storage Modules
+** 6、Other Related Modules
+   | Modules         | Contents                                                                    |
+   |-----------------+-----------------------------------------------------------------------------|
+   | base64          | Encoding/decoding of binary strings to/from text strings                    |
+   | binascii        | Encoding/decoding of binary and ASCII-encoded binary strings                |
+   | bz2             | Allows access to BZ2 compressed files                                       |
+   | csv             | Allows access to comma-separated value files                                |
+   | filecmp         | Compares directories and files                                              |
+   | fileinput       | Iterates over lines of multiple input text files                            |
+   | getopt/optparse | Provides comamnd-line argument parsing/manipulation                         |
+   | glob/fnmatch    | Provides Unix-style wildcard character matching                             |
+   | gzip/zlib       | Reads and writes GNU zip (gzip) files (needs /zlib/ module for compression) |
+   | shutil          | Offers high-level file access functionality                                 |
+   | c/StringIO      | Implements file-like interface on top of string objects                     |
+   | tarfile         | Reads and writes TAR archive files, even compressed ones                    |
+   | tempfile        | Generates temporary file names or files                                     |
+   | uu              | uuencode and uudecode files                                                 |
+   | zipfile         | Tools and utilities to read and write ZIP archive files                     |
+* 35、加密
+** 1、crypy
+   用法:
+   import crypt
+   crypt.crypt.(word, salt)
+   把 word 加密成 string 类型的数据，其中, salt 是两位的字符串，用来选择 DES 的
+   4096 种变体中的一种。salt 中的字符可以是 '.'、'/' 或字母数字。
+   返回的结果的前两位是 salt 代表的两位的字符。
+* 36、Functions
+** Return value
+   When no items are explicitly returned or if *None* is returned, then Python
+   returns *None*. If the function returns exactly one object, then that is the
+   object that Python returns and the type of that object stays the same. If the
+   function returns multiple objects, Python gathers them all together and
+   returns them in a tuple.
+** keyword arguments
+   这种调用函数的方法允许不按默认的参数顺序，如
+   def net_conn(host, port):
+       net_conn_suite
+   可用如下方法调用
+   net_conn('chino', 8080)
+   或
+   net_conn(port=8080, host='kappa')
+
+** formal arguments
+*** positional arguments
+    Positional arguments must be passed in the exact order in which they are
+    defined for the funcitons that are called.
+*** default arguments
+    All positional arguments must come before any default arguments.
+** Variable-Length Arguments
+*** Non-keyword Variable Arguments (Tuple)
+    格式:
+    def function_name([formal_args, ] *vargs_tuple):
+        'function_body_suite'
+*** Keyword Variable Arguments (Dictionary)
+    格式:
+    def function_name([formal_args, ] [*vargst, ] **vargsd):
+        'function_body_suite'
+** Functional Programming
+*** Anonymous Functions and /lambda/
+    An entire lambda "statement" represents an expression, and the body of that
+    expression must also be given on the same line as the declaration.
+
+    Syntax:
+    lambda [arg1 [, arg2, ..., argN]]: expression
+
+    Calling /lambda/ with an appropriate expression yields a function object
+    that can be used like an other funciton.
+*** Built-in Functions: apply(), filter(), map(), reduce()
+** Generators
+* 38、定义全局变量
+  global var1[, var2 [, var3 ...]]
+* 39、Modules
+** Brief
+   *Modules* are a means to organize Python code, and *packages* help you
+   organize modules.
+   In a nutshell, modules are self-contained and organized pieces of Python code
+   that can be shared.
+** Seach Path
+   A default search path is automatically defined either in the compilation or
+   installation process. This search path may be modified in one of two places.
+
+   One is the *PYTHONPATH* envirionment variable set in the /shell/ or
+   comamnd-line interpreter that invokes Python. The contents of this variable
+   consist of a colon-delimited set of dictionary paths. if you want the
+   interpreter to use the contents of this variable, make sure you set or update
+   it before you start the interpreter or run a Python script.
+   
+   once the interpreter has started, you can access the path itself, which is
+   stored in the *sys* module as the *sys.path* variable. Rather tahn a single
+   string that is colon-delimited, the path has been "split" into a list of
+   individual directory strings.
+    
+   若想修改搜索路径的话，可通过如下方法:
+   sys.path.append('路径')
+   或
+   sys.path.insert(位置，'路径')
+
+   查看已载入模块的方法
+   print sys.modules
+** Namespaces
+   A *namespace* is a mapping of names (identifiers) to objects. The process of
+   adding a name to a namespace consists of binding the identifier to the object
+   (and increasing the reference count to the object by one). The Python
+   Language Reference also includes the following definitions: "changing the
+   mapping of a name is called *rebinding* [, and] removing a name is
+   *unbinding* ."
+
+   The *__builtins__*  module consists of a set of build-in names for the built-ins
+   namespaces. Most, if not all, of these names come from the *__builtin__*
+   module, which is a module of the built-in functions, exceptions, and other
+   attributes. in standard Python execution, *__builtins__* contains all the
+   name from *__builtin__* .
+** Namespaces and Variable Scope
+   *Namespaces* are purely mappings between names and objects, but *scope* 
+   dictates how, rather where, one can access these names based on the physical
+   location from within your 
+** Module ordering for /import/ statements
+   It is recommended that all modules imports happen at the top of Python
+   modules. Furthermore, imports should follow this ordering:
+   1)Python Standard Library modules
+   2)Python third party modules
+   3)Application-specific modules
+   Separate these groups with an empty line between the imports of these three
+   types of modules. This helps ensure that modules are imported in a consistant
+   manner and helps minimize the number of *import* statements required in each
+   of the modules.
+** 给载入的模块另起个名字
+   import Tkinter
+   tk = Tkinter
+   del Tkinter
+   或
+   import Tkinter as tk
+   from cgi import FieldStorage as form
+* 40、查看 Python 哲学
+  import this
+* 41、Object-Oriented Programming
+** Brief
+   The "mother of all classes" is *object*. If you don't have any ancestor to
+   inherit from, use *object* as your default. It must exist at the top of every
+   class hierarchy. If you do not subclass *object* or a class that subclasses
+   *object* , then you have defined a /classic class/.
+   If you do not specify a parent class, or if you subclass a base class without
+   a parent class, you have created a classic class.	
+   *Everything in Python is an object.*
+** Class as a container
+   可把类用作命名空间，如下例:
+
+   class MyData(object):
+       pass
+   mathObj = MyData()
+   mathObj.x = 4
+   mathObj.y = 5
+   print mathObj.x + mathObj.y
+** Method and self
+   The *self* keyword must be present in all method declarations. That argument,
+   representing the instance object, is passed to the method implicitly by the
+   interpreter when you invoke a method on an instance.
+   It is all part of Python's philosophy of being explicitly clear.
+   Requiring the instantce only applies to regular methods and not static or
+   class methods, although the latter requires the class the class rather than
+   the instance.
+** 在子类中调用基类的构造函数
+   Each subclass must define its own constructor if desired, otherwise the base
+   class constructor will be called. However, if a subclass overrides a base
+   class constructor, the base class constructor will not be called
+   automatically, such a request must be made explicitly.
+   假设已经定义了类 AddrBookEntry，然后在子类中调用它的构造函数，如下:
+   
+   class EmplAddrBookEntry(AddrBookEntry):
+       'Employee Address Book Entry class'
+       def __init__(self, nm, ph, id, em):
+           AddrBookEntry.__init__(self, nm, ph)
+	   self.empid = id
+	   self.email = em
+
+       def updateEmail(self, newem):
+           self.email = newem
+	   print 'Updated email address for:', self.name
+** Some Concepts
+*** Abstraction/Implementation
+    /Abstracttion/ refers to the modeling of essential aspects, behavior, and
+    characteristics of real-word problems and entities, providing a relevant
+    subset as the definition of a programmatic structure that can realize such
+    models. Abstractions not only contain the data attributes of such a model,
+    but also define interfaces with that data. An /Implmentation/ of such an
+    abstraction is the realization of that data and the interfaces that go
+    along with it. Such a realization should remain hidden from and irrelevant
+    to the client programmer.
+*** Encapsulation/Interfaces
+    /Encapsulation/ describes the concept of data/information hiding and
+    providing interfaces or accessor function to the data attributes. Direct
+    access to data by any client, bypassing the interfaces, goes against the
+    principles of encapsulation, but the programmer is free to allow such
+    access. As part of the implementation, the client should not even kown how
+    the data attributes are architected within the abstraction. In Python, *all*
+    *class attributes are public*, but names may be "mangled" to discourage
+    unauthorized access, but otherwise not prevented. It is up to the designer
+    to provide the appropriate interfaces to the data so that the client
+    programmer does not have to resort to manipulating the encapsulated data
+    attributes.
+*** Composition
+    Composition enables multiple yes distinct classes to be combined into a
+    larger entity to solve a real-word problem. Composition describes a
+    singular, complex system such as a class made up of other, smaller
+    components such as other classes, data attributes, and behaviors, all of
+    which are combined, embodying "has-a" relationships.
+*** Derivation/Inheritance/Hierarchy
+    /Deriavtion/ describes the creation of subclasses, new classes that retain
+    all desired data and behavior of the existing class type but permit
+    modification or other customization, all without having to modify the
+    original class definition.
+    /Inheritance/ describes the means by which attributes of a subclass are
+    "bequeathed from" an ancestor class.
+    /Hierarchy/ describes multiple "generations" of derivation which can be
+    depicted graphically as a "family tree" with successive subclasses having
+    relationships with ancestor classes.
+*** Generalization/Specialization
+    /Generalization/ describes all the traits a subclass has with its parent and
+    ancestor classes, so subclasses are considered to have an "is-a"
+    relationship with ancestor classes because a derived object (instance) is an
+    "example" of an ancestor class.
+    /Specialization/ is the term that describes all the customization of a
+    subclass, i.e., what attributes make it differ from its ancestor classes.
+*** Polymorphism
+    The concept of /polymorphism/ describes how objects can be manipulation and
+    accessed using attributes and behaviors they have in common without regard
+    to their specific class. Polymorphism indicates the presence of dynamic
+    (aka late, runtime) binding, allowing for overriding and runtime type
+    determination and verification.
+*** Introspection/Reflection
+    /Introspection/ is what gives you, the programmer, the ability to perform an
+    activity such as "manual type checking." Also called /reflection/, this
+    property describes how information about a particular object can be accessed
+    by itself during runtime. The *dir()* and *type()* built-in functions would
+    have a very difficult time working if Python did not support some sort of
+    introspection capability. Keep an eye out for these calls as well as for
+    special attributes like /__dict__, __name__, __doc__/ .
+** Classes
+*** Brief
+    Python does not support /pure virtual function/ or /abstract methods/ ,
+    which coerce the programmer to define a method in a subclass. As a proxy,
+    you can simply raise the *NoImplementedError* exception in the base class
+    method to get the same effect.
+*** Attributes
+    One interesting side note about attributes is that when you are accessing an
+    attribute, it is also an object and may have attributes of its own which you
+    can then access, leading to a chain of attributes.
+    In general, all methods in Python have the same restriction: they require an
+    instance before they can be called.
+    
+    有两种类型的 attributes, 即 *classs attributes* 和 *instance attributes* 。
+    在类中直接定义的是 *class attributes* ，它们相当于 C++ 和 Java 中的类的
+    static 类型的属性。用户在实例化一个类后再添加的属性是 *instance attributes* .
+    Static members are generally used only to track values associated with
+    classes. They represent data that is tied to the class object they belong to
+    and are independent of any class.
+
+    Methods are inherently attributes of the class they are defined in, even if
+    they are almost always invoked via an object.
+*** Determining Class Attributes
+    /dir()/ returns a list of (just the) names of an object's attributes while
+    /__dict__/ is a dictionary whose attribute names are the keys and whose
+    values are the data value of the corresponding attribute objects.
+*** Special Class Attributes
+    For any class /C/, there are a list of all of the special attributes of /C/:
+
+    | C.__name__   | string name of class /C/                                   |
+    | C.__doc__    | documementation string for class C                         |
+    | C.__bases__  | tuple of class /C/'s parent classes                        |
+    | C.__dict__   | attributes of /C/                                          |
+    | C.__module__ | module where /C/ is defined                                |
+    | C.__class__  | class of which /C/ is an instance (new style classes only) |
+    
+    The documentation string is not inehrited by derived classes, an indication
+    that they must contain their own documentation strings.
+*** Class Attributes
+    data and methods.
+** Instances
+*** Brief
+    Keep in mind that when you define a class, you are not creating a new type,
+    just a new class object; and for 2.2 and after, when you define a
+    (new-style) class, you are creating a new type.
+*** __init__()  "Constructor" method
+    When the class is invoked, the first step in the instantiation process is to
+    create the instance object. Once the object is avaiable, Python checks if an
+    /__init__/ method has been implemented. By default, no sepecial actions are
+    enacted on the instance without the definition of (or the overriding) of the
+    special method /__init__()/. Any special action desired requires the
+    programmer to implement /__init__()/, overriding its default behavior. If
+    /__init__()/ has not been implemented, the object is then returned and the
+    instantiation process is complete.
+    If /__init__()/ has been implemented, then that special method is invoked
+    and the instance object passed in as the first argument (self). Any
+    arguments passed to the class invocation call are passed on to /__init__()/.
+    
+    You don't call /new/ to create an instance.
+    /__init__()/ is simply the first method that is called after the interpreter
+    creates an instance for you in case you want to prep the object a little bit
+    more before putting it to use.
+*** __new__() "Constructor" method
+    The /__new__()/ special method bears a much closer resemblance to a real
+    construtor than /__init__()/.
+    It is the responsibility of /__new__()/ to call a superclass /__new__()/  to
+    create the object (delegating upward).
+    The reason why we say that /__new__()/ is more like a construtor than
+    /__init__()/ is that it has to return a valid instance so that the
+    interpreter can then call /__init__()/ with that instance as self. Calling a
+    superclass /__new__()/ to create the object is just like using a *new*
+    keyword to create an object in other languages.
+    /__new__()/ and /__init__()/ are both passed the (same) arguments as in the
+    class creatino call.
+*** __del__() "Destructor" Method
+    Due to the way Python manages garbage collection of objects (by reference
+    counting), this function is not executed until all references to an instance
+    object have been removed. 
+    Destruction in Python are methods that provide special processing before
+    instance are deallocated and are not commonly implemented since instance are
+    seldom deallocated explicitly.
+    If you do override /__del__()/, be sure to call any parent class /__del__()/
+    first so these pieces can be adequately deallocated.
+    
+    Note:
+    1) Do not forget to call a superclass /__del__()/ first
+    2) Invoking *del x* does not call /x.__del__()/. It just decrements the
+       reference count of *x*
+    3) If you have a cycle or some other cause of lingering references to an
+    instance, an object's /__del__()/ may never be called.
+    4) Uncaught exception in /__del__()/ are ignored (because some variables used
+    in /__del__()/ may have already been deleted). Try not to do anything in
+    /__del__()/ not related to an instance.
+    5) Implementing /__del__()/ is not a common occurence, only do it if you
+    really know what you are doing.
+    6) If you define /__del__()/, and instance is part of a cycle, the garbage
+    collector will not break the cycle, you have to do it yourself by explicitly
+    using /del/.
+
+    Python does nto provide any internal mechanism to track how many instances
+    of a class have been created or to keep tabs on what they are. You can
+    explicitly add some code to the class definition and perhaps /__init__()/
+    and /__del__()/ if such functionality is desired. The best way is to keep
+    track of the number of instances using a static member. It would be
+    dangerous to keep track of instance objects by saving references to them,
+    because you must manage these references properly or else your instances
+    will never be deallocated (because of your extra reference to them).
+** Instance Attributes
+*** Brief
+    Instances have only data attribute (methods are strictly class attributes)
+    and are simply data values that you want to be associated with a particular
+    instance of any class and are accessible via the dotted-attribute
+    notation. These values are independent of any other instance or of the class
+    it was instantiated. When an instance is deallocated, so are its attributes.
+*** "Instantiating" Instance Attributes
+    Instance attributes can be set any time after an instance has been created,
+    in any piece of code that has access to the instance. One of the key places
+    where such attributes are set is in the construtor, /__init__()/.
+
+    Being able to create an instance attribute "on-the-fly" is one of the greate
+    features of Python classes. Python is not only dynamically typed but also
+    allows for such dynamic creation of object attributes during run-time.
+    Python gives you a new feature you were not used to before, but if you use
+    it, you need to be more careful, too.
+*** __init__() Should Return None
+    If a construtor is defined, it should not return any object because the
+    instance object is automatically returned after the instantiation
+    call. /__init__()/ should not return any object (or return *None*);
+    otherwise, there is a conflict of interest because only the instance should
+    be returned. Attempting to return any object other than *None* will return a
+    *TypeError* exception.
+*** Sepcial Instance Attributes
+    Instances have only two special attributes. For intance /I/ :
+    
+    | I.__class__ | class from which I is instantiated |
+    | I.__dict__  | attributes of I                    |
+
+    Although the /__dict__()/ attribute for both classes and instances are
+    mutable, it is recommended that you not modify these dictionaries unless or
+    untill you know exactly what you are doing. Such modification contaminates
+    your OOP and may have unexpected side effect. It is more acceptable to
+    access and manipulate attributes using the dotted-attribute notation. One of
+    the few cases where you would modify the /__dict__()/ attribute directly is
+    when you are overriding the /__setattr__/ special method.
+*** Built-in Type Attributes
+    Built-in types are classes, too. We can use /dir()/ to get their attributes.
+*** Instance Attributes versus Class Attributes
+    _Class Attributes_ are simply data vlaues associated with a class and not
+    nay particular instances like instance attributes are. Such values are also
+    referred to as static members because their values stay constant, even if a
+    class is invoked due to instantiation multiple times.
+
+    Classes and instances are both namespaces. Classes are namespaces for class
+    attributes. Instances are namespaces for instance attributes.
+
+    You can access a class attribute with either the class or an instance,
+    provided that the instance does not have an attribute with the same name.
+
+    若通过 instances 访问某个 attribute, Python 的搜索顺序是:若在 instance 的
+    namespace 中没找到该 attribute，则在 class 的 namespace 找; 若在 class 的
+    namespace 中没找到，则在 class 的父类的 namespace 中找，若仍没找到，则抛出异
+    常。
+
+    It perilous to try and modify a class attribute by using an instance
+    attribute. The reason is because instances have their own set of attributes,
+    and there is no clear way in Python to indicate that you want to modify the
+    class attribute of the same name in an instances namespace. 
+    Always modify a class attribute with the class name, not an instance.
+** Binding and Method Invocation
+*** Brief
+    Methods can be called only when there is an instance of the class upon which
+    the method is invoked. When there is an instance present, the method is
+    considered /bound/ to that intance. Without an instance, a method is
+    considered /unbound/.
+    
+    The first argument in any method definition is the variable *self*, which
+    represents the instance object invoking the method.
+    If you do not use *self* in your method, you might consider creating a
+    regular function instead, unless you have a particular reason not to.
+    In other object-oritened languages, *self* may be named *this*.
+** Inheritance
+*** Overriding Methods through Inheritence
+    The nice thing about using /super()/ is that you do not need to give any
+    base class name explicitly. It does all the legwork for you . The importance
+    of using /super()/ is that you are not explicitly specifying the parent
+    class. This means that if you change the class hierarchy, you only need to
+    change one line. One example:
+
+    class C(P):
+        def __init__(self):
+	    super(C, slef).__init__(self)
+	    pritn "Calling C's constructor"
+*** Multiple Inheritance
+    There are two different aspects to remember when using multiple
+    inheritance. The first is being able to find the correct attribute. Another
+    is when you have overriden methods, all of which call parent class methods
+    to "take care of their responsibilities" while the child class takes care of
+    its own obligation.
+    MRO: Method Resolution Order
+    
+    New-style classes have an /__mro__/ attribute that tells you what the search
+    order.
+
+    Classic classes have a depth-first MRO algorithm.
+    New-style classes have a breadth-first MRO algorithm.
+* 42、Errors and Exceptions
+** 1、Errors/Exception
+*** Notice
+    其中, KeyboardInterrupt 和 SystemExit 不算 exceptions, 它们是正常情况
+*** 1、BaseException
+    Root class for all exceptions.
+*** 2、SystemExit
+    Request termination of Python interprete
+*** 3、KeyboardInterrupt
+    当用户按下 C-c 时。User interrupted execution.
+*** 4、Exception
+    Root class for regualr exceptions.
+*** 5、StopIteration
+    Iteration has no further valuse.
+*** 6、GeneratorExit
+    Exception sent to generator to tell it to quit.
+*** 7、StandarError
+    Base class for all standard built-in exceptions.
+*** 8、ArithmetricError
+    Base class for all numeric calculation errors.
+*** 9、FloatingPointError
+    Error in floating point calculation.
+*** 10、OverflowError
+    Calculatoin exceeded maximum limit for numerical type.
+*** 11、ZeroDivisonError
+    Division by any numeric zero.
+*** 12、AssertionError
+    Failure of *assert* statement.
+*** 13、AttributeError
+    Attempt to access an unknown object attribute.
+    No such object attribute,
+*** 14、EOFError
+    End-of-file marker reached without input from built-in
+*** 15、EnvironmentError
+    Base class for operating system envirionment errors.
+*** 16、IOError
+    Any type of I/O error raises an /IOError/ exception.
+*** 17、WindowsError
+    MS Windows system call failure.
+*** 18、ImportError
+    Failure to import module or object.
+*** 19、LookupError
+    Base class for invalid data lookup errors.
+*** 20、IndexError
+    Attempting to retrieve a sequence element with an index outside of the
+    length of the sequence results in an *IndexError* exception.
+    No such index in sequence.
+*** 21、KeyError
+    Request for a non-existent dictionary key.
+    No such key in mapping.
+*** 22、MemoryError
+    Out-of-memory error (non-fatal to Python interpreter).
+*** 23、NameError
+    Attempt to access an undeclared variable.
+    Accessing a variable entails a search by the interpreter, and if the name
+    requested is not found in any of the namespaces, a /NameError/ exception
+    will be generated.
+    Undeclared/uninitialized object (non-attribute).
+*** 24、UnboundLocalError
+    Access of an uninitialized local variable.
+*** 25、ReferenceError
+    Weak reference tried to access a garbage-collected object.
+*** 26、RuntimeError
+    Generic default error during execution.
+*** 27、NotImplementedError
+    Unimplemented method.
+*** 28、SyntaxError
+    Python interpreter syntax error.
+    /SyntaxError/ exceptions are the only ones that do not occur at
+    run-time. They indicate an improperly constructed piece of Python code which
+    cannot execute untill corrected. These errors are generated at compile-time,
+    when the interpreter loads and attempts to convert your script to Python
+    bytecode. These may alos occur as a result of importing a faulty module.
+*** 29、IndentationError
+    Improper indentation.
+*** 30、TabError
+    Improper mixture of TABs and spaces
+*** 31、SystemError
+    Generic interpreter system error.
+*** 32、TypeError
+    Invaild operation for type.
+*** 33、ValueError
+    数据不存在时。 
+    Invalid argument given.
+** 2、Detecting and Handling Exceptions
+   Exceptions can be detected by incorporating them as part of a /try/
+   statement. Any code suite of a /try/ statement will be monitored for
+   Exceptions.
+   There are two main forms fo the /try/ statement: *try-except* and
+   *try-finally*. These statements are mutually exclusive, meaning that you pick
+   only one of them. A /try/ statement can be accompained by one or more
+   /except/ clauses, exaclty one /finally/ clause, or a hybrid
+   *try-except-finally* combination.
+   *try-except* statements allow one to dectect and handle exceptions. There is
+   even an optional /else/ clause for situations where code needs to run only
+   when no exceptions are detected. Meanwhile, *tyr-finally* statements allow
+   only for detection and processing of any obligatory cleanup (whether or not
+   exceptions occur), but otherwise have no facility in dealing with
+   exceptions. The combination does both.
+
+** 3、try-except
+   Basic format:
+
+   try:
+       try_suite         # watch for excpetions here
+   except Exception[, reason]:
+       except_suite      # exception-handling code
+   
+    In general, any number of exceptions can follow an /except/ statement as
+    long as they are all properly enclosed in a tuple.
+
+    try:
+        try_suite
+    except (Exc1[, Exc2[, ... ExcN]])[, reason]:
+        except_suite
+    
+    可用如下语句处理所有的异常:
+    
+    try:
+        try_suite
+    except Exception, e:     # 'e' can be substituted by any word
+        # error occured, log 'e', etc
+
+    还可简化为:
+
+    try:
+        try_suite
+    except:
+        # error occured, log 'e', etc
+
+    但有 KeyboardInterrupt 和 SystemExit 是特殊情况，要特别处理：
+   
+    try:
+        try_suite
+    except (KeyboardInterrupt, System):
+        # user wants to quit
+        raise                    # reraise back to caller
+    except:
+        # error occured, log 'e', etc
+** 4、try-finally
+   A /finally/ clause is one where its suite or block of code is executed
+   regardless of whether an exception occurred or whether it was caught or not.
+   The *try-finally* statement differs from its *try-except* bretheren in that
+   it is not used to handle exception, instead it is used to maintain consistent
+   behavior regardless of whether or not exceptions occur.
+   When an exception does occur within the /try/ suite, execution jumps
+   immediately to the /finally/ suite. When all the code in the /finally/ suite
+   completes, the exception is reraised for handling at the next higher
+   layer. Thus it is common to see a *try-finally* nested as part of a
+   *try-except* suite.
+   If the code in the /finally/ suite raises another excpetion, or is aborted
+   due to a *return* *break* or *continue* statement, the original exception is
+   lost and cannot be reraised.
+** 5、Python 如何处理 exception
+   The remaining code in the /try/ suite from the point of the exception is
+   never reached (hence never executed). Once an exception is raised, the race
+   is on to decide on the continuing flow of control. The remaining code is
+   skipped, and the search for a handler begins. If one is found, the program
+   continues in the handler.
+   If the search is exhausted without finding an appropriate handler, the
+   exception is tehn propagated to the caller's level for handling, meaning the
+   stack frame immediately preceding the current one. If there is no handler at
+   the next higher level, the excpetion is yet again propagated to its
+   caller. If the top level is reached without an appropriate handler, the
+   exception is considered /unhandled/, and the Python interpreter will display
+   the traceback and exit.
+** 6、Context Management
+** 7、Raising Exceptions
+** 8、Assertions
+* 43、服务器接口 
+  我知道的有三种方式: cgi、mod_python、WSGI
+* 44、安装 egg 文件
+  # easy_install egg文件

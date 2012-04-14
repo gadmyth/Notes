@@ -1,0 +1,463 @@
+* 《Lucene in Action》 目录
+** PART1 Core Lucene 
+*** 1)Meet Lucene
+    1.1 Dealing with information explosion
+    1.2 What is Lucene?
+    1.3 Lucene and the components of a search application
+    1.4 Lucene in action: a sample application
+    1.5 Understanding the core indexing classes
+    1.6 Understanding the core searching classes
+    1.7 Summary
+*** 2)Building a search index
+    2.1 How Lucene models content 
+    2.2 Understanding the indexing process
+    2.3 Basic index operations
+    2.4 Field options
+    2.5 Boosting documents and fields
+    2.6 Indexing numbers, dates, and times
+    2.7 Field truncation
+    2.8 Near-real-time search
+    2.9 Optimizing an index
+    2.10 Other directory implementations
+    2.11 Concurrency, thread saftey, and locking issues
+    2.12 Debugging indexing
+    2.13 Advanced indexing concepts
+    2.14 Summary
+*** 3)Adding search on your applicaiton
+    3.1 Implementing a simple search feature
+    3.2 Using IndexSearcher
+    3.3 Understanding Lucene scoring
+    3.4 Lucene's diverse queries
+    3.5 Parsing query expressions: QueryPareser
+    3.6 Summary
+*** 4)Lucene's analysis process
+    4.1 Using analyzers
+    4.2 What's inside an analyzer?
+    4.3 Using the built-in analyzers
+    4.4 Sounds-like querying
+    4.5 Synonyms, aliases, and words that mean the same
+    4.6 Stemming analysis
+    4.7 Field variations
+    4.8 Language analysis issues
+    4.9 Nutch analysis
+    4.10 Summary
+*** 5)Advanced search techniques
+    5.1 Lucene's field cache
+    5.2 Sorting search results
+    5.3 Using MultiPhraseQuery
+    5.4 Queryting on multiple fields at once
+    5.5 Span queries
+    5.6 Filtering a search
+    5.7 Custom scoring using function queries
+    5.8 Searching across multiple Lucene indexes
+    5.9 Leveraging term vectors
+    5.10 Loading fields with FieldSelector
+    5.11 Stopping a slow search
+    5.12 Summary
+*** 6)Extending search
+    6.1 Using a custom sort method
+    6.2 Developing a custom Collector
+    6.3 Extending QueryPareser
+    6.4 Custom filters
+    6.5 Payloads
+    6.6 Sumamry
+** PART2 Applied Lucene
+*** 7)Extracting text with Tika
+    7.1 What is Tika?
+    7.2 Tika's logical design and API
+    7.3 Installing Tika
+    7.4 Tika's built-in text extraction tool
+    7.5 Extracting text programmatically
+    7.6 Tika's limitaions
+    7.7 Indexing custom XML
+    7.8 Alternatives
+    7.9 Summary
+*** 8)Essential Lucene extensions
+    8.1 Luke, the Lucene Index Toolbox
+    8.2 Analyzer, tokenizer, and TokenFilters
+    8.3 Highlighting query terms
+    8.4 FastVectorHighlighter
+    8.5 Spell checking
+    8.6 Fun and interesting Query extensions
+    8.7 Building contrib modules
+    8.8 Summary
+*** 9)Further Lucene extensions
+    9.1 Chaining filters
+    9.2 Storing an index in Berkeley DB
+    9.3 Synonyms from WordNet
+    9.4 Fast memory-based indices
+    9.5 XML QueryParser: Beyond "one box"
+    9.6 Surround query language
+    9.7 Spatial Lucene
+    9.8 Searching multiple indexes remotely
+    9.9 Flexible QueryParser
+    9.10 Odds and ends
+    9.11 Summary
+*** 10)Using Lucene from other programming languages
+    10.1 Ports primer
+    10.2 CLucene (C++)
+    10.3 Lucenen.Net (C# and other .NET languages)
+    10.4 KinoSearch and lucy(Perl)
+    10.5 Ferret (Ruby)
+    10.6 PHP
+    10.7 PyLucene(Python)
+    10.8 Solr(many programming languages)
+    10.9 Summary
+*** 11)Lucene administration and performance tuning
+    11.1 Performance tuning
+    11.2 Threads and concurrency
+    11.3 Managing resource consumption
+    11.4 Hot backups of the index
+    11.5 Common errors
+    11.6 Summary
+** PART3 Case Studies
+*** 12)Case study1: Krugle
+    12.1 Introducing Krugle
+    12.2 Appliance architecture
+    12.3 Search performance
+    12.4 Parsing source code
+    12.5 Substring searching
+    12.6 Query vs. search
+    12.7 Future improvements
+    12.8 Summary
+*** 13)Case study2: SIREn
+    13.1 Introduing SIREn
+    13.2 SIREn's benefits
+    13.3 Indexing entities with SIREn
+    13.4 Searching entities with SIREn
+    13.5 Integrating SIREn in Solr
+    13.6 Benchmark
+    13.7 Summary
+*** 14)Case study3: LinkedIn
+    14.1 Faceted search with Bobo Browse
+    14.2 Real-time search with Zoie
+    14.3 Summary
+* Chapter 1
+** brief
+   Lucence's core JAR is only 1MB, and it has no dependecies.
+   遇到问题时，向 java-user@lucene.apache.org 发邮件。
+   
+   A search application starts with an indexing chain, which in turn requires
+   separate steps to retrieve the raw content; create documents from the
+   content, possibly extracting text from binary documents; and index the
+   documents. Once the index is built, the components required for searching are
+   equally diverse, including a user interface, a means of building up a
+   programmatic query, query execution (to retrieve matching documents), and
+   results rendering.
+** what's lucene
+   Lucene is a software library, a tookit if you will, not a full-featured
+   search application. It concerns itself with text indexing and searching, and
+   it does those things very well. Lucene lets your application deal with
+   business rules specific to its problem domain while hiding the complexity of
+   indexing and searching behind a simple-to-use API. Lucene is the core that
+   the application wraps around.
+** document filter
+*** Tika
+*** DBSight
+*** Hibernate Search
+*** LuSQL
+*** Compass
+** the reason of indexing
+   It's important to remember that indexing is something of a necessary evil
+   that you must undertake in order to provide a good search experience: you
+   should design and customize your indexing process only to the extent that you
+   improve your user's search experience.
+** indexing
+*** brief
+    Indexing processes the original data into a highly efficient cross-reference
+    lookup in order to facilitate rapid searching.
+    To search large amounts of text quickly, you must first index that text and
+    convert it into a format that will let you search it rapidly, eliminating the
+    slow sequential scanning process. This conversion process is called
+    /indexing/, and its output is called an /index/.
+    我觉得 indexing 就是把大的数据根据制定的规则分成不同的部分，然后给不同的部分
+    起个名称，搜索时根据关键词找到符合的块，进行局部搜索。它所形成的数据结构类似
+    于 hash table，提供了 *随机存取* 功能。
+*** acquire content
+**** brief
+     这就要通过爬虫程序来抓取原始数据，可以自己写爬虫程序，也可以采用开源的程序。
+**** Solr
+     It has support for natively ingesting relational databases and XML feeds,
+     as well as handling rich documents throuth Tika integration.
+**** Nutch
+     It has a high-scale cralwer that's suitable for discovering content by
+     cralwing websites.
+**** Grub
+**** Heritrix
+     It's Internet Archive's open source crawler.XS
+**** Droids
+**** Aperture
+     It has support for crawling websites, file systems, and mail boxes and for
+     extracting and indexing text.
+**** The Google Enterprise Connector Manager Project
+     It provides connectors for a number of nonweb repositories.
+*** build document
+    Once you have the raw content that needs to be indexed, you must translate
+    the content into the /units/ (usually called document) used by the search
+    engine. The document typically consists of several separately named fields
+    with values, such as /title, body, abstract, author, and url/.
+    
+    对于非文本类的数据，如 PDF 等类型的文件，在生成 document 之前，需要使用
+    document filters 来从这样的文件中提取出所用的文本数据。
+    
+    One common part of building the document is to inject boosts to individual
+    documents and fields that are deemed more or less important.
+    Boosting may be done statically (per document and field) at indexing time,
+    or dynamically during searching.
+    
+    The textual fields in a document can't be indexed by the search engine just
+    yet. In order to do that, the text must first be analyzed.
+
+    Lucene provides an API for building fields and documents, but it doesn't
+    provide any logic to build a document because that's entirely application
+    specific.
+
+    这是对获得的数据的粗加工，只是把原始数据构建成了 document 类型的数据，每个
+    document 中包含不同的 field.
+*** document filter
+    Tika.
+*** analyze document
+    No search engine indexes text directly, rather, the text must be broken into
+    a series of individual atomic elements called /tokens/. This is what happens
+    during the Analyze Document step. Each token corresponding roughly to a
+    "word" in the language, and this step determines how the textual fields in
+    the doucument are divided into a series of tokens.
+    
+    这是对粗加工后的数据精加工，提取出数据的特征，分析其中的异同以便提高搜索的精 
+    度。
+*** index document
+    During the indexing step, the document is added to the index. Lucene
+    provides everything necessary for this step.
+*** summary
+    It's important to remember that indexing is something of a necessary evil
+    that you must undertake in order to provide a goode search experience: you
+    should design and customize your indexing process only to the extent that
+    you improve your user's search experience.
+** search
+*** brief
+    Searching is the process of looking up words in an index to find documents
+    where they appear. The quality of a search is typically described using
+    *precision* and *recall* metrics. *Recall* measures how well the search
+    system finds relevant documents; *Precision* measures how well the system
+    filters out the irrelevant documents.
+    从这里可以了解到，看待搜索结果主要从两方面，搜索结果与目的关联性是否比较大，
+    搜索结果是否过滤了不相关的内容。
+*** search user interface
+*** build query
+    
+** the core indexing classes
+*** IndexWriter
+   /IndexWriter/ is the central component of the indexing process. This class
+   creates a new index or opens an existing one, and adds, removes, or updates
+   documents in the index. Think of /IndexWriter/ as an object that gives you
+   write access to the index but doesn't let you read or search
+   it. /IndexWriter/ needs somewhere to store its index, and that's what
+   /Directory/ is for.
+*** Directory
+   The /Directory/ class represents the location of a Lucene index. It's an
+   abstract class that allows its subclasses to store the index as they see fit.
+   /IndexWriter/ can't index text unless it's first been broken into separate
+   words, using an analyzer.
+*** Analyzer
+   Before text is indexed, it's passed through an analyzer. The analyzer,
+   specified in the /IndexWriter/ constructor, is in charge of extracting those
+   tokens out of text that should be indexed and eliminating the rest. if the
+   content to be indexed isn't plain text, you should first extract plain text
+   from it before indexing. /Analyzer/ is an abstract class, but Lucene comes
+   with serveral implementations of it. Some of them deal with skipping stop
+   words (frequently used words that don't help distinguish one document from
+   the other, such as /a, an, the, in, and on/); some deal with conversion of
+   tokens to lowercase letters, so that searches aren't case sensitive; and so
+   on. Analyzers are an important part of Lucene and can be used for much more
+   than simple input filtering. For a developer integrating Lucene into an
+   application, the choice of analyzer(s) is a critical element of application
+   design.
+   The analysis process requires a document, containing separate fields to be
+   indexed.
+*** Document
+   _Lucene only deals with text and numbers_. Lucene's core doesn't itself
+   handle anything but /java.lang.String/, /java.io.Reader/, and native numeric
+   types (such as int or float).
+*** Field
+   Each field has a name and corresponding value, and a bunch of options that
+   control precisely how Lucene will index the field's value.
+   *A document may have more than one field with the same name* . In this case,
+   the values of the fields are appended, during indexing, in the order they
+   were added to the document. When searching, it's exactly as if the text from
+   all the fields were concatenated and treated as a single text field.
+** Understanding the core searching classes
+*** IndexSearcher
+   /IndexSearcher/ is to searching what /IndexSearcher/ is to indexing:
+   the central link to the index that exposes several search
+   methods. You can think of /IndexSearcher/ as a class that opens an
+   index in a read-only mode. It requires a /Directory/ instance,
+   holding the previously created index, and then offers a nubmer of
+   search methods, some of which are implemented in its abstract
+   parent class /Searcher/; the simplest takes a /Query/ object and an
+   /int topN/ count as parameters and returns a /TopDocs/ object. A
+   typical use of this method looks like this:
+
+   Directory dir = FSDirectory.open(new File("/tmp/index"));
+   IndexSearcher searcher = new IndexSearcher(dir);
+   Query q = new TermQuery(new Term("contents", "lucene"));
+   TopDocs hits = searcher.search(q, 10);
+   searcher.close();
+*** Term
+   A /Term/ is the basic unit for searching. Similar to the /Field/
+   object, it consists of a pair of string elements: the name of the
+   field and the word (text value) of that field. Note that /Term/
+   objects are also involved in the indexing process. However, they're
+   created by Lucene's internals, so you typically don't need to think
+   about them while indexing. During searching, you may construct
+   /Term/ objects and use them together with /TermQuery/:
+
+   Query q = new TermQuery(new Term("contents", "lucene"));
+   TopDocs hits = searcher.search(q, 10);
+
+   This code instructs Lucene to find the top 10 documents that
+   contains the word _lucene_ in a field named _contents_, sorting the
+   documents by descending relevance. Because the /TermQuery/ object
+   is derived from the abstract parent class /Query/, you can use the
+   /Query/ type on the left side of the statement.
+*** Query
+   Lucene comes with a number of concrete /Query/ subclasses. /Query/
+   types have *TermQuery*, *BooleanQuery*, *PhraseQuery*,
+   *PrefixQuery*, *PhrasePrefixQuery*, *TermRangeQuery*,
+   *NumericRangeQuery*, *FilteredQuery*, and *SpanQuery*. /Query/ is
+   the common, abstract parent class. It contains serveral utility
+   methods, the most interesting of which is /setBoost(float)/ , which
+   enables you to tell Lucene that certain subqueries should have a
+   stronger contribution to the final relavance score than other
+   subquries.
+*** TermQuery
+   /TermQuery/ is the most basic type of query supported by Lucene,
+   and it's one of the primitive query types. It's used for matching
+   documents that contain fields with speicific values.
+*** TopDocs
+   The /TopDocs/ class is a simple container of pointers to the top N
+   ranked search results--documents that match a given query. For each
+   of the top N  results, /TopDocs/ records the /int docID/ (which you
+   can use to retrieve the document) as well as the float score.
+** Summary
+   Lucene is an information retrieval library, not a ready-to-use
+   standalone product, and it most certainly doesn't contain a web
+   crawler, document filters, or a search user interface.
+* Chapter 2
+** Brief
+   What matters is the search experience your applications present to
+   your users; indexing is "merely" the necessary evil you must go
+   through in order to enable a strong search experience. So although
+   there are fun details here about indexing, your time is generally
+   better spent working on how to improve the search experience. In
+   nearly every application, the search features are far more
+   important than the details of indexing. That being said,
+   implementing search features require important corresponding steps
+   during indexing.
+** How Lucene models content
+*** Documents and fileds
+    A document is Lucene's atomic unit of indexing and searching. It's
+    a container that holds one or more fields, which in turn contain
+    the "real" content. Each field has a name to identify it, a text
+    or binary value, and a series of detailed options that describe
+    what Lucene should do with the field's value when you add the
+    document to the index. To index your raw content sources, you must
+    first translate it into Lucene's documents and fields. Then at
+    search time, it's the field values that are searched.
+    When you retrieve a document from the index, only the stored
+    fields will be present.
+*** Difference between Lucene and Database
+**** Schema
+     Unlike a database, Lucene has no notion of a fixed global
+     schema. In other words, each document you add to index is a blank
+     slate and can be completely different from the document before
+     it: it can have whatever fields you want, with any indexing and
+     storing and term vector options. It need not have the same fields
+     as the previous document you added. It can even have the same
+     fields, with different options, than in other documents.
+**** Indexed data to be flatten
+     Lucene requires you to flatten, or denormalize, your content when
+     you index it.
+     One common challenge is resolving any "mismatch" between the
+     structure of your documents versus what Lucene can
+     represent. Open source projects that build on Lucene, like
+     Hibernate Search, Compass, LuSQL, DBSight, Browse Engine, and
+     Oracle/Lucene integration, each has different and interesting
+     approaches for handling this denormalization.
+
+** Understanding the indexing process
+*** Brief
+    During indexing, the text is first extracted from the original content and
+    used to create an instance of /Document/, containing /Field/ instances to
+    hold the content. The text in the fields is then analyzed to produce a
+    stream of tokens. Finally, those tokens are added to the index in a
+    segmented architecture.
+*** Extracting text and creating the document
+    /Tika/ framework makes it almost too simple to extract text from documents
+    in diverse formats.
+*** Analysis
+    It's a process that splits the textual data into a stream of *tokens*, and
+    performs a number of optional operations on them. For instance, the tokens
+    could be lowercased before indexing, to make searches case insensitive,
+    using Lucene's /LowerCaseFilter/. Also it can use /StopFilter/ to remove all
+    stop words. It's also common to process input tokens to reduce them to their
+    roots, by using /PorterStemFilter/ for English text (similar classes exist
+    in Lucene's contrib analysis module for other language). The combination of
+    an original source of tokens, followed by the series of filters that modify
+    the tokens produced by that source, make up the analyzer. You are also free
+    to build your own analyzer by chaining together Lucene's token sources and
+    filters, or your own, in customized ways.
+    The analysis process produces a stream of tokens that are then written into
+    the files in the index.
+*** Adding to the Index
+    Lucene stores the input in a data structure known as an inverted index.
+    _What makes this structure inverted is that it uses tokens extracted from_
+    _input documents as lookup keys instead of treating documents as the_
+    _central entities, much like the index of this book references the page_
+    _number(s) where a concept occurs. In other words, rather than trying to_
+    _answer the question "What words are contained in this document?" this_
+    _structure is optimized for providing quick answers to "Which documents_
+    _contain word X?_"
+    即 "反向索引" 是指通过关键字查询包含这些关键字的文档。
+*** Index Segments
+    Every Lucene index consists of one or more segments. Each segment is a
+    standalone index, holding a subset of all indexed documents. A new segment
+    is created whenever the writer flushes buffered added documents and pending
+    deletions into the directory. At search time, each segment is visited
+    separately and the results are combined.
+    Each segment, in turn, consists of multiple files, of the form /_X.<ext>/,
+    where /X/ is the segment's name and /<ext>/ is the extension that identifies
+    which part of the index that file corresponds to. There are separate files
+    to hold the different parts of the index (term vectorss, stored fields,
+    inverted index, and so on). If you're using the compound file format (which
+    is enabled by default but you can change using
+    /IndexWriter.setUseCompoundFile/), then most of these index files are
+    collapsed into a single compound file: /_X.cfs/ . This reduces the number of
+    open file descriptors during searching, at a small cost of searching and
+    indexing performance.
+    There's one special file, referred to as the /segments/ file and named
+    segments_<N> , that references all live segments. Lucene first opens this
+    file, and then opens each segment referenced by it. The value <N>, called
+    "the generation", is an integer that increases by one every time a change is
+    committed to the index.
+    Naturally, over time the index will accumulate many segments. Periodically,
+    /IndexWriter/ will select segments and coalesce them by merging them into a
+    single new segment and then removing the old segments. The selection of
+    segments to be merged is governed by a separate /MergePolicy/. Once merges
+    are selected, their execution is done by the /MergeSecheduler/.
+*** Basic Index Operations
+**** Add documents in the index
+**** Delete documents in the index
+**** Updating documents in the index
+     Lucene deletes the entire previous document and then adds a new document to
+     the index. 
+* PyLucene
+** 使用方法
+   PyLucene 的 API 和 Java 版的 Lucene 一模一样。
+   有两种途径，一种是通过
+   import lucene
+   这样之后，通过
+   lucene.API_name
+   的方法使用 Java Lucene 中的 API。
+   还可
+   from lucene import API_name
+   这样之后，可直接在代码中使用 Java Lucene 的 API。

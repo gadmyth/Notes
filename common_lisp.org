@@ -1,0 +1,21 @@
+* REPL
+  read-eval-pring loop.
+* Basic
+  Anything in parentheses is a list.
+
+  Lisp, in general, evaluates lists by treating the first element as the name of
+  a function and the rest of the elements as expressions to be evaluated to
+  yield the arguments to the function.
+
+  Strings, like numbers, have a literal syntax that's understood by the Lisp
+  reader and are self-evaluating objects: Lisp reads the double-quoted string
+  and instantiates a string object in memory that, when evaluated, evaluates to
+  itself and is then printed in the same literal syntax. The quotation marks
+  aren't part of the string object in memory——they're just the syntax that tells
+  the reader to read a string. The printer puts them back on when it prints the
+  string because it tries to print objects in the same syntax the reader
+  understands.
+
+  Functions in Common Lisp automatically return the value of the last expression
+  evaluated.
+

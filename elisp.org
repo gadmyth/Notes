@@ -1,0 +1,292 @@
+* 三种模式
+** 1、emacs-lisp-mode
+   Used for editing Emacs Lisp code (filename .emacs or suffix .el).
+** 2、lisp-mode
+   Used for editing Lisp code intended for another Lisp system (suffix .l or
+   .lisp).
+** 3、lisp-interaction-mode
+   Used for editing and running Emacs Lisp code.
+* S-expression、lists、defuns
+  An S-expression (or syntactic expression) is any syntactically correct Lisp
+  expression, be it an atom (number, symbol, variable, etc.), or parenthesized
+  list.
+  Lists are special cases of S-expression.
+  Defuns (function definitions) are special cases of lists.
+* Basic elements
+** 1 basic
+   The basic elements in Lisp are functions, variables, and atoms.
+** 2 function
+   Functions are the only program units in Lisp; they cover the notions of
+   procedures, subroutines, programs and even oeprators in other languages.
+   Functions are defined as lists of the above entities, usually as lists of
+   calls to others, existing functions. 
+   All functions have return values; a function's return value is simply the
+   value of the last item in the list, usually the value returned by the last
+   function called. 
+   A function call within another function is equivalent to a statement in other
+   languages.
+** 3 variable
+   Variables in Lisp are simlilar to those in any other language, except that
+   they do not have types. A Lisp variable can assume any type of value (values
+   themselves do have types, but variables don't impose restrictions on what
+   they can hold).
+** 4 atom
+   Atoms are values of any type, including integers, floating point (real)
+   numbers, characters, strings Boolean truth values, symbols, and special Emacs
+   types such as buffers, windows, and processes. The syntax for various kinds
+   of atoms is:
+   1) _Integers_ are what you would expect: signed whole numbers in the range -2^27
+   to 2^27-1.
+   2) _Floating_ point numbers are real numbers that you can represent with decimal
+   points and scientific notation (with lowercase "e" for the power of 10).
+   3) _Characters_ are preceded by a question mark, for example, ?a. Esc, Newline,
+   and Tab are abbreviated \e, \n and \t respectively; other control characters
+   are denoted with the prefix \C-, so that (for example) C-a is denoted as
+   ?\C-a.
+   Integers are also allowed where characters are expected. The ASCII code is
+   used on most machines. 
+   4) _Strings_ are surrounded by double quotes; quote marks and backslashes within
+   strings need to be preceded by a backslash. Srings can be split across
+   multiple lines without any special syntax. Everything until the closing
+   quote, including all the line breaks, is part of the string value.
+   5) _Boolean_ use *t* for true and *nil* for false, though most of the time, if a
+   Boolean value is expected, any non-nil value is assumed to mean true. *nil*
+   is also used as a null or nonvalue in various situations.
+   6) _Symbols_ are names of things in Lisp, for example, names of variables of
+   functions. Sometimes it is important to refer to the name of something
+   instead of its value, and this is done by preceding the name with a single
+   quote (').
+* (let)
+  (let ((var1 value1) (var2 value2) ...)
+    statement-block)
+  
+  The first thing *let* does is define the variable /var1, var2, etc.../ and set
+  them to the initial values /value1, value2, etc.../. Then *let* executes the
+  statement block, which is a sequence of function calls or values, just like
+  the body of a function.
+  If a *let* is used to define a variable, its value can be reset later within
+  the *let* block with *setq*. Furthmore, a variable defined with *let* can have
+  the same as a global variable; all *setqs* on that variable within the *let*
+  block act on the local variable, leaving the global variable
+  undisturbed. However, a *setq* on a variable that is not defined with a *let*
+  affects the global envirionment. It is advisable to avoid using global
+  variable as much as possible because theis names might confilct with those of
+  existing global variabls and therefore your changes might have unexpected and
+  inexplicable side effects later on.
+* (save-excursion)
+  Calling *save-excursion* tells Emacs to remember the location of cursor at the
+  beginning of the function, and go back there after executing any statements in
+  its body. 
+* point
+  *point* is Emacs's internal name for the position fo the cursor.
+  常用的有:
+  (point) : 返回当前光标位置
+  (point-min) : 返回光标最开始的位置，一般为 1
+  (point-max) : 返回在当前 buffer 中，光标可能的最大位置
+* (while)
+  (while /condition/ /statement-block/)
+
+* (message)
+  它有很多函数用来显示信息，可在 minibuffer 中显示，也可用弹出框显示。显示信息的
+  格式与 C 中 printf 函数的格式一样，常用的有 %s、%c、%d、%e、%f、%g，意义和 C
+  中的相同。控制浮点数的小数位数的方法和 C 中 printf 的方法相同。
+  例:
+  (message "\"%s\" is a string, %d is a number, and %c is a character"
+           "hi there" 142 ?q)
+* 注册自定义函数
+  对于自定义的函数，向 Emacs 注册后，可以通过 M-x 来调用。格式是:
+  
+  (interactive "prompt-string")
+  
+  This statement should be the first in a function, that is, right after the
+  line containing the *defun* and the documentation string. Using *interactive*
+  causes Emacs to register the function as a command and to prompt the user for
+  the arguments declared in the *defun* statement. The prompt string is
+  optional.
+  The prompt string has a special format: for each argument you want to prompt
+  the user for, you provide a section of prompt string. the sections are
+  separated by newlines (\n). The first letter of each section is a code for the
+  type of argument you want, for example, 'n' for integer, 'b' for 'name of an
+  existing buffer', 's' for string.
+  
+  例:
+  
+  (defun replace-string (from to)
+    (interactive "sReplace string: \nsReplace string %s with: ")
+    ...)
+
+  要向这个函数传入两个参数，通过 M-x 效用这个函数时，首先会在 minibuffer 提示
+  "Replace string: "，函数中的 'sReplace' 表示传入的参数是 string 类型的，输入一
+  个字符串按回车后(如输入 flyer)，则在 minibuffer 中继续提示 "Replace string
+  flyer with: ",输入要替换为的字符串后，就把两个参数传入给了该函数。在函数中 %s
+  表示最初输入的参数。
+  也可在 *defun* 和 (interactive) 之间的一行添加注释，用双引号引着，这样可作为该
+  函数的帮助信息。
+
+* lisp primitive functions
+** Arithmetic
+   +, -, *, /, %, 1+, 1-, max, min
+** Comparison
+   >, <, >=, <=, 
+   /= (not equal), 
+   = (for numbers and characters), 
+   equal (for strings and other complex objects)
+** Logic
+   and, or, not
+* Statement Blocks
+** (progn)
+   (progn
+      /statement-block/)
+   The value returned by *progn* is the value returned by the last statement in
+   the block.
+   它更常用在 (if) 语句中，因为 (if) 默认的是判断语句后只有一条陈述句。
+** (let) and (let*)
+   它有多种形式，常见的有:
+
+   (let ((var1 value1) (var2 value2) ...)
+      /statement-block/)
+   
+   (let (var1 var2 ...)
+      /statement-block/)
+
+   (let (var1 (var2 value) var3 ...)
+      /statement-block/)
+
+   若其中的变量没有初始值，则赋予值 *nil*.
+   (let) 语句中的变量赋值是在函数计算后再赋值的，即赋值时，后面的变量不能使用前
+   面变量的值，因为还没进行赋值。若想使定义变量时使用前面变量的值，可用 (let*)
+   函数，如
+   (let* ((var1 value1) (var2 (* var1 100)))
+      /statement-block/)
+
+* Control Structures
+** (if)
+   (if /condition/
+      /true-case/
+      /false-case/)
+   其中， /true-case/ 只是一条一句，接在其后的都是 /false-case/ 语句，且
+   /false-case/ 是可选的。
+   
+   例:
+   (defun pluralize (word count &optional plural)
+      (if (= count 1)
+        word
+	(if (null plural)
+	   (concat word "s")
+	   plural)))
+
+   注意函数参数中的 &optional 选项，加上这个关键字后，其后的参数在调用函数时是可
+   选的，如下调用该函数:
+   (pluralize "flyer" 1)
+   (pluralize "mouse" 3 "mice")
+** (concat)
+   连接后面的 list，返回一个 string。
+** (cond)
+   它类似于 C 中的 if..else...if... 和 switch 语句的结合体。
+
+   (cond
+     (/condition1/ /statement-block/)
+     (/condition2/ /statement-block/)
+     (/condition3/ /statement-block/)
+     ...)
+
+   例:
+   (defun how-many (count)
+     (cond
+       ((zerop count) "zero")
+       ((= count 1) "one")
+       ((= count 2) "two")
+       (t "many")))
+** (zerop)
+   It's pronounced "zero-pee" and is short for "zero predicate".
+   In the realm of mathematical logic from which Lisp evolved, a predicate is a
+   function that returns true or flase based on some attribute of its argument.
+* Basic Functions
+** (point)
+   character position of point
+** (mark)
+   character position of mark
+** (point-min)
+   minimum character position (usually 1)
+** (point-max)
+   maximum character position (usually size of buffer)
+** (bolp)
+   whether point is at the beginning of the line (t or nil)
+** (eolp)
+   whether point is at the end of the line
+** (bobp)
+   whether point is at the beginning of the buffer
+** (eobp)
+   whether point is at the end of the buffer
+** (insert)
+   insert any number of arguments (strings or characters) into the buffer after point
+** (number-to-string)
+   convert a numerical argument to a string
+** (string-to-number)
+   convert a string argument to a number (integer or floating point)
+** (char-to-string)
+** (substring)
+   given a string and two integer indices /start/ and /end/, return the
+   substring starting after /start/ and ending before /end/. Indices start at 0.
+** (aref)
+   array indexing funciton that can be used to return individual characters from
+   strings; take an integer argument and returns the character as an integer,
+   using the ASCII code (on most machines).
+
+* Regular Expressions
+** basic
+   .               matches any character
+   .*              mathes any string
+   [abc]           matches a, b, or c
+   [a-z]           matches any lowercase letter
+   *               匹配零个或任意多个之前的字符或组
+   +               匹配一个或多个之前的字符或组
+   ?               匹配零个或一个之前的字符或组
+   ^               在 [] 外表示句子的开头匹配，在 [] 内表示匹配除 [] 内的内容
+   $               匹配句子的末尾
+   \n              match newline within a regexp
+   \t              match Tab within a regexp
+
+   如若想匹配以 a 开头的字符串，用如下形式:
+   a.*
+
+** 在 elisp 中使用正则表达式的函数
+   若想在这样的函数中取某些特殊字符的字面含义，必须用双斜杠，如 \\*，　\\.
+   The reason has to do with the way Emacs Lisp reads and decodes strings. When
+   Emacs reads a string in a Lisp program, it decodes the backslash-escaped
+   characters and thus turns double backslashes into single backslashes. If the
+   string is besing used as a regular expression--that is, if it is being passed
+   to a function that expects a regular expression argument--that function uses
+   the single backslash as part of the regular expression syntax.
+   例:
+   (replace-regexp "fred\\*" "bob*")
+   在这样的函数中，被替换成的部分不是正则表达式，只是一般的字符串。
+   但如果是通过 M-x 来使用这样的函数，则只需用一个斜杠即可。
+** grouping and alternation
+   使用类似于 \\(file\\)* 则会匹配零个或多个 file.用 \\( 和 \\) 可把其中作为整体，
+   和 *、？、+ 配合使用。
+   用这种正则表达式匹配后，可使用 \\n (其中 n 是数字)来使用其中的内容，如
+   (replace-regexp "\\<program\\('s\\|s\\)?\\>" "module\\1")
+   会把 program 替换为 module，把 program's 替换为 module's，把 programs 替换为
+   modules.
+   还有个有用的例子:
+   (replace-regexp "\\([a-zA-Z_]+\\)\\.java" "\\1.c")
+   把所有的 .java 程序改名为  .c 的程序.
+   也可使用类似于 one\\|two 来匹配 one 或 two,这有些类似于 shell 中的 [one|two]
+   格式。
+** 匹配单词
+   The operators \\< and \\> match the beginning and end of a word,
+   respectively.
+   如 \\<program\\> 只匹配 program.
+* 查找变量的值
+  C-h v
+* 查看函数的表述
+  可在 buffer 中打出函数，这时会自动有提示。也可按
+  C-h f
+  然后输入函数名来查看。
+* 描述组合键对应的函数
+  C-h k
+  也可
+  C-h c
+  只查看组合键对应的函数名。若想通过查看一类函数，则用
+  C-h a

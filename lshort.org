@@ -1,0 +1,415 @@
+* Chapter 1 Things You Need to Know
+** 1.1 The Name of the Game
+*** 1.1.1 TeX
+   TeX is a computer program created by Donald E.Knuth. It is aimed at
+   typesetting text and mathematical formulae. Knuth started writing
+   the TeX typesetting engine in 1977 to explore the potential of the
+   digital printing equipment that was beginning to infiltrate the
+   publishing industry at that time, especailly in the hope that he
+   could reverse the trend of deteriorating typographical quality that
+   he saw affecting his own books and articles. TeX as we use it today
+   was released in 1982, with some slight enhancements added in 1989
+   to better support 8-bit characters and multiple languages. TeX is
+   renowned for being extremely stable, for running on many different
+   kinds of computers, and for being virtually bug free. The version
+   number of TeX is converging to pai and is now at 3.141592.
+*** 1.1.2 LaTeX
+   LaTeX enables authors to typeset and print their work at the
+   highest typographical quality, using a predefined, professional
+   layout. It uses the TeX formatter as its its typesetting engine.
+
+** 1.2 Basics
+*** 1.2.1 Author, Book Designer, and Typesetter
+    In a LaTeX environment, LaTeX takes the role of the book designer
+    and uses TeX as its typesetter. But LaTeX is "only" a program and
+    therefore needs more guidance. The author has to provide
+    additional information to describe the logical structure of his
+    work. The information is written into the text as "LaTeX
+    commands".
+*** 1.2.2 Layout Design
+    With WYSIWYG systems, authors often generate aesthetically
+    pleasing documents with very little or inconsistent
+    structure. LaTeX prevents such formatting errors by forcing the
+    author to declare the logical structure of his document. LaTeX
+    then chooses the most suitable layout.
+*** 1.2.3 Advantages and Disadvantages
+** 1.3 LaTeX Input Files
+   The input for LaTeX is a plain ASCII text file. Create it with any
+   text editor. It contains the text of the document, as well as the
+   commands that tell LaTeX how to typeset the text.
+*** 1.3.1 Spaces
+    空白(whitespace)字符都被 LaTeX 认为是空格。几个连续的空格被认为是一个空格，行
+    首的空白被忽略，同时，换行也被认为是空白。
+    文本两行之间的空行被定义为段落的结尾。几个空行被处理为一个空行。
+
+*** 1.3.2 Special Characters
+    以下是 LaTeX 中的特殊字符，它们要么在 LaTeX 中特殊的意义，要么不可
+    打印。如果直接键入而不用 \ ，则它们不会被打印出来，但会迫使 LaTeX
+    执行特殊的含义：
+     #   %   $   ^   &   _   {   }   ~   \
+    若要打印它们，则需要在这些符号前加 \
+
+*** 1.3.3 LaTeX Commands
+    LaTeX 命令区分大小写，并采用如下的两种方式：
+        + 以 \ 开头，然后只包含字母。命令以空格、字母或其它非字母来结束。
+        + 包含一个 \ 而且只有一个非字母的字符。
+    LaTeX 忽略命令后的空白。若想在命令后保留一个空白，要加入{}和一个空
+    白，或在命令后加入一个特殊的空白命令。（注意若用第一种形式，必须在
+    {}后加上空白才有效）
+    一些命令必须加参数，可在命令后紧接着在{}中加入参数。有些命令可加可
+    选的参数，可在命令后在[]加入可选的参数。
+    从例子中总结的用法：
+        +　\\ 表示换行，也可用 \newline
+        +  \today 用“日期 月份，年”的形式显示时间。
+        +  \textsl{text}  将以斜体形式显示 text .
+
+*** 1.3.4 Comments
+    在行中 % 之后到行尾的所有内容都会被认为是 comments 而不会被打印。
+    % 还可被用在分隔长的输入，尤其是在不允许实用空白或换行命令时。
+    若想在连续的行中插入 comments ，需要在 input file 中加入
+    \usepackage{verbatim}
+    然后在 
+    \begin{comment} 和 \end{comment} 之间插入 comments.
+    但后者在复杂的环境如数学中不能起作用。
+
+** 1.4 Input File Structure
+   LaTeX2e 只能对特定格式的 input file 进行处理。每个 input file 都必
+   须以 
+   \documentclass{...}
+   格式开头，它标明将要写的是哪种类型的文档。之后，加入影响整个文档风
+   格的命令，或载入可以给 LaTeX 增加特性的包。载入包可用以下格式
+   \usepackage{...}
+   当这些都完成后，开始文档要用如下命令
+   \begin{document}
+   然后就可添加混合有 LaTeX 命令的文本。文本结束时要添加
+   \end{document}
+   在这之后的所有内容将会被 LaTeX 忽略。
+   在 \documentclass{...} 和 \begin{document} 之间的区域被称为 preamble.
+
+** 1.5 A Typical Command Line Session
+   使用步骤：
+   + 创建以 .tex 结尾的 ASCII 文档。
+   + 用命令 
+     latex file.tex 
+     此时会产生以 .dvi 结尾的文件，可用 xdvi 来查看。
+   + 把以 .dvi 结尾的文件转换成 postscript 或 pdf 文件：
+     dvips -Pcmz file.dvi -o file.ps 或
+     dvipdf file.dvi
+   从例子中总结的:
+   1、可用 \documentclass[a4paper,11pt]{article} 格式来指定整个文档的
+     格式。
+   2、可在 \documentclass{...} 和 \begin{document} 之间插入
+     \title{...} 、 \author{...} 等，前者表示文章的题目，然后
+     在 \begin{document} 的下一行插入 \maketitle 来显示这些，同时会在
+     输出的文档中自动打印时间，时间格式是“月份 几号，年份”.
+   3、在 \begin{document} 和 \end{document} 中可插入 \tableofcontents
+     ,在输出的文档中显示为 "Contents", 然后加入 \section{...} 此时会自
+     动在 ... 前加入序号，并可多次添加 \section{...} ，此时序号会自动
+     增加，可在 \section{...} 之后加入属于该 section 的文本。
+   4、\ldots 表示插入三个实点。
+   
+** 1.6 The Layout ot the Document
+*** 1.6.1 Document Classes
+    \documentclass[options]{class}
+    Document classes：
+    *article*    for articles in scientific journals, presentations,
+                 short reports, program documentation, invitations...
+    *proc*       a class for proceedings based on the article class
+    *minimal*    is as small as it can get. It only sets a page size
+                 and a base font. It is mainly used for debugging
+                 purposes.
+    *report*     for longer reports containing several chapters, small
+                 books, PhD theses...
+    *book*       for real books
+    *slides*     for slides. The class uses big sans serif
+                 letters. You might want to consider using the Beamer
+		 class  instead.
+    Document class options:
+    *10pt, 11pt, 12pt* sets the size of the main font in the
+                       document. If no option is specified, *10pt* is
+		       assumed.
+    *a4paper, letterpaper,...* Defines the paper size. The default
+                               size is *letterpaper*. Besides that,
+			       *a5paper*, *b5paper*, *executivepaper*,
+			       and *legalpaper* can be spcified.
+    *fleqn* Typesets displayed formulae left-aligned instead of
+            contred.
+    *leqno* Places the numbering of formulae on the left hand side
+            instead of the right.
+    *titlepage, notitlepage* Specifies whether a new page should be
+                             started after the document title or
+			     not. The *article* class does not start a
+			     new page by default, while *report* and
+			     *book* do.
+    *onecolumn, twocolumn* Instructs LaTeX to typeset the document in
+                           one column or two column.
+    *twoside, oneside* Specifies whether double or single sided output
+                       should be generated. The classes *article* and
+		       *report* are single sided and the *book* class
+		       is dobule by default. Note that this option
+		       concerns the style of the document only. The
+		       option *twoside* does not tell the printer you
+		       use that it should actually make a two-sided
+		       printout.
+    *landscape* Changes the layout of the document to print in
+                lanscape mode.
+    *openright, openany* Makes chapters begin either only on right
+                         hand pages or on the next page
+			 available. This does not work with the
+			 *article* class, as it does not know about
+			 chapters. The *report* class by default
+			 starts chapters on the next page avaiable and
+			 the *book* class startx them on right hand
+			 pages.
+
+*** 1.6.2 Packages
+    若想使用一些特性，如图形、带颜色的文本或源码，需要加入包，格式为：
+    \usepackage[options]{package}
+    其中，options 可以触发 package 中的一些特殊的功能,options 和
+    package 都是要改的参数。
+    查看包的功能，可用 
+    texdoc 包名
+    伴随 LaTeX 发行的包：
+    *doc* Allows the documentation of LaTeX programs. 
+    *exscale* Provides scaled versions of the math extension font.
+    *fontenc* Specifies which font encoding LaTeX should use.
+    *ifthen* Provides commands of the form
+             'if ... then do ... otherwise do ...'
+    *latexsym* To access the LaTeX symbol font.
+    *makeidx* Provides commands for producing indexes. 
+    *syntonly* Processes a document without typesetting it.
+    *inputenc* Allows the specification of an input encoding such as
+    ASCII, ISO Latin-1, ISO Latin-2, 437/850 IBM code page, Apple
+    Macintosh, Next, ANSI-Windows or user-defined one.
+
+*** 1.6.3 Page Styles
+    LaTeX 支持三种预定义的 header/footer，即页格式。使用格式为：
+    \pagestyle{style}
+    其中 style 可选取一种格式。预定义的 page style 为：
+    *plain* prints the page numbers on the bottom of the page, in the
+            middle of the footer. This is the default page style.
+    *headings* prints the current chapter heading and the page number
+               in the header on each page, while the footer remains
+	       empty.
+    *empty* sets both the header and the footer to be empty.
+
+** 1.7 Files You Might Encounter
+   以下是可能遇到的后缀:
+   *.tex* LaTeX or TeX input file. Can be compiled with *latex*.
+   *.sty* LaTeX Macro package. Load this into your LaTeX document
+          using the *\usepackage* command.
+   *.dtx* Documented TeX. This is the main distribution format for
+          LaTeX style files. If you process a .dtx file you get
+	  documented macro code of the LaTeX package contained in the
+	  .dtx file.
+   *.ins* The installer for the files contained in the matching .dtx
+          file. If you download a LaTeX package from the net, you will
+	  normally get a .dtx and a .ins file. Run LaTeX on the .ins
+	  file to unpack the .dtx file.
+   *.cls* Class files define what your document looks like. They are
+          selected with the *\documentclass* command.
+   *.fd* Font description file telling LaTeX about new fonts.
+   下面的是运行 latex 后产生的文件:
+   *.dvi* Device Independent File. This is the main result of a LaTeX
+          compile run. Look at its content with a DVI previewer
+	  program or send it to a printer with *dvips* or a similar
+	  application.
+   *.log* Gives a detailed account of what happened during the last
+          compiler run. 
+   *.toc* Stores all your section headers. It gets read in for the
+          next compiler run and is used to produce the table of
+	  content.
+   *.lof* This is like .toc but for the list of figures.
+   *.lot* And again the same for the list of tables.
+   *.aux* Another file that transports information from one compiler
+          run to the next. Among other things, the .aux file is used
+	  to store information associated with cross-references.
+   *.idx* If your document contains an index. LaTeX stores all the
+          words that go into the index in this file. Process this file
+	  with *makeindex*. 
+   *.ind* The processed .idx file, ready for inclusion into your
+          document on the next compile cycle.
+   *.ilg* Logfile telling what *makeindex* did.
+
+** 1.8 Big Projects
+   若编辑大的文档，可把它们分割成小部分，然后有两种方式可合并。
+   一种是：
+   \include{filename}
+   在文档体中使用这个命令， filename 为已经写好的 filename.tex. 注意，
+   LaTeX 处理插入的这个文档时，会在输出的文件中另起一页。
+   第二种是：
+   \includeonly{filename,filename,...}
+   这是在 preamble 中使用的，注意文件名和逗号之间不要有空白。在这个命
+   令执行后，只有列出的文件才能在 \include 中生效，而且也是在输出的文
+   件中另起一页打印。
+   若不想另起一页文档，使得不同文件中的文档直接相连，可用 
+   \input{filename}
+   它将仅是加入名为 filename.tex 的文件，不做其他的处理。
+   为了加快 LaTeX 检查文档的速度，可用 *syntonly* 包。这会使得 LaTeX
+   只检查语法，而不产生 任何的输出。要在 preamble 部分加入
+   \usepackage{syntonly}
+   \syntaxonly
+   若想产生输出文件，注释掉这两行即可。
+
+* Chapter 2 Typesetting Text
+** 2.1 The Structure of Text and Language
+   合理地组织段落可以使意思表达的更清楚。
+   以下是从例子中总结的：
+   1、输入等式时，在
+   \begin{equation} 和 \end{equation}
+   中添加。
+   2、 \cdot 表示乘号。  m^n 表示 m 的 n 次方。 \; 是在等式后自动添加
+   标号。
+   3、 \sum_{k=1}^{n}  表示显示连加符号，k=1 在连加符号的下面显示, n
+   在连加符号的上端显示。
+   4、要在符号的右下角加下标时，用 _n 来表示,其中 n 表示 下面的符号。
+** 2.2 Line Breaking and Page Breaking
+*** 2.2.1 Justified Paragraphs
+    换行并开始新段落  \\ or \newline
+    换行但不开是新段落  \\*
+    换页   \newpage
+    更灵活性控制换行和换页  \linebreak[n], \nolinebreak[n],
+    \pagebreak[n], \nopagebreak[n]  其中 n 表示0-4之间的数字。
+*** 2.2.2 断词
+    必要时 LaTeX 就会断词。我对 \hyphenation{word list} 的用法看不太明
+    白，感觉用的次数应该会很少，所以暂时不总结。
+    \mbox{}  把括号中的内容全部排列在一行。
+    \fbox{}  在括号中的内容外加个方框。
+    可在 \mbox{} 和 \fbox{} 的括号内添加其他的命令，如 \emph{} ，该命
+    令表示对括号中内容强调，表示为斜体。
+** 2.3 内置字符串
+   \today   用“月份 几号，年份”来表示当日日期
+   \TeX  \LaTeX  \LaTeXe
+** 2.4 特殊字符和符号
+*** 2.4.1 引号
+*** 2.4.2 破折号和连字号
+*** 2.4.3 波浪号~
+    产生小的波浪号用  \~
+    产生大的波浪号用  $\sim$
+*** 2.4.4 度的符号
+    如 $-30\,^{\circ}\mathrm{C}$ 此时在-30和符号之间有少量的空隙,若不
+    加 \, 则-30紧挨着符号。
+*** 2.4.5 欧元符号
+    先载入 textcomp 宏包,  \usepackage{textcomp}
+    然后使用 \texteuro 来生成欧元符号.
+*** 2.4.6 省略号
+    \ldots
+*** 2.4.7 连字
+    在两个字母之间插入一个 \mbox{} 可禁止连字，这对由两个词构成的单词，可
+    能是必要的。
+*** 2.4.8 注音符号和特殊字符
+    这些符号的使用建议在具体使用时查手册或 Google 下，不需要刻意记忆。
+** 2.5 International Language Support
+   When you write documents in languages other than English, there are
+   three ares where LaTeX has to be configured appropriatedly:
+   1、All automatically generated text strings have to be adapted to
+   the new language. For many languages, these changes can be
+   accomplished by using the *babel* package by Johannes Braams.
+   2、LaTeX needs to know the hyphenation rules for the new
+   language. Getting hyphenation rules into LaTeX is a bit more
+   tricky. It means rebuilding the format file with different
+   hyphenation patterns enabled.
+   3、Language specific typographic rules.
+** 2.6 The Space Between Words
+   To get a straight right margin in the output, LaTeX inserts varying
+   amounts of space between the words. It inserts slightly more space
+   at the end of a sentence, as this makes the text more
+   readable. LaTeX assumes that sentences end with periods, question
+   marks or exclamation marks. If a period follows an uppercase
+   letter, this is not taken as a sentence ending, since periods after
+   uppercase letters normally occure in abbreviations.
+   Any exception from these assumptions has to be specified by the
+   author. A backslash in front of a space generates a space that will
+   nor be enlarged. A tilde '~' character generates a space that
+   cannot be enlarged and additionally prohibits a line break. The
+   command *\@* in front of a period specifies that this period
+   terminates a sentence even when it follows an uppercase letter.
+   The additional space after periods can be disabled with the command
+   \frenchspacing
+   which tell LaTeX not to insert more space after a period than after
+   ordinary character.
+** 2.7 Titles, Chapters, and Sections
+   To help the reader find his or her way through your work, you
+   should divide it into chapters, sections, and subsections. LaTeX
+   supports this with special commands that take the section tilte as
+   their argument. It is up to you to use them in the correct order.
+   The following sectioning commands are available for the *article*
+   class:
+   \section{...}
+   \subsection{...}
+   \subsubsection{...}
+   \paragraph{...}
+   \subparagraph{...}
+   If you want to split your document in parts without influencing the
+   section or chapter numbering use
+   \part{...}
+   When you work with the *report* or *book* class, an additional
+   top-level sectioning command becomes available
+   \chapter{...}
+   As the *article* class does not know about chapters, it is quite
+   easy to add articles as chapters to a book. The spacing between
+   sections, the numbering and the font size of the titles will be set
+   automatically by LaTeX.
+   Two of the sectioning commands are a bit special:
+   1、The *\part* command does not influence the numbering sequence of
+   chapters.
+   2、The *\appendix* command does not take an argument. It just
+   changes the chapter numbering to letters.
+   LaTeX creates a table of contents by taking the section headings
+   and page numbers from the last compile cycle of the document. The
+   command
+   \tableofcontents
+   expands to a table of contents at the place it is issued. A new
+   document has to be compiled twice to get a correct table of
+   contents. Sometimes it might be necessary to compile the document a
+   third time. LaTeX will tell you when this is necessary.
+   All sectioning commands listed above also exist as "starred"
+   versions. A "starred" version of a command is built by adding a
+   star * after the command name. This generates section headings that
+   do not show up in the table of contents and are not numbered. The
+   command *\section{Help}*, for example, would becom
+   *\section*{Help}*.
+   Normally the section headings show up in the table of contents
+   exactly as they are entered in the text. Sometimes this is not
+   possible, because the heading is too long to fit into the table of
+   contents. The entry for the table of contents can then be specified
+   as an optional argument in font of the actual heading.
+   e.g.
+   \chapter[Title for the table of contents]{A long and especially
+   boring title, shown in the text}
+   The title of the whole document is generated by issuing a 
+   \maketitle
+   command. The contents of the title have to be defined by the
+   commands
+   \title{...}, \author{...} and optionally \date{...}
+   before calling *\maketitle*. In the argument to *\author*, you can
+   supply several names separated by *\and* commands.
+** 2.8 Cross References
+   In books, reports and articles, there are often cross-references to
+   figures, tables and special segments of text. LaTeX provides the
+   following commands for cross referencing
+   \label{marker}, \ref{marker} and \pageref{marker}
+   where /marker/ is an identifier chosen by the user. LaTeX replaces
+   *\ref* by the number of the section, subsection, figure, table or
+   theorem after which the corresponding *\label* command was
+   issued. *\pageref* prints the page number of the page where the
+   *\label* command occurred. As with the seciton titles, the numbers
+   from the previous run are used.
+   看看这节的例子会更明白。
+
+   
+
+** 2.9 Footnotes
+   With the command
+   \footnote{footnote text}
+   a footnote is printed at the foot of the current page. Footnotes
+   should always be put after the word or sentence they refer
+   to. Footnotes referring to a sentence or part of it should
+   therefore be put after the comma or period.
+** 2.10 Emphasized Words
+   加下划线用如下命令
+   \underline{/text/}
+   起强调作用常用斜体，若在斜体中起强调作用，则会变为正常的字体以示区
+   分：
+   \emph{/text/}
+

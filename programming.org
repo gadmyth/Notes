@@ -1,0 +1,1079 @@
+* 1、C++
+** 1、是否所有动作都从 main() 开始
+   不是，如全局变量和全局对象在 main() 进入之前就开始了。
+* 2、Tools
+** 1、objdump
+    它不仅能够显示汇编代码，还能够显示生成的原始指令码。例：
+    $ gcc  -c test.c
+    $ objdump -d test.o 
+** 2、gprof
+    分析程序的执行和确定应用程序中的“热点”的位置，即确定程序运行时需
+    要最多处理时间的函数。例：
+    $ gcc -o demo demo.c -pg
+    $ ./demo
+    $
+    (此时会生成 gmon.out 调用图表简档文件)
+    $ gprof demo > gprof.txt
+** 3、as
+    汇编器。例:
+    $ as -o test.o test.s
+    $ ld -o test test.o
+** 4、ld
+    链接器.
+    在汇编中，若调用的是 C 的函数，则链接时要用如下格式:
+    $ ld -dynamic-linker /lib/ld-linux.so.2 -lc xxx.o
+    动态链接时不必把库名全都加上，如 libx.so ，只需用 -lx 即可。
+** 5、gdb
+*** 1、info registers 显示所有寄存器的值
+*** 2、display x 其中 x 为某个变量，这样每次进行时都会显示出这个变量的值
+*** 3、print 高级用法
+     1)加上一个修饰符就可修改 print 命令的输出格式：
+       print/d    显式十进制的值
+       print/t    显式二进制的值
+       print/x    显式十六进制的值
+     2)x命令用于显式特定内存位置的值，可使用修饰符修改 x 命令的输出。
+       命令格式为
+       x/nyz
+       其中，n 是要显示的字段数，y 是输出格式，它可以是
+       c 用于字符
+       d 用于十进制
+       x 用于十六进制
+       z 是要显示的字段的长度，它可以是
+       b 用于字节
+       h 用于16位字
+       w 用于32位字
+*** 4、调试带参程序
+     可用如下格式
+     $ gdb --args 程序 参数
+*** 5、断点相关
+**** 1、设置断点
+       break 行号或函数名
+       或
+       b 行号或函数名
+**** 2、取消断点
+       取消断点用
+       clear 行号或函数名
+       或 
+       delete 行号或函数名
+**** 3、批量设置断点
+       可在调试前用普通文件保存一系列的设置断点信息，如 test.bpoint 
+       b 1
+       b 2
+       ...
+       调试时使用  
+       gdb -x test.bpoint 程序名
+       即可自动设置断点。
+** 6、查看二进制文件
+    od : 八进制形式显示
+    hexdump : 十六进制显示
+    在 Emacs 下，先打开文件，然后进入 hexl-mode 模式即可
+    objdump: 可用 $ objdump -s 文件 来查看。
+** 7、ldd 查看程序链接的库文件
+   通过
+   $ ldd 二进制程序
+   可以查看程序链接的库。
+* 3、进程和线程
+** 1、程序怎样转换成进程
+    *进程* (process)是一个正在执行的程序实例。每个实例都有自己的地址空间
+    和执行状态。那么，在什么情况下程序才会转换成进程呢？OS 将程序读入内
+    存，为程序映像分配内存还不足以使之转换成进程。进程必须要有一个 ID
+    号（进程ID），这样 OS 才能区分各个进程。 *进程状态* （process state）指
+    的是单个进程的执行状态。OS 记录进程 ID 和相应的进程状态，并用这些信
+    息来分配和管理系统资源。OS 还要对进程占用的内存和可分配的内存进程管
+    理。
+    当 OS 向内核数据结构中添加了适当的信息，并为运行程序代码分配了必要
+    的资源之后，程序就变成了进程。进程拥有地址空间（它可以访问的内存）
+    和至少一个被称为 *线程* (thread)的控制流。进程的变量可在进程的生命
+    周期中始终存在（静态存储），也可在执行进入一个程序块时自动分配，离
+    开这个程序块时将其释放（自动存储）。
+    进程以执行一个指令序列的控制流开始。处理器程序计数器记录处理器（CPU）
+    要执行的下一条指令。CPU 读取一条指令后，对程序计数器的值进行增量运
+    算，且在指令的执行过程中，如，在出现分支的时候，还会对其做进一步的
+    修改。可能有多个进程驻存在内存中并发执行，它们基本上都相互独立。若
+    进程要进行通信或相互合作，它们就必须显示地通过文件系统、管道、共享
+    内存或网络这样的 OS 结构来进行交互。
+** 2、线程和执行线程
+    我的理解是：进程被细分为数据和执行两部分，其中执行即为线程。
+    程序执行时，由进程程序计数器的值来决定下面该执行哪一条进程指令。得
+    到的指令流被称为 *执行线程* (thread of execution),它可用程序代码执
+    行期间为程序计数器指定的指令地址序列来表示。
+    执行线程中的指令序列对进程来说就像是一条不间断的地址流。但从处理器
+    的观点来看，来自不同进程的执行线程是混在一起的。执行从一个进程切换
+    到另一个进程的点被称作 *上下文切换* (context switch)。处理器看到的
+    执行线程是交错的，而单个进程看到的是不间断的序列。
+    进程模型的自然扩展允许多个线程在同一个进程内执行。使用多个线程可避
+    免上下文切换，并允许共享代码和数据。这种方法可能会改善有多个处理器
+    的机器中程序的性能。对共享数据进行操作的独立任务具有自然的并行性，
+    具有这种自然并行性的程序就可利用这些多处理器机器额外的执行能力。OS
+    具有重要的自然并行性，若它拥有多额可以同时运行的执行线程，就可执行
+    得更好。在 *对称多道处理技术(symmetric multiprocessing)* 中， OS
+    和应用程序都有多个利用了并行硬件的、不加区分的执行线程。
+    *线程* 是代表了进程内执行线程的一种抽象数据类型。线程有自己的执行
+    栈、程序计数器、寄存器组和状态。通过在一个进程范围内声明多个线程，
+    程序员可以编写出以很低的开销获得并行性的程序。尽管这些线程提供了低
+    开销的并行性，但由于它们驻留在相同的进程地址空间并共享进程资源，因
+    此，可能还需对它们进行额外的同步。由于启动进程所需的工作量大，有人
+    将进程称为是重量级（heavyweight）的。与之相反，线程有时被称作轻量
+    级进程（lightweight processes）。
+** 3、程序映像的布局
+    加载之后，可执行程序看起来占据了一个连续的内存块，这个连续的内存块
+    被称为 *程序映像* (program image)。
+    | 命令行参数和环境变量 | argc、argv、环境  （高端地址） |
+    |----------------------+--------------------------------------|
+    | 栈（向下增长） | 函数调用的活动记录（返回地址、参数、 |
+    | .                    | 已保存的寄存器、自动变量） |
+    | .                    |                                      |
+    |                      |                                      |
+    | .                    |                                      |
+    | .                    |                                      |
+    | 堆（向上增长） | 用 malloc 函数族分配的内存  |
+    | -------------------- |                                      |
+    | 未初始化的静态数据 |                                      |
+    | 已初始化的静态数据 |                                      |
+    | 程序文本     | （低端地址）                   |
+    以上是程序映像在它的逻辑地址空间中的一个布局实例。程序映像有几个不
+    同的分区。程序文本或代码显示在内存低端地址中。在映像中已初始化和未
+    初始化的静态变量也有自己的分区。其它的分区包括堆、栈和环境。
+    *活动记录* （activation record） 是在进程栈顶端分配的一个内存块，
+    用来装载调用过程中函数的执行上下文。每次函数调用都在栈上创建一个新
+    的活动记录。假如嵌套的函数调用按照后调用先返回的次序工作，则函数返
+    回时会将活动记录从栈中删除。
+    活动记录包括返回地址、参数（参数值从相应的命令行参数中拷贝而来）、
+    状态信息和调用时某些 CPU 寄存器值的拷贝。进程从记录表示的调用中返
+    回时，要恢复寄存器的值。活动记录中还包括函数执行时在其内部分配的自
+    动变量。活动记录的特定格式取决于硬件和编程语言。
+    除了静态变量和自动变量之外，程序映像中还包括了 argc 和 argv 占用的
+    空间及 malloc 分配的空间。malloc 函数族在一个被称为 *堆* (heap) 的
+    空闲内存池中分配存储空间。在堆上分配的存储空间一直存在，直到它被释
+    放或程序退出为止。若一个函数调用了 malloc，则在这个函数返回后，存
+    储空间仍保持已分配的状态。除非程序有一个在函数返回后仍然可以访问的、
+    指向该存储空间的指针，否则，返回后的程序就不能访问它。
+    在声明时没有显式初始化的静态变量在运行时被初始化为0,。注意，在程序
+    映像中，已初始化的静态变量和未初始化的静态变量占据不同的分区。通常，
+    已初始化的几个能太变量是磁盘上可执行模块的一部分，而未初始化的静态
+    变量则不是。当然，自动哦该变量不是可执行模块的一部分，因为只有当定
+    义它们的程序块被调用时，它们才被分配。除非程序显示地对自动变量进程
+    初始化，否则，它们的初始值是不确定。
+    对线程化的执行来说，静态变量会使程序变得不安全。连续调用一个引用了
+    静态变量的函数会出现意料不到的情况，因此，外部静态变量也使得代码的
+    调试更加困难。出于这些原因，除非是在受控的情况下，否则应该避免使用
+    静态变量。
+    尽管程序映像看起来占据了一个连续的内存块，但实际上，OS 将程序映像
+    映射到不一定连续的物理内存块中。通常的映射将程序映像划分为相同大小
+    的片，这些片被称为 *页* (page)。OS 将这些页加载到内存中，当处理器
+    引用某页上的内存时，OS 会从一个表中查找这一页的物理位置。这种映射
+    方式允许栈和堆有很大的逻辑地址空间，除非需要，否则这些栈和堆实际上
+    可不占用物理内存。OS 隐藏了这种底层映射的存在，这样，即使有些页实
+    际上并没有驻存在内存中，程序员也可认为程序映像在逻辑上是连续的。
+
+    局部数组入栈时，首地址在内存低处，即数组接受数据时，是按照顺序从低
+    地址向高地址储存的。这可通过调试时显示内存位置来验证。
+    局部变量入栈时，顺序可能与源程序中的顺序不同。
+    不同的编译器会为了优化的缘故而并不严格遵守先声明先入栈，或许还会为
+    了优化的原因把一个不被修改的自动变量设置为常量来当作参数，或用寄存
+    器来保存某个自动变量的值。
+** 4、进程状态转换
+*** 1)基本概念
+    处于 *阻塞* 状态的进程在等待事件，不能被选中执行。进程可以通过执行一个 sleep
+    这样的调用自动进入阻塞状态。更常见的情况是，进程在执行一个 I/O 请求时转入阻塞
+    状态。进程执行 I/O 时是通过一个库函数去请求服务的，这个库函数有时被称为 *系统
+    调用* （system call）。
+    *上下文切换(context switch)* 是指将一个进程从运行状态移出，并用另一个进程来替
+    代它的行为。
+    *进程上下文(process context)* 是 OS 在上下文切换之后重启进程所需的、有关此进
+    程及其环境的信息。
+*** 2)僵进程（zombie）
+    若进程终止了，但它的父进程没有等待它，则它就变成了一个 *僵进程(zombie)* .僵
+    进程一直停留在系统中，直到有进程等待它们为止。若父进程没有等待子进程就终止了，
+    子进程就成了 *孤儿进程(orphan)* ，并由一个特殊的系统进程收养。传统上，这个进
+    程被称为 init, 它的 pid 是 1, 但是 POSIX 不要求这种标识。init 进程周期性地等
+    待子进程，所以最后，成为孤儿进程的僵进程都被删除了。
+** 5、进程创建
+   fork() 函数拷贝了父进程的内存映像，这样新进程就会收到父进程地址空间的一份拷贝。
+   两个进程在 fork() 语句之后，都继续执行后面的指令（分别在它们自己的内存映像中
+   执行）。
+** 6、wait 函数
+   一个进程创建子进程时，父进程和子进程都从 fork 后的那个点开始继续执行。父进程
+   可通过执行 wait() 或 waitpid() 一直阻塞到子进程结束。wait 函数会使调用者的执
+   行挂起，直到子进程的状态成为可用的，或调用者收到一个信号为止。
+   父进程只能对子进程返回状态的 8 个最低有效位进行访问。
+* 4、安全编程
+   1）用返回值传递信息，并用返回值使调用程序能够很容易捕获错误。
+   2）不是从函数中退出，而是返回一个错误值，使调用程序能够灵活处理错误。
+   3）编写通用且便于使用的函数（有时这两个目标是相互冲突的）。
+   4）不对缓冲区大小作不必要的假设（通常很难实现）。
+   5）必须要使用限制时，使用标准的、系统定义的限制，而不要使用任意的常
+   量。
+   6）不要做重复的工作——可能的时候使用标准的库函数。
+   7）除非确实有必要，否则不要修改输入参数的值。
+   8）使用自动分配能做得到的，就不要使用静态变量或动态内存分配。
+   9）分析所有 malloc 函数族的调用，确保程序释放了所有已分配的内存。
+   10）考虑一下函数是否曾经被递归地调用、或被信号处理程序或线程调用过。
+   那些带有静态存储类变量的函数的表现可能会出人意料（在这里错误号会引
+   发很大的问题）。
+   11）对信号引起的中断造成的后果进行分析。
+   12）仔细地考虑整个程序如何终止。
+* 5、讨论 b=(++a)+(++a)+(++a)
+   不同的编译器计算出来的结果可能不同，根据后缀式(这个可能会有问题)
+   a++a+++a+++
+   先计算出两个 ++a 值，相加后再与 ++a 相加。注意，第一次相加时，本质
+   上还是 a 的值相加，故应该是两次自增后的 a 的 2 倍。
+   但这对 gcc 适用，对微软的一些编译器不适合，微软的编译器先计算出 a
+   的最终值，然后再进行加运算。
+   要考虑运算的优先级和结合性。
+* 6、驱动程序
+** 1、我的想法
+   1) Linux 系统调用实际上是调用设备驱动程序中的 
+      struct file_operations 中定义的函数，系统调用只是提供了操作的统
+      一名称，具体的操作方法由 struct file_operations 中对应函数的定义
+      来决定。
+   2) 设备驱动程序在一定程度上体现了面向对象的思想，即数据结构和操作在
+      一起，体现了面向对象中的“封装”思想。
+   3) kernel space 和 user space 内存中的数据不能直接相互访问。
+** 2、基础理论
+*** 1、内核模块的主要组成
+**** 1）模块加载函数（必须)
+     当通过 insmod 或 modprobe 命令加载内核模块时，模块的加载函数会自
+     动被内核执行，完成本模块的相关初始化工作。
+     Linux 内核模块加载函数一般以 __init 标识声明。模块加载函数必须以
+     "module_init(函数名)"的形式被指定。它返回整型值，若初始化成功，应
+     返回 0。若初始化失败，应返回错误编码。返回相应的错误编码是种好习
+     惯，因为只有这样，用户程序才可利用 perror() 等方法把它们转换成有
+     意义的错误信息字符串。
+     在 Linux 内核中，所有标识为 __init 的函数在连接时都放在
+     .init.text 这个区段内，此外，所有的 __init 函数在区段
+     .initcall.init 中还保存了一份函数指针，在初始化时内核会通过这些函
+     数指针调用这些 __init 函数，并在初始化完成后释放 init 区段（包括
+     .init.text、initcall.init 等）。
+     在 Linux 2.6 内核中，可使用 request_module(const char *fmt,...)
+     函数加载内核模块，驱动开发人员可通过调用
+     request_module(module_name);
+     或
+     request_module("char-major-%d-%d", MAJOR(dev), MINOR(dev));
+     来加载其他内核模块。
+**** 2）模块卸载函数（必须）
+     当通过 rmmod 命令卸载某模块时，模块的卸载函数会自动被内核执行，完
+     成与模块加载函数相反的功能。
+     Linux 内核模块卸载函数一般以 __exit 标识声明。模块卸载函数在模块
+     卸载时执行，不返回任何值，必须以 "module_exit(函数名)"的形式来指
+     定。通常来说，模块卸载函数要完成与模块加载函数相反的功能。
+     实际上，__init 和 __exit 都是宏，其定义分别为：
+     #define __init __attribut__ ((__section__(".init.text")))
+     和
+     #ifdef MODULE
+     #define __exit __attribut__ ((__section__ (".exit.text")))
+pp     #else
+     #define __exit
+     __attribut_used____attriute__((__section__(".exit.text")))
+     #endif
+     数据也可被定义为 _initdata 和 _exitdata，这两个宏分别为:
+     #define __initdata __attribut__ ((__section__(".init.data")))
+     和
+     #define __exitdata __attribut__ ((__section__(".exit.data")))
+**** 3）模块许可证声明（必须）
+     若不声明 LICENSE，模块被加载时，将收到内核被污染 (kernel tainted)
+     的警告。
+     在 Linux 2.6 内核中，可接受的 LICENSE 包括 "GPL","GPL v2","DPL
+     and additional rights","Dual BSD/GPL","Dual MPL/GPL"和
+     "Proprietary".
+**** 4）模块参数（可选）
+     它是模块被加载时可被传递给它的值，它本身对应模块内部的全局变量。
+     形式为：
+     module_param(参数名，参数类型，参数读写权限)
+     参数类型可以是 byte、short、ushort、int、uint、long、ulong、charp
+     （字符指针）、bool 或 invbool （布尔的反），在模块被编译时会将
+     module_param 中声明的类型与变量定义的类型进行比较，判断是否一致。
+     在装载内核模块时，用户可向模块传递参数，形式为
+     insmod (或 modprobe) 模块名 参数名=参数值
+     若不传递参数，则参数将使用模块内定义的默认值。
+     模块被加载后，在 /sys/module/ 目录下将出现以此模块名命名的目录。
+     当“参数读写权限”为 0 时，表示此参数不存在 sysfs 文件系统下对应
+     的文件节点，若此模块存在“参数读写权限”不为 0 的命令行参数，在此
+     模块的目录下还将出现 parameters 目录，包含一系列以参数名命名的文
+     件节点，这些文件的权限值就是传入 module_param() 的“参数读写权限”，
+     而文件的内容为参数的值。
+     除此之外，模块也可拥有参数数组，形式为
+     module_param_array(数组名，数组类型，数组长，参数读写权限)
+     将数组长变量的指针赋给“数组长”，当不需要保存实际输入的数组元素
+     个数时，可设置“数组长”为 NULL。
+     运行 insmod 或 modprobe 命令时，应使用逗号分割输入的数组元素。
+**** 5）模块导出符号（可选）
+     内核模块可以导出符号（symbol, 对应于函数或变量），这样其它模块可
+     使用本模块中的变量或函数。
+     Linux 2.6 的 /proc/kallsyms 文件对应内核符号表，它记录了符号以及
+     符号所在的内存地址。
+     模块可使用如下宏导出符号到内核符号表：
+     EXPORT_SYMBOL(符号名);
+     EXPORT_SYMBOL_GPL(符号名);
+     导出的符号将可被其他模块使用，使用前声明一下即可。
+     EXPORT_SYMBOL_GPL() 只适用于包含 GPL 许可权的模块。
+**** 6）模块作者等信息声明（可选）
+      MODULE_AUTHOR()          模块作者
+      MODULE_DESCRIPTION()     描述
+      MODULE_VERSION()         版本
+      MODULE_DEVICE_TABLE()    设备表
+      MODULE_ALIAS()           别名
+*** 2、模块的使用计数
+     Linux 2.6 内核提供了模块计数管理接口 try_module_get(&module) 和
+     module_put(&module)。模块的使用计数一般不必由模块自身管理，而且模
+     块计数管理还考虑了 SMP 与 PREEMPT 机制的影响。
+     int try_module_get(struct module *module);
+     void module_put(struct module *module);
+     第一个函数用于增加模块使用计数，若返回为 0, 表示调用失败，希望使
+     用的模块没有被加载或正在被加载。
+     第二个函数用于减少模块使用计数。
+     try_module_get() 与 module_put() 的引入与使用与 Linux 2.6 内核下
+     的设备模型密切相关。Linux 2.6 内核为不同类型的设备定义了 
+     struct module *owner 域，用来指向管理此设备的模块。当开始使用某个
+     设备时，内核使用 try_module_get(dev->owner) 去增加此设备的 owner
+     模块的使用计数;当不再使用此设备时，内核使用
+     module_put(dev->owner) 减少对管理此设备的 owner 模块的使用计数。
+     这样，当设备在使用时，管理此设备的模块将不能被卸载。只有当设备不
+     再被使用时，模块才允许被卸载。
+     在 Linux 2.6 内核下，对于设备驱动工程师而言，很少需要亲自调用
+     try_module_get() 与 module_put()，因为此时开发人员所写的驱动通常
+     为支持某具体设备的 owner 模块，对此设备 owner 模块的计数管理由内
+     核里更底层的代码(如总线驱动或是此类设备共用的核心模块)来实现，从
+     而简化了设备驱动的开发。
+     
+** 3、Linux 文件系统与设备驱动
+    应用程序和 VFS 之间的接口是系统调用,而 VFS 与磁盘文件系统以及普通
+    设备之间的接口是 file_operations 结构体成员函数,这个结构体包含对文
+    件进行打开,关闭,读写,控制的一系列成员函数.
+    由于字符设备的上层没有磁盘文件系统,所以字符设备的 file_operations
+    成员函数就直接由设备驱动提供了, file_operations 正是字符设备驱动的
+    核心.
+    而对于块存储设备而言, ext2\fat\fffs2 等文件系统中会实现针对 VFS 的
+    file_operations 成员函数,设备驱动层将看不到 file_operations 的存在.磁
+    盘文件系统和设备驱动会将对磁盘上文件的访问最终转换成对磁盘上柱面和
+    扇区的访问. 
+** 4、file 结构体
+    文件结构体代表一个打开的文件(设备对应于设备文件),系统每个打开的文
+    件在内核空间都有一个关联的 struct file. 它由内核在打开文件时创建,
+    并传递给在文件上进行操作的任何函数.在文件的所有实例都关闭后,内核释
+    放这个数据结构.
+
+    struct file {
+        union {
+	    struct list_head fu_list;
+	    struct rcu_head fu_rcuhead;
+	} f_u;
+	struct dentry *f_dentry;/* 与文件关联的目录入口(dentry)结构*/
+	struct vfsmount *f_vfsmnt;
+	struct file_operations *f_op;    /* 和文件关联的操作 */
+	atomic_t f_count;
+	unsigned in f_flags; /* 文件标志,如 O_RDONLY, O_NONBLOCK */
+	mode_t f_mode;  /* 文件读写模式, FMODE_READ, FMODE_WRITE */
+	loff_t f_pos;   /* 当前读写位置 */
+	struct fown_struct f_owner;
+	unsigned int f_uid, f_gid;
+	struct file_ra_state f_ra;
+	unsigned long f_version;
+	void *f_security;
+
+	/* tty 驱动需要,其他的驱动可能需要 */
+	void *private_data;   /* 文件私有数据 */
+
+	#ifdef CONFIG_EPOLL
+	/* 被 fs/eventpoll.c 使用以便连接所有这个文件的钩子(hooks) */
+	  struct list_head f_ep_links;
+	  spinlock_t f_ep_lock;
+	#endif 
+	struct address_space *f_mapping;
+    };
+
+    文件读写模式 mode \ 标志 f_flags 都是设备驱动关心的内容,而私有数据
+    指针 private_data 在设备驱动中被广泛使用,大多指向设备驱动自定义用
+    于描述设备的结构体. 
+** 5、inode 结构体
+    VFS inode 包含文件访问权限、属主、组、大小、生成时间、访问时间、最
+    后修改时间等信息。它是 Linux 管理文件系统的最基本单位，也是文件系
+    统连接任何子目录、文件的桥梁。
+    
+    struct inode{
+        ...
+	umode_t i_mode; /* inode 的权限 */
+	uid_t i_uid; /* inode 拥有者的id */
+	gid_t i_gid; /* inode 所属的群组 id */
+	dev_t i_rdev; /* 若是设备文件，此字段将记录设备的设备号 */
+	loff_t i_size; /* inode 所代表的文件大小 */
+	
+	struct timespec i_atime; /* inode 最近存取时间 */
+	strcut timespec i_mtime; /* inode 最近修改时间 */
+	struct timespec i_ctime; /* inode 产生时间 */
+	
+	unsigned long i_blksize; /* inode 在做 I/O 时的区块大小*/
+	unsigned long i_blocks; /* inode 所使用的 block 数，
+	                           一个 block 为 512 bytes */
+        
+	struct block_device *i_bdev; /* 若是块设备，为其对应的
+	                                block_device 大小*/
+        struct cdev *i_cdev; /* 若是字符设备，为其对应的 cdev 
+	                        结构体指针 */
+	...
+    };
+    对于表示设备文件的 inode 结构，i_rdev 字段包含设备编号。Linux2.6
+    设备编号分为主设备号和次设备号，前者为 dev_t 的高 12 位，后者为
+    dev_t 的低 20 位。
+    可查看 /proc/devices 文件获知系统中注册的设备，第一列为主设备号，
+    第二列为设备名。
+    主设备号是与驱动对应的概念，同一类设备一般使用相同的主设备号，不同
+    类的设备一般使用不同的主设备号（但也不排除在同一主设备号下包含有一
+    定差异的设备）。因为同一驱动可支持多个同类设备，因此用次设备号来描
+    述使用该驱动的设备的序号，序号一般从 0 开始。
+** 6、2.6.37 内核中 struct file_operations 的改变
+   没有 .ioctl（） 函数，改成了：
+   long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
+   long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
+   在写驱动时，要注意所用的内核版本和其中结构体的变化。
+** 7、常用函数及全局变量速查
+*** 1、kmalloc() 及 kfree()
+    定义在 <linux/slab.h>
+*** 2、container_of()
+    定义在 <linux/kernel.h>
+*** 3、current
+    指向 task_struct,定义在 <linux/sched.h>
+ssh flyer@210.27.6.248 -p 7777
+
+* 7、与 Linux 底层相关
+** 1、查看系统变量地址
+   /proc/kallsyms
+* 8、Process group
+  In POSIX-confomant OS, a *process group* denotes a collection of one
+  or more processes. Process groups are used to control the
+  distribution of signals. A signal directed to a process group is
+  delivered individually to all of the processes that are members of
+  the group.
+  Process groups are themselves grouped into *session*. Process groups
+  are not permitted to migrate from one session to another, and a
+  process may only create new procsss groups belonging to the same
+  session as it itself belongs to. Processes are not permitted to join
+  Process groups that are not in the same session as they themselves
+  are.
+  New process images created by a call to a function of the *exec*
+  family inherit the procsss group membership and the session
+  membership of the old process image.
+* 9、头文件
+  What variables and functions are accessbile from your program has
+  nothing to do with what headers you include. Headers just contain
+  prototypes of variables and functions so that you don't have to
+  write them all manually.
+* 10、Linux Kernel 学思考
+** 1、有关设计
+   好的设计会指导写出优秀的程序，这个过程包括：
+   1）有什么问题要解决
+   2）如何解决提出的问题
+   3）程序要完成什么功能
+   4）程序的结构要如何组织
+   设计很重要，可以和大家通过邮件列表或其它方式进行讨论，决定是否增加某个特性，
+   要以实用为基准。
+   每个稳定发布版的功能集都要在写代码前确定，一旦确定下来，每个版本的功能集不能
+   再变，若有新特性商讨后觉得有必要添加，那么作为下次的稳定发行版再添加。
+   每次只做好一件事。
+** 2、有关版本
+   版本可以采取类似于 Linux Kernel 的版本格式，以 2.6.37 为例，’2‘指的是主版本
+   号，可以由次版本号由 0.1 增加到 1.0 来增加。 ’6‘ 为次版本号，如果作为内部开
+   发的话，用奇数表示试验版本，偶数表示稳定版，每次新增加特性来开发时，次版本号
+   增加。 ’37‘ 表示第几次发布，每发布一次增 1 ，上限为 99。次版本号每次增加时，
+   表示发布次数的数字清零。
+* 11、缓冲
+  一般标准 I/O 库函数带有缓冲函数。
+  当标准输出连接到终端设备时，它是行缓冲的。也就是说，输出是一行一
+  行的来，每一行由换行符进行冲洗缓冲，相当于输出一行后缓冲区就再没内容。
+  当标准输出重定向到一个文件时，它是全缓冲的，也就是说缓冲区中的内容虽然输出了，
+  但是在缓冲区中的内容仍然保留，没有被冲洗掉。
+  我的系统，stdin 和 stdout 都是 line buffered, 大小为 1024 byte, stderr 是
+  unbuffered, 大小是 1 byte。当输出定向到文件时，stdin 仍是 line buffered, 大小
+  为 1024 byte, stdout 变成 fully buffered，大小为 4096 byte.默认情况下，普通文
+  件都是 fully buffered, 大小为 4096 byte.
+  在程序结束时，缓冲区内容会全部被输出，缓冲区被清空。
+  可使用 fflush(3) 函数清空缓冲区内容。
+  缓冲区进行数据的缓冲也如同压栈入栈，后进先出。
+  buffering 有三种: unbuffered, block buffered, line buffered. When an output
+  stream is unbuffered, information appears on the destination file or terminal as
+  soon as written; when it is block buffered, many characters are saved up and
+  written as a block; when it is line buffered, characters are saved up until a
+  newline is output or input is read from any stream attached to a terminal device
+  (typically stdin). The function *fflush(3)* may be used to force the block out
+  early. Normally all files are block buffered. When the first I/O operation
+  occures on a file, *malloc(3)* is called, and a buffer is obtained. If a stream
+  refers to a terminal (as stdout Normally does), it is line buffered. The
+  standard error stream stderr is always unbuffered by default.
+  从这段来自 setvbuf(3) 的 man 文档中可以知道,使用 fflush(3) 函数可以强制输出以
+  block buffered 形式缓冲的内容. 每次打开文件时,都会调用 malloc(3) 函数,用来获得缓
+  冲.
+* 12、命令解释程序
+  它是一个用来提示命令、从标准输入中读入命令、创建子进程来执行命令并等待子进程执
+  行完毕的一个程序。
+* 13、算法
+** 1、求全排列
+   利用递归的方法。先从两个数时分析，两种情况，交换两个数位置，三个数时，它们依
+   次位于首位置，然后对后两个数进行交换。按照这种方法进行递归。
+** 2、一次遍历单链表找寻中间结点
+   设置三个指针来遍历，一个指针步长为 1, 一个指针步长为 2, 另一个指针指向步长为
+   2 的指针的前个结点。结束标志是第二个指针和第三个指针的 next 域为空。
+   用此方法可以在一次遍历过程中求出任意位置的结点。
+** 3、一次遍历双向链表找寻中间结点
+   设立两个指针，一个从头开始遍历，一个从尾部往前遍历，直到两个指针相遇。注意结
+   束条件，不能用两个指针相等作为结束条件，因为奇数时首尾指针不会相遇，要另找可
+   以区分的作为条件。
+** 4、交换两个整数
+*** 1、利用一个整型变量
+    int tmp;
+    tmp = a;
+    a = b;
+    b = tmp;
+*** 2、利用加减法
+    a = a + b;
+    b = a - b;
+    a = a - b;
+*** 3、利用异或运算
+    a = a^b;
+    b = a^b;
+    a = a^b;
+** 5、求两个数中最大的数
+   不使用判断语句和 ?: ，方法是
+   ((a+b) + abs(a-b)) / 2
+   直接求。
+** 6、实现单链表的反转(带头结点)
+   struct node *p1, *p2, *p3;
+   p1 = head->next;
+   p2 = p1->next;
+   p3 = p2->next;
+   p1->next = NULL;
+   while (p3) {
+       p2->next = p1;
+       p1 = p2;
+       p2 = p3;
+       p3 = p3->next;
+   }
+   p2->next = p1;
+   head->next = p2;
+** 7、判断一个单链表是否有环
+   设置两个指针，一个指针一次移动一个步长，另一个指针一次移动两个步长，若有环，
+   则在移动的过程中这两个指针必定重合。
+* 14、内存分配方式及区别
+** 1、从静态存储区域分配
+   内存在程序编译的时候就已经分配好，这块内存在程序的整个运行期间都存在，如全局
+   变量，static 变量。
+** 2、在栈上创建
+   在执行函数时，函数内局部变量的存储单元都可在栈上创建，函数执行结束时这些存储
+   单元自动被释放。栈内存分配运算内置于处理器的指令集。
+** 3、从堆上分配(动态内存分配)
+   程序运行时用 malloc 或 new 申请任意多的内存，程序员自己负责在何时用 free 或
+   delete 释放内存。动态内存的生存期由程序员决定，使用非常灵活，但问题也最多。
+
+* 15、软件开发
+** 1、五个步骤
+   需求分析，系统设计，系统编码，测试运行，升级维护。
+* 16、堆常出现的问题
+** 1、内存损坏
+   释放或改写仍在使用的内存。
+** 2、内存泄漏
+   未释放不再使用的内存，典型表现是该进程的速度会减慢，若数量多，也会造成 OS 速
+   度变慢。原因是：体积大的进程更有可能被系统换出，让别的进程运行，且大的进程在
+   换进换出时花费的时间也更多。即使泄漏的内存本身并不被引用，但它仍可能存在于页
+   面中(内容自然是垃圾)，这样就增加了进程的工作页数量，降低了性能。
+   检测方法分两个步骤：
+   一、使用 swapon 命令观察还有多少可用的交换空间，在短时间内多次键入该命令，观
+   察可用的交换空间是否在减少。还可使用 vmstat、netstat 等命令。若不断有内存被分
+   配但从不释放，一个可能的原因是某个进程出现了内存泄漏。
+   二、确定可疑的进程，察看它是否该位内存泄漏负责，可通过 ps 命令来察看。
+
+* 17、总线错误和段错误
+  总线错误和段错误的准确原因在不同的操作系统版本上各不相同。
+  在缺省情况下，进程在收到”总线错误“或”段错误“信号后将进行信息转储 (core
+  dumped) 并终止。
+** 1、总线错误
+   它几乎都是由于未对齐的读或写引起的。它之所以称为总线错误，是因为未出现对齐的
+   内存访问请求时，被堵塞的组件就是地址总线。对齐(alignment)的意思酒肆和数据项只
+   能存储在地址是数据项大小的整数倍的内存位置上。在现在的计算机架构中，尤其是
+   RISC 架构，都需要对齐数据，因为与任意的对齐有关的额外逻辑会使整个内存系统更大
+   且更慢。通过迫使每个内存访问局限在一个 Cache 行或一个单独的页面内，可疑极大地
+   简化并加速如 Cache 控制器和内存管理单元这样的硬件。
+   总线错误也可能由于引用一块物理上不存在的内存引起。
+
+** 2、段错误
+   在 Sun 的硬件中，段错误是由于内存管理单元(负责支持虚拟内存的硬件)的异常所致，
+   而该异常则通常是由于解除引用一个未初始化或非法值的指针引起的。若指针引用一个
+   并不位于你的地址空间中的地址，OS 便会对此进行干涉。
+   若未初始化的指针恰好具有未对齐的值(对于指针所要访问的数据而言)，它将会产生总
+   线错误，而不是段错误。对于绝大多数架构的计算机而言确实如此，因为 CPU 先看到地
+   址，然后再把它发送到 MMU。
+   若程序所需的内存超过了 OS 所能提供给它的数量，程序就会发出一条”段错误“信息
+   并终止。
+   常见的可能导致段错误的编程错误有:
+*** 1、坏指针值错误
+    在指针赋值之前就用它来引用内存，或向库函数传送一个坏指针，堆指针进行释放后再
+    访问它的内容。
+    对于第三种情况，可用如下方式避免：
+    free(p);
+    p = NULL;
+*** 2、改写(overwrite)错误
+    越过数组边界写入数据，在动态分配的内存两端之外写入数据，或改写一些堆管理数据
+    结构。
+*** 3、指针释放引起的错误
+    释放同一个内存块两次，或释放一块未曾使用  malloc() 分配的内存，或释放仍在使
+    用中的内存，或释放一个无效的指针。
+* 18、C/C++ 中的字符常量大小
+  在 C 中，字符常量被认为是 int 型，而在 C++ 中，字符常量被认为是 char 型。记住
+  这点儿。
+* 19、Common Lisp
+** 1、有趣的函数
+*** 1、car、cdr 及其组合
+    (car list) 用来显示 list 的第一项
+    (cdr list) 用来显示 list 的除第一项之外的其他元素
+    (cdar list) 相当于 (cdr (car list))
+    (cadr list) 相当于 (car (cdr list))
+    (cddr list) 相当于 (cdr (cdr list))
+    (caddr list) 相当于 (car (cdr (cdr list)))
+    (cddar list) 相当于 (cdr (cdr (car list)))
+    (cadadr list) 相当于 (car (cdr (car (cdr list))))
+    由此来看，car 和 cdr 可以任意组合，只要满足函数首尾分别是 c、r，中间可以有至
+    多 4 个 a 和 d 的组合。4 层组合时 CL 提供的，自己可以写出更多层的组合函数。
+
+*** 2、cons
+    (cons se1 se2)
+    把 se1 加入到 se2 中，功能是构造一个 list，以 nil 结尾，例：
+    (cons 'pork (cons 'beef ()))
+    等价于
+    (cons 'pork (cons 'beef nil))
+*** 3、list
+    (list &rest args)
+    构造 list.例
+    (list 'pork 'beef)
+    等价于
+    (cons 'pork (cons 'beef nil))
+    用它创造嵌套 list 很方便，如
+    (list '(peas tomatoes) '(pork beef))
+    等价于
+    (cons (cons 'peas (cons 'tomatoes nil))
+          (cons (cons 'pork (cons 'beef nil)) nil))
+*** 4、ash
+    (ash integer count)
+    移位函数，count > 0 时左移，count < 0 时右移。
+*** 5、定义变量
+    (defparameter var val &optional doc)
+    (defvar var &optional val doc)
+    第一个定义的参数在重新定义时值可以改变，第二个在重新定义某个参数时，即使在定
+    义时赋了新值，但值还是第一次定义时的值。
+*** 6、定义函数
+    (defun name args &body body)
+*** 7、加减1
+    (1+ num)
+    (1- num)
+    第一个表示 num+1, 第二个表示 num-1,但原值不变。
+*** 8、princ
+    (princ object &optional stream)
+*** 9、setf
+    (setf &rest args)
+    修改变量的值，变量必须先定义。
+*** 10、比较函数
+    *(equal x y)*
+    *(eql x y)*
+    *(eq obj obj2)*
+    *(= number &rest more-numbers)*
+    *(string-equal string1 string2 &key (start1 0) end1 (start2 0) end2)*
+    *(char-equal character &rest more-characters)*
+
+    The *eql* command is similar to the *eq* command, but unlike *eq*, it also
+    handles comparisons of numbers and characters.
+    The *equalp* command is essentially the same as the *equal* command, except
+    that it can handle some difficult comparison cases with a bit of extar
+    sophistication. For istance, it can compare strings with different
+    capitalizations and can compare integers against flaoting-point numbers:
+    > (equalp "Bob Smith" "bob smith")
+    T
+    > (equal "Bob Smith" "bob smith")
+    NIL
+    > (equalp 0 0.0)
+    T
+    > (equal 0 0.0)
+    NIL
+
+    Conrad's rule fo thumb for comparison:
+    1) Use *(eq)* to compare symbols
+    2) Use *(equal)* for everything else
+*** 11、判断是否为奇数、偶数
+    (oddp number)
+    (evenp number)
+    真的话返回 T，否则返回 NIL。
+*** 12、乘除运算
+    (* &rest args)
+    (/ number &rest more-numbers)
+    对于除法，若都是整型，若被除数比除数大且不能整除，或被除数比除数小，则返回分
+    数。
+*** 13、progn
+    (progn &rest forms)
+*** 14、member
+    判断一个量是否在在一个集合中
+    (member item list &key key test test-not)
+    若 item 包含于 list,则返回 list 中从 item 起之后的子 list，否则返回 NIL.
+*** 15、find-if
+    (find-if predicate sequence &rest args &key from-end (start 0) end key)
+    以 (find-if #'oddp '(2 4 5 6)) 为例:
+    The *find-if* function actually takes another function, in this case *oddp*,
+    as a parameter. *find-if* will find the first value in the list for which
+    *oddp* returns true. In this case, it will find the first number (if any)
+    that is an odd number.
+    *find-if* can fill dual roles: either as a retriever of values matching some
+    constraint or as a true/false value inside a condition.
+    缺陷例子:
+    (find-if #'null '(3 2 nil 5))
+    此时返回 NIL。
+*** 16、null
+    (null object)
+    The *nulle function*, which returns true for any of the *nil* value,
+    correctly finds the *nil*.
+** 2、基础概念
+*** 1、list and cons cells
+    All lists are made of cons cells.
+    In lisp, a chain of cons cells and a list are exactly the same thing.
+    Lists are just long chains of two-item cells.
+    CL 支持嵌套 list。
+    Lists are created from cons cells.
+
+*** 2、code mode and data mode
+    CL 由这两种 mode 构成，在 list 或变量前加 ' 即标明它是 data.
+*** 3、True and False
+    CL 把空 list 即 () 当作 False,其余的都是 True。
+    '() == 'nil == nil == ()
+*** 4、recursive
+**** 1、list recursive
+     Lists in Lisp are recursive (conses of conses of conses ...), so the act of
+     consuming a list maps naturally onto functions that are recursive.
+*** 5、Text Handling
+    Remember that handling text is not a computer's strength. It is a necessary
+    evil best kept to a minimum.
+** 3、基本语句
+*** 1、if、when、unless
+    (if test then &optional else)
+    (when test &body forms)
+    (unless test &body forms)
+    if 是 special form 而不是 function.
+    if 语句默认的情况下是，不管真假，只能使用一条语句，但可以使用 (progn &rest
+    forms) 语句来增加在判断真假后可以处理的语句个数。
+    when 和 unless 语句本质上和 if 语句一样，但是可以在判断真假后执行多条语句，
+    隐式嵌入了 (progn ) 函数。when 是当条件为真时执行接下来的语句，unless 是当条
+    件为假时执行接下来的语句。条件不满足时返回 NIL.
+*** 2、cond
+    判断语句，有些类似于 C 中的 if-else 句型，最后一般用 (t statement) 结尾，表
+    示以上条件都不满足时，执行这句。
+*** 3、case
+    这种语句和 C 中的基本一样，只是对于默认情况不是用 default,而是用 otherwise,
+    且 otherwise 这个词不用加括号，例
+    (case person
+      ((flyer) ...)
+      ((flx) ...)
+      ...
+      (otherwise ...))
+*** 4、and/or
+    逻辑运算.
+    (and &rest forms)
+    (or &rest forms)
+* 20、\r 、\n 和 \r\n 区别
+  \r 表示回车，仅表示完成，把光标回到行首。
+  \n 表示换行，位置是当前光标位置的下一行的竖直位置。
+  \r\n 表示换行和回车，表示完成后，光标移动到下一行的行首。
+  按键盘上回车键时，会自动产生 \r\n.
+* 21、HTML
+** 1、Notice
+   HTML 对大小写不敏感。
+   单双引号都可以用。
+** 2、基本标签
+*** 1、标题:
+    <h1>description</h1> 共六种，到  <h6>description</h6>
+*** 2、段落:
+    <p>content</p>
+*** 3、链接:
+**** 1、基本格式
+     <a href="url">description</a>
+     若使用
+     <a href="url" target="_blank"></a>
+     则会在新的窗口中打开链接。
+**** 2、使用图片作为链接的例子:
+     <a href="/example/html/lastpage.html">
+     <img border="0" src="/i/eg_buttonnext.gif" />
+     </a>
+**** 3、结合锚
+     结合锚在本页中跳转或不同网页中跳转到指定的位置，以下是例子:
+     <a name="tips">Useful Tips Section</a>
+     <a href="#tips">Visit the Useful Tips Section</a>
+     <a href="http://www.w3school.com.cn/html_links.htm#tips">
+     Visit the Useful Tips Section
+     </a>
+**** 4、跳出框架的例子:
+     <a href="/index.html"
+     target="_top">请点击这里！</a> 
+**** 5、发送邮件:
+    <a href="mailto:邮箱地址"></a>
+    若找不到锚，会返回到该文档顶端，不会产生错误。
+    定义链接时，最后在 url 的最后部分加上 '/' ，不然客户端会向服务器产生两次请求，
+    第一次请求的作用是在 url 的最后部分加上 ‘/’.
+*** 4、图片:
+**** 1、基本用法
+     <img src="link" width="value" height="value">
+     通过  width 和 height 可调整图片的尺寸。
+     若浏览器无法显示图片，可用文字替代，如下:
+     <img src="boat.gif" alt="Big Boat">
+     可在 <img> 中添加对齐属性  algin="bottom" (该行其余部分与图片底部对齐)
+     algin="middle" algin="top"
+     algin="left" align="right" ，图片浮动到文本的左边/右边。
+**** 2、背景图片
+     <body background="img">
+     若图片小于页面，图片会重复.
+*** 5、换行:
+    <br />
+*** 6、水平线:
+    <hr />
+*** 7、字体:
+    1)粗体 <b></b>
+    2)强调 <strong></strong>
+    3)大号字体 <big></big>
+    4)小号字体 <small></small>
+    5)强调文本 <em></em>
+    6)斜体 <i></i>
+    7)定义下标文体 <sub></sub>
+    8)定义上标文体 <sup></sup>
+    9)删除字 <del></del>
+      效果为在输入的文字上划横线，表示删除该文字.
+    10)插入字 <ins></ins>
+      效果为就像填空一样。
+*** 8、定义预格式文本:
+    <pre></pre>
+    即在 html 文件中如何写就如何显示，很适合显示计算机代码。
+*** 9、常用于显示计算机/编程代码的标签:
+    <code>Computer Code</code>
+    <kbd>Keyboard input</kbd>
+    <tt>Teletype text</tt>
+    <samp>Sample text</samp>
+    <var>Computer variables</var>
+*** 10、用于显示地址的标签:
+    <address></address>
+*** 11、缩写:
+    <abbr title="etcetera">etc.</abbr>               # 定义缩写
+    <acronym title="World Wide Web">WWW</acronym>    # 定义只取首字母的缩写
+    以上两个是例子，可以发现用法的不同。在网页中，鼠标放上去后会显示完整的词句。
+*** 12、文字方向:
+    <bdo dir="rtl"></bdo>
+    若浏览器支持 bi-directional override (bdo)，则上述标记会从右向左显示输入的文
+    字。
+*** 13、引用
+    长引用:
+    <blockquote></blockquote>
+    在此之间的文字会自动插入换行和边距。
+    短引用:
+    <q></q>
+    虽也是引用，但不会有特殊的格式。
+*** 14、定义引正:
+    <cite></cite>
+*** 15、定义一个定义项目:
+    <dfn></dfn>
+*** 16、表格
+    每个表格由 table 标签开始,每个表格行由 tr 标签开始,每个表格数据由 td 标签开
+    始,嵌套使用.可以定义表头，用 <th></th>，既可以用水平表头，也可以用垂直表头，
+    用法同 <td></td>.
+    以下是例子:
+    
+    <table border="8">
+    <tr>
+      <td>First</td>
+      <td>Row</td>
+    </tr>   
+    <tr>
+      <td>Second</td>
+      <td>Row</td>
+    </tr>
+    </table>
+    
+    其中 border 的值可以修改，不同的值显示的表格的边框的粗细不同，也可以不使用这
+    个属性。
+    可在 <table> 下添加 <caption></caption> ，作用是给一个表格添加标题，然后下面
+    才是表格行、表格数据.
+    添加属性 colspan="num" 表示该项占 num 个表格项的竖向大小;
+    添加属性 rowspan="num" 表示该项占 num 个表格项的横向大小.
+*** 17、列表
+**** 1、无序列表
+     <ul>
+     <li>content</li>
+     <li>content</li>
+     </ul>
+     
+     ul 有属性 type="disc"  type="circle"  type="square"，分别表示列表项前的符号
+     为实心圆、空心圆、实心方框。
+**** 2、有序列表
+     <ol>
+     <li>content</li>
+     <li>content</li>
+     </ol>
+     
+     ol 有属性 type="A"  type="a"  type="I"  type="i"，分别表示列表项前的符号为
+     大写字母、小写字母、大写罗马数字、小写罗马数字，默认是阿拉伯数字。
+**** 3、定义列表
+     形如
+     <dl>
+     <dt>Coffee</dt>
+     <dd>Black hot drink</dd>
+     <dt>Milk</dt>
+     <dd>White cold drink</dd>
+     </dl>
+
+     效果为:
+     Coffee
+           Black hot drink
+     Milk
+           White cold drink
+*** 18、表单
+**** 1、文本域和密码域
+     例子为:
+     <form>
+     用户：
+     <input type="text" name="user">
+     <br />
+     密码：
+     <input type="password" name="password">
+     </form>
+
+     建立多行文本域
+     <textarea rows="10" cols="30">content</textarea>
+**** 2、单选按钮
+     例子如下:
+     <form>
+     <input type="radio" name="sex" value="male" /> Male
+     <br />
+     <input type="radio" name="sex" value="female" /> Female
+     </form>
+**** 3、复选框
+     例子如下:
+     <form>
+     <input type="checkbox" name="bike" />
+     I have a bike
+     <br />
+     <input type="checkbox" name="car" />
+     I have a car
+     </form>
+**** 4、表单的动作属性（Action）和确认按钮
+     例子如下:
+     <form name="input" action="html_form_action.asp" method="get">
+     Username: 
+     <input type="text" name="user" />
+     <input type="submit" value="Submit" />
+     </form>
+**** 5、下拉表
+     <form>
+     <select name="cars">
+     <option value="volvo">Volvo</option>
+     <option value="saab">Saab</option>
+     <option value="fiat">Fiat</option>
+     <option value="audi">Audi</option>
+     </select>
+     </form>
+
+     <form>
+     <select name="cars">
+     <option value="volvo">Volvo</option>
+     <option value="saab">Saab</option>
+     <option value="fiat" selected="selected">Fiat</option>
+     <option value="audi">Audi</option>
+     </select>
+     </form>
+**** 6、创建按钮
+     <form>
+     <input type="button" value="Hello world!">
+     </form>
+**** 7、带框的表单
+     <fieldset>
+     <legend>健康信息：</legend>
+     <form>
+     <label>身高：<input type="text" /></label>
+     <label>体重：<input type="text" /></label>
+     </form>
+     </fieldset>
+**** 8、带输入框和确认按钮的表单
+     <form action="/example/html/form_action.asp" method="get">
+     <p>First name: <input type="text" name="fname" /></p>
+     <p>Last name: <input type="text" name="lname" /></p>
+     <input type="submit" value="Submit" />
+     </form>
+**** 9、带复选框的表单
+     <form name="input" action="/html/html_form_action.asp" method="get">
+     I have a bike:
+     <input type="checkbox" name="vehicle" value="Bike" checked="checked" />
+     <br />
+     I have a car: 
+     <input type="checkbox" name="vehicle" value="Car" />
+     <br />
+     I have an airplane: 
+     <input type="checkbox" name="vehicle" value="Airplane" />
+     <br /><br />
+     <input type="submit" value="Submit" />
+     </form> 
+**** 10、从表单发送电子邮件
+     <form action="MAILTO:someone@w3school.com.cn" method="post" enctype="text/plain">
+
+     <h3>这个表单会把电子邮件发送到 W3School。</h3>
+     姓名：<br />
+     <input type="text" name="name" value="yourname" size="20">
+     <br />
+     电邮：<br />
+     <input type="text" name="mail" value="yourmail" size="20">
+     <br />
+     内容：<br />
+     <input type="text" name="comment" value="yourcomment" size="40">
+     <br /><br />
+     <input type="submit" value="发送">
+     <input type="reset" value="重置">
+
+     </form>
+*** 19、背景颜色
+    有三种格式:
+    <body bgcolor="#000000">     # 十六进制表示
+    <body bgcolor="rgb(0,0,0)">
+    <body bgcolor="black">
+*** 20、颜色值
+    颜色由一个十六进制符号来定义，这个符号由红色、绿色和蓝色的值组成（RGB）。每
+    种颜色的最小值是 0（十六进制：#00）。最大值是 255（十六进制：#FF），故共有
+    256^3 中颜色.
+    当所有颜色取相等的值时，灰色就可以被显示出来。
+*** 21、链接样式表
+**** 1、链接外部样式表
+     适合于很多网页的样式
+     <head>
+     <link rel="stylesheet" type="text/css" href="mystyle.css">
+     </head>
+**** 2、链接内部样式表
+     适用于单个网页
+     <head>
+     <style type="text/css">
+     body {background-color: red}
+     p {margin-left: 20px}
+     </style>
+     </head>
+**** 3、内链样式
+     适合于网页中的部分
+     <p style="color: red; margin-left: 20px">
+     This is a paragraph
+     </p>
+** 3、常用属性
+*** 1、style 样式
+    如下例子:
+    
+    <body style="background-color:yellow">
+    <h2 style="background-color:red">This is a heading</h2>
+    <p style="background-color:green">This is a paragraph.</p>
+    </body>
+
+    <body>
+    <h1 style="font-family:verdana">A heading</h1>
+    <p style="font-family:arial;color:red;font-size:20px;">A paragraph.</p>
+    </body>
+
+    <body>
+    <h1 style="text-align:center">This is a heading</h1>
+    <p>The heading above is aligned to the center of this page.</p>
+    </body>
+
+* 22、CSS
+* 23、MySQL
+** 1、重命名表
+   ALTER TABLE `旧表名` RENAME TO `新表名`;

@@ -749,10 +749,20 @@
 
 * 118、cpu frequecy
   软件 powernowd 可以调节 CPU 频率。
-* 119、ssh 自动连接
-  先通过
+* 119、定位文件位置
+  locate
+* 120、局域网查看出口 IP
+  $ curl ifconfig.me
+* 121、ssh 免密码
   $ ssh-keygen -t rsa
-  生成密钥(选项都是默认就行)，然后把公钥保存在 ~/.ssh/id_rsa.pub 中，私钥保存在
-  ~/.ssh/id_rsa 中，再把 ~/.ssh 的权限设置为 755。
-  接着把 id_rsa.pub 复制到目标机器的 ~/.ssh/authorized_keys 文件中就行。这样之后，
-  通过 ssh 或 scp 访问、复制文件时就不需要再输入密码了。
+  把生成的 id_rsa.pub 中的内容复制到目标机器的 ~/.ssh/authorized_keys 文件下即可.
+* 122、ssh localhost 提示连接错误
+  如果出现 
+  ssh: connect to host localhost port 22: Connection refused
+  这种错误，是因为 sshd 没有启动。在 slackware 下，通过 
+  # sh /etc/rc.d/rc.sshd start
+  命令即可启动。其它的 Linux 发行版用相应的命令来启动。
+* 123、查看进程读取的文件
+  lsof
+* 124、chrome 查看连接相关的
+  chrome://net-internals/#requests

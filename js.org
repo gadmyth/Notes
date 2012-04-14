@@ -1,0 +1,174 @@
+* 大小写
+  Javascript 对大小写敏感。
+* js 放置位置
+** 位于 head 部分
+   当脚本被调用时，或者当事件被触发时，脚本就会被执行。当把脚本放置到 head 部分
+   后，就可确保在使用脚本之前，它已经被载入。
+** 位于 body 部分
+   在页面载入时脚本就会被执行，当把脚本置于 body 部分后，它就会生成页面的内容。
+** 外部调用
+   也可通过
+   <script src="path/xxx.js">
+   的方式调用外部的 js 脚本
+
+* js 语句作用
+  Javascript 是发给浏览器的命令，这些命令的作用是告诉浏览器要做的事情。
+  浏览器通过两种方式认定 Javascript 一条语句的结束:
+  1)分号
+  2)行末
+* js 注释
+  方法同 C .
+* js 变量
+  通过 var 关键字重新声明变量时，该变量不会丢失原来的值。
+
+* 比较运算符
+  有个特殊的比较运算符是 ===，它和 == 都是比较是否相等，只是 === 更严格，会检查
+  值和类型是否都相同。
+* 三元运算符
+  C 中的 :? 运算符也可以使用。
+
+* if 语句
+  用法完全同 C。
+* switch 语句
+  用法完全同 C 中的 switch 语句。
+
+* 消息框
+** 警告框
+   它长用于确保用户可以得到某些信息，当警告框出现后，用户需要点击确定按钮才能继
+   续进行操作。
+   如下的函数例子:
+
+   function disp_alert()
+   {
+   alert("再次向您问好！在这里，我们向您演示" + '\n' + "如何向警告框添加折行。")
+   }
+** 确认框
+   它用于使用户可以验证或接受某些信息。当确认框出现后，用户需要点击"确认"或"取消"
+   按钮才能继续进行操作。若用户点击"确认"，则返回值为 true，若点击"取消"，则返回
+   值为 false。
+   如下的函数例子:
+
+   function show_confirm()
+   {
+   var r=confirm("Press a button!");
+   if (r==true)
+   {
+   alert("You pressed OK!");
+   }
+   else
+   {
+   alert("You pressed Cancel!");
+   }
+   }
+** 提示框
+   它常用于提示用户在进入页面前输入某个值。当提示框出现后，用户需要输入某个值，
+   然后点击"确认"或"取消"按钮才能继续操作。若用户点击"确认"，则返回值为输入的值，
+   若用户点击"取消"，则返回值为 null.
+   如下的函数例子:
+
+   function disp_prompt()
+   {
+   var name=prompt("请输入您的名字","Bill Gates")
+   if (name!=null && name!="")
+   {
+   document.write("你好！" + name + " 今天过得怎么样？")
+   }
+   }
+* 函数
+  函数的参数、返回值和 C 一样，只是可以不指明参数的类型。
+
+* for 语句
+  它有两种用法，分别和 C、Python 中的 for 用法类似。
+  注意下面这个例子，理解 Javascript 把内容输出给浏览器，然后浏览器负责格式化显示
+  内容:
+  for (i = 1; i <= 6; i++)
+  {
+  document.write("<h" + i + ">这是标题 " + i)
+  document.write("</h" + i + ">")
+  }
+
+* while 和 do...while 语句
+  用法同 C 中一样。
+* break 和 continue 语句
+  用法同 C 中的一样。
+
+* for...in 语句
+  用来对数组或对象的属性进行循环操作，循环中的代码每执行一次，就会对数组的元素或
+  对象的属性进行一次操作。
+  
+  例子:
+  var x
+  var mycars = new Array()
+  mycars[0] = "宝马"
+  mycars[1] = "奔驰"
+  mycars[2] = "宾利"
+  
+  for (x in mycars)
+  {
+  document.write(mycars[x] + "<br />")
+  }
+* js 事件
+  这些很有用处，可参考 w3school 列出的事件。
+
+* try...catch... 语句
+  例子:
+  function message()
+  {
+  try
+  {
+  adddlert("Welcome guest!")
+  }
+  catch(err)
+  {
+  txt="There was an error on this page.\n\n"
+  txt+="Click OK to continue viewing this page,\n"
+  txt+="or Cancel to return to the home page.\n\n"
+  if(!confirm(txt))
+  {
+  document.location.href="http://www.w3school.com.cn/"
+  }
+  }
+  }
+* throw 语句
+  作用是创建 exception (异常或错误)。可把这个声明与 try...catch 声明配合使用，以
+  达到控制程序流并产生精确错误消息的目的。
+  例子:
+  
+  var x=prompt("Enter a number between 0 and 10:","")
+  try
+  { 
+  if(x>10) 
+  throw "Err1"
+  else if(x<0)
+  throw "Err2"
+  } 
+  catch(er)
+  {
+  if(er=="Err1") 
+  alert("Error! The value is too high")
+  if(er == "Err2") 
+  alert("Error! The value is too low") 
+  }
+
+* String 对象
+** 作用
+   用于处理已有的字符串.
+* Date 对象
+** 作用
+   用于处理日期和时间。
+   Date 对象自动使用当前的日期和时间作为其初始值。
+
+* Array 对象
+* Boolean 对象
+* Math 对象
+** 作用
+   执行常见的算数任务。
+
+* RegExp 对象
+* Javascript HTML DOM 对象
+* Cookie
+** 作用
+   它是存储于访问者的计算机中的变量，每当同一台计算机通过浏览器请求某个页面时，
+   就会发送这个 cookie。可使用 Javascript 来创建和取回 cookie 的值。
+
+* 创建自己的对象
