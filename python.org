@@ -1413,3 +1413,21 @@
   我知道的有三种方式: cgi、mod_python、WSGI
 * 44、安装 egg 文件
   # easy_install egg文件
+* 45、包管理器
+  pip
+* 46、Regular Expressions
+** Common re sysmbols and special characters
+   | Notation | Description                                                                           | Example     |
+   | (...)    | Match encloed RE and save as subgroup                                                 | ([0-9]{3})? |
+   | \d       | Match any decimal digit, same as [0-9]                                                | data\d.txt  |
+   | \D       | Don't match any numeric digit                                                         |             |
+   | \w       | Match any alphanumeric character, same as [A-Za-z0-9]                                 | ]           |
+   | \W       | inverse of \w                                                                         |             |
+   | \s       | Match any whitespace character, same as [\n\t\r\v\f]                                  | of\sthe     |
+   | \S       | inverse of \s                                                                         |             |
+   | \b       | Match any word boundary                                                               | \bThe\b     |
+   | \B       | inverse of \b                                                                         |             |
+   | \nn      | Matched saved subgroup /nn/                                                           | price: \16  |
+   | \c       | Match any special character /c/ verbatim (i.e., without its special meaning, literal) | \.  \\  \*  |
+   | \A (\Z)  | Match start (end) of string                                                           | \ADear      |
+** 
