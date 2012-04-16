@@ -766,3 +766,5 @@
   lsof
 * 124、chrome 查看连接相关的
   chrome://net-internals/#requests
+* 125、去除 Windows 下编辑的文本末尾的 ^M
+  除了可在编辑器中通过替换来删除，还可以通过 dos2unix 这个专门的工具来去除。
