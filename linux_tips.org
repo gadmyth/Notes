@@ -771,3 +771,5 @@
 
 * 126、Linux 连接到外设投影时分辨率
   xrandr
+* 127、音量控制软件
+  kmix、aumix、alsamixer
