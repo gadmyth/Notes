@@ -49,3 +49,73 @@
   expires before anything interesting happends. On error, -1 is returned, an
   errno is set appropriately; the sets and timeout become undefined, so do not
   rely on their contents after an error.
+* 设置报错
+  最好每次写 PHP 时，都在开头使用
+  error_reporing(E_ALL);
+  来打印所有可能的出错信息。
+* 使用时间时要注意的
+  若在程序中需要使用时间，则需要在使用之前设置下时区，在国内一般用
+  date_default_timezone_set("Asia/Chongqing");
+
+* sleep() 使用时注意
+  若是在多进程中使用 sleep(),如想在父进程 sleep() 一段时间，而子进程正常运行，这
+  样 sleep() 可能会失效，因为子进程在退出时会向父进程发出一个信号，sleep() 可能
+  在父进程接受到该信号时会退出，如下:
+
+  <?php
+  error_reporting(E_ALL);
+
+  date_default_timezone_set("Asia/Chongqing");
+
+  $pid = pcntl_fork();
+  switch ($pid) {
+  case 0:
+  /* in child */
+  echo "in child\n";
+  exit(0);
+  case -1:
+  die("pcntl_fork() failed\n");
+  default:
+  /* in parent */
+  echo "in parent\n";
+  sleep(10);
+  echo "after 10 seconds, parent wakes.\n";
+  }
+
+  在这个程序中，父进程不会 sleep 10 秒，会直接返回。可在子进程中运行一段代码，在
+  子进程中 sleep()，这样或许可以避免 sleep() 被信号中断的问题。
+  若必须使父进程 sleep 一段时间，则在 Unix 或类 Unix 平台下，使用系统提供的
+  sleep 命令也可以实现。修改以上代码:
+
+  <?php
+  error_reporting(E_ALL);
+
+  date_default_timezone_set("Asia/Chongqing");
+
+  $pid = pcntl_fork();
+  switch ($pid) {
+  case 0:
+  /* in child */
+  echo "in child\n";
+  exit(0);
+  case -1:
+  die("pcntl_fork() failed\n");
+  default:
+  /* in parent */
+  echo "in parent\n";
+  system("sleep 10");
+  echo "after 10 seconds, parent wakes.\n";
+  }
+* 使用 PDO 后获得数据库查询的行数
+  $sql_num         = "SELECT COUNT(*) FROM $table";
+  $proxy_total_num = $dbh->query($sql_num)->fetchColumn();
+
+* 打印文件、函数、行号、类名等信息
+  可通过变量 __FILE__、__FUNCTION__、__LINE__、__CLASS__ 来获取。
+* phpize
+  有时使用 phpize 时可能会出现如下的错误:
+
+  Cannot find build files at '/usr/local/lib/php/build'. Please check your PHP
+  installation.
+
+  找下 phpize 的位置，通过绝对路径来使用 phpize.

@@ -292,6 +292,13 @@
 
    调整当前文件的编码
    M-x revert-buffer-with-coding-system
+** 33、ffap 在文件中直接定位文件
+   在 ~/.emacs 中编辑
+   
+   (require 'ffap)
+   (global-set-key (kbd "C-4") 'ffap)
+   
+   之后在程序中，出现文件名的地方按下 C-4，则会显示出该文件的路径。
 * 小知识
 ** 1、端口 
    端口扫描器是一种检测服务器或主机虚拟端口是开启或关闭的工具。

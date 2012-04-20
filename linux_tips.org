@@ -1,7 +1,3 @@
-* 1 更新系统
-   可用
-   # slackpkg update
-   # slackpkg upgrade-all
 * 2 查看系统中安装的中文字体
    fc-list :lang=zh-cn
 * 3 增加虚拟网卡
@@ -773,3 +769,5 @@
   xrandr
 * 127、音量控制软件
   kmix、aumix、alsamixer
+* 128、slackware 下 adobe reader 的名字
+  acroread
