@@ -1439,3 +1439,13 @@
 ** pear 安装 syck-beta 时错误
    可先去 http://rubyforge.org/frs 下载 syck 来安装，然后再通过 pear 安装
    syck-beta.
+* GUI 编程
+** Brief
+   如果想要在 panel 上编程显示程序图标的功能，首先要明白 *系统托盘(system
+   panel)* 的概念，它是用来显示正在运行的程序的图标。如果想要实现桌面提醒功能，
+   要明白 *通知提醒* 的概念。
+   明白这两个概念后，不懂的地方就可以很快 google 到。
+** python 下系统托盘图标显示和通知提供的类
+   分别是 appindicator 和 pynofiy
+** GTK 下系统托盘图标显示和通知提供的库
+   libegg
