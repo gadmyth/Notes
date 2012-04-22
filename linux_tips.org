@@ -100,6 +100,7 @@
    reboot.
 * 22、dstat
 * 23、slackpkg 用法
+** Brief
    记住，可修改 /etc/slackpkg/mirrors 来从 DVD 中下载软件。
    配置文件是 /etc/slackpkg/slackpkg.conf ，下载的软件默认保存位置是
    /var/cache/packages/
@@ -121,6 +122,8 @@
     # slackpkg download 软件名
     下载的默认保存位置是 /var/cache/packages/ ,可通过
     /etc/slackpkg/slackpkg.conf 来修改默认的下载保存位置。
+** 4、查看某个库文件被包含的程序
+   # slackpkg file-search 库
 * 24、查看系统温度
    sensors
 * 25、查看二进制程序的依赖关系
