@@ -470,6 +470,11 @@
   All *screen* commands are prefixed with a CTRL+A keystroke, e.g., CTRL+A+C
   creating a new terminal session, CTRL+A+N switching to the next terminal,
   CTRL+A+P switching to the previous terminal.
+  
+  添加新窗口: C-a c
+  杀掉当前窗口: C-a k
+  切换到下一个窗口: C-a n
+  切换到前一个窗口: C-a p
 * 65、查询指定用户信息(可以是远程用户)
   $ finger 用户或邮箱
 * 66、网络工具

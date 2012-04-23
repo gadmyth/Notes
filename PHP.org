@@ -119,3 +119,18 @@
   installation.
 
   找下 phpize 的位置，通过绝对路径来使用 phpize.
+* php-config
+  我在安装 xhprof 过程中遇到过因为 php-config 不能用的问题，通过
+  $ lcoate php-config
+  发现有两个位置含有 php-config 命令，试了试之后发现只有一个可以正确使用，于是把
+  出现问题的那个删除了。
+  在有问题的情况下，make 时会提示源码错误。以后在出现这种问题时，注意下
+  php-config 是否能够正确使用。
+
+  我按照 gearman 官网上的资料安装 gearman 的 php 扩展时，提示 zend_internal 之类
+  的错误，也是因为 php-config 的问题，在 configure 时通过指定良好的 php-config
+  可以解决这个问题:
+  $ ./configure --with-php-config=/usr/bin/php-config
+* 子进程被 kill 掉时文件锁的问题
+  在子进程中对一个文件加上 LOCK_EX 锁，当子进程被其它进程通过 posix_kill() 发出
+  SIGKILL 信号后，被子进程加锁的文件不会自动解锁，除非是子进程自己退出。
