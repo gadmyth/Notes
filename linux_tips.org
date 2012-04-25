@@ -779,3 +779,15 @@
   kmix、aumix、alsamixer
 * 128、slackware 下 adobe reader 的名字
   acroread
+* 129、查看文件的扩展属性
+  $ lsattr 文件名
+  setxattr 命令族是修改文件扩展属性。还可以用 chattr 来修改。
+  可通过 
+  $ man 5 attr
+  来详细了解。
+
+* 130、查看系统里的所有锁 
+  通过
+  $ cat /proc/locks
+  解释可参考 
+  http://www.centos.org/docs/5/html/5.2/Deployment_Guide/s2-proc-locks.html 

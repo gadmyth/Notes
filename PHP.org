@@ -132,5 +132,6 @@
   可以解决这个问题:
   $ ./configure --with-php-config=/usr/bin/php-config
 * 子进程被 kill 掉时文件锁的问题
-  在子进程中对一个文件加上 LOCK_EX 锁，当子进程被其它进程通过 posix_kill() 发出
-  SIGKILL 信号后，被子进程加锁的文件不会自动解锁，除非是子进程自己退出。
+  在子进程中对一个文件加上 LOCK_EX|LOCK_NB 锁，当子进程被其它进程通过
+  posix_kill() 发出 SIGKILL 或 SIGTERM 信号后，被子进程加锁的文件不会自动解锁，
+  除非是子进程自己退出。
