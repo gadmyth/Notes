@@ -791,3 +791,5 @@
   $ cat /proc/locks
   解释可参考 
   http://www.centos.org/docs/5/html/5.2/Deployment_Guide/s2-proc-locks.html 
+* 131、网页加载速度评测及建议的工具
+  google speedpage

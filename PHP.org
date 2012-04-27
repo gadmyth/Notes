@@ -135,3 +135,13 @@
   在子进程中对一个文件加上 LOCK_EX|LOCK_NB 锁，当子进程被其它进程通过
   posix_kill() 发出 SIGKILL 或 SIGTERM 信号后，被子进程加锁的文件不会自动解锁，
   除非是子进程自己退出。
+* Web API
+** 获取完整的参数数据
+   以
+   http://localhost/api.php?url=http://api.douban.com/test.php?arg1=242&arg2=24&follow=y
+   其中 http://localhost/api.php 是 API，通过 $_GET['url'] 获得不了用户传入的完
+   整的 url，只能获得用户传入的 url 的部分，如本例中的
+   http://api.douban.com/test.php?arg1=242 之后的就获得不了。这是因为 url 中是以
+   & 作为参数的分隔符。
+   解决方法是，可用 $_SERVER['QUERY_STRING'] 来获得用户传入的所有参数，然后自己
+   解析字符串。
