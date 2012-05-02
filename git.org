@@ -257,6 +257,9 @@
 ** 删除分支
    当某个分支被合并后，如名为 testing 的分支，删除该分支用如下命令
    $ git branch -d testing
+   这种方法只能删除已经合并过的分支，未合并的分支不能用这种方法删除，要用如下方
+   法:
+   $ git branch -D testing
 ** 冲突的合并
    在 git merge 时可能会出现有冲突的文件。任何包含未解决冲突的文件都会以未合并
    (unmerged) 状态列出。git 会在有冲突的文件里加入标准的冲突解决标记，可通过它们
@@ -267,6 +270,18 @@
    
    可通过如下命令使用图形化的工具
    $ git mergetool
+** 查看所有分支
+   $ git branch
+   星号所在行表示当前所在分支
+   
+   $ git branch -v
+   可查看各个分支最后一次 commit 信息
+   
+   $ git branch --merged
+   查看已经被并入到当前分支的分支
+   
+   $ git branch --no-merged
+   查看当前尚未合并的分支
 * 链接
   git 简易指南
   http://rogerdudler.github.com/git-guide/index.zh.html
