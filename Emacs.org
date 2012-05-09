@@ -302,3 +302,7 @@
    M-x emacs-version
 * 35、方便使用 Elisp 的方法
   M-x ielm
+* 36、删除文件中所有空行
+  M-x flush-lines
+  匹配时可用如下的正则表达式:
+  ^[ ]*$

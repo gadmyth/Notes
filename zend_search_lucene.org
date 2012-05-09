@@ -1,0 +1,393 @@
+* Brief
+  Zend_Search_Lucene 是一个完全由 PHP5 编写的通用文本搜索引擎。由于其将索引保存
+  在文件系统中而不需要数据库支持，故它几乎可为任何由 PHP 驱动的网站增加搜索能力。
+* 特性
+  + 具有排名功能的搜索——最符合要求的结果出现在最前面
+  + 许多强大的查询类型:短语查询、通配符查询、近似查询、范围查询等
+  + 搜索特定的字段，如标题、作者、内容等
+* document 和 field 对象
+  最基本的索引主题: document. 它又分为若干 field, field 中包含可供搜索的内容。
+  一个文档被表示为 Zend_Search_Lucene_Document 对象，该对象中又包含了若干
+  Zend_Search_Lucene_Field 对象，用以表现相应的字段。
+  任意类型的信息都可被加入到索引中。描述信息或元信息(metadata)可被保存在 field
+  字段中，并在搜索过程中与 document 一起被检索。
+* index
+** 创建索引
+   $index = new Zend_Search_Lucene('/path/to/file/indexed', true);
+   $doc = new Zend_Search_Lucene_Document();
+   $doc->addField(Zend_Search_Lucene_Field::Text('title', 'content'));
+   ...
+   $index->addDocument($doc);
+   $index->commit();
+   在最后进行了 commit() 后，新添加的文档就可被检索了。
+   Zend_Search_Lucene::commit() 会在脚本执行结束前及任意搜索请求开始前会被自动调
+   用。
+   每次 commit() 后会产生新的索引分段，故要尽可能少地请求它。
+** 更新索引
+   和"创建索引"步骤基本上一样，除了在创建 Zend_Search_Lucene 对象时，不加 true
+   参数。
+** NOTE
+   Zend_Search_Lucene 不会自动管理分段。
+   可通过 Luke 这个工具来优化 Zend_Search_Lucene 产生的索引。
+* search
+** 两种查询方式
+   + 使用查询分析程序(Query Parser)来从字符串中创建查询。
+   + 通过 Zend_Search_Lucene API 创建自己的查询。
+	 这两种查询方式都采用相同的 API 方法来搜索索引。
+	 使用查询方式时的建议:
+		+ 若使用程序生成查询字串并传递给查询分析程序，那么最好考虑直接使用查询
+          API 来建立查询。即，查询分析程序是为人为输入的文本设计的，而不是为程序
+          生成的文本准备的。
+		+ 非记号化字段最好直接加入查询中，而不是通过查询分析程序。若一个字段的值
+          是应用程序生成的，则它应该按照这个条款进行查询。查询分析程序使用的机制，
+          是设计来转换人为输入的文本的。像日期、关键词等，都可认为是程序生成的信
+          息。
+		+ 在查询表中，用于生成文本的字段应该是用查询分析程序。所有其它的诸如日期
+          范围、关键词等，最好通过查询 API 直接加入查询。一个具有一组取值范围的
+          字段，可通过下拉菜单来实现而不应加入需要被分析的查询字串中，而不是增加
+          一个查询项。
+		  这两种方式都用同样的 API 方法来搜索索引:
+		  $index->find($query);
+		  该方法是对大小写敏感的。
+** result
+   通过 find() 方法返回的是 Zend_Search_Lucene_Search_QueryHit 对象数组，搜索结
+   果是按照分值排序的(最高分的搜索结果位于最前面)。
+   Zend_Search_Lucene_Search_QueryHit 对象还能将 Zend_Search_Lucene_Document 中
+   的各个字段作为属性陈列出来，意思是还可通过这个对象将 Field 字段中的 name 作为
+   属性来用，显示 value 的值.下例:
+   
+   $hits = $index->find($query);
+   foreach ($hits as $hit) {
+   // 假设 author、title 都是在 Field 中的 name
+   echo $hit->author . "<br />";
+   echo $hit->title . "<br />";
+   }
+   
+   也可通过 Zend_Search_Lucene_Search_QueryHit 对象获得
+   Zend_Search_Lucene_Document 对象，然后应用 Zend_Search_Lucene_Document
+   对象中的方法获得域的值，这有助于对搜索到的数据的不同项进行处理。具体的 API 查看源码。
+   能够获取的 Zend_Search_Lucene_Document 对象的字段是在进行索引的时候决定的。
+   Zend_Search_Lucene 使用和 Java Lucene 一样的评分算法。搜索结果是按照分值进行
+   排序的。分支越大，相应的搜索结果显示越靠前。
+   不同的分值意味着一篇文档相比另一篇更能匹配查询要求。
+   粗略地说，包含更多的搜索项或短语的搜索结果，将会具有更高的分值。
+* Query Language
+** Brief
+   我觉得下面的内容提供了个性化分词的方法。
+** Terms
+   这段话解释了引擎是如何分解查询语句的。
+
+   A query is broken up into /terms/ and /operators/.
+   There are three types of terms: /Single Term/, /Phrases/, and /Subqueries/.
+   A Single Term is a single word such as "test" or "hello".
+   A Phrase is a group of words surrounded by double quotes such as "hello
+   dolly".
+   A Subquery is a query surrounded by parentheses such as "(hello dolly)".
+   Multiple terms can be combined together with Boolean operators to form a more
+   complex query.
+
+   我认为这段话意味着，查询语句先被分解成三种基本形式，即单词、短语、短语组合，
+   即这三类在搜索时是作为一个整体被用来搜索，故若想同时搜索到单词、短语相关的，
+   要把它们先组合成 subquery 的形式，然后再用 Boolean opertors 结合起来。
+
+   A Term represents a word from text.  This is the unit of search.  It is
+   composed of two elements, the text of the word, as a string, and the name of
+   the field that the text occured in, an interned string.
+   Note that terms may represent more than words from text fields, but also
+   things like dates, email addresses, urls, etc.
+** Fields
+   (注:以下的 "域" 和 field 是指同一个事物。)
+
+   这段话解释了引擎在搜索时是搜索哪段字段和字段的哪部分。
+
+   Lucene supports fielded data. When performing a search, you can either
+   specify a field, or use the default field. The field names depend on indexed
+   data and default field is defined by current settings. The first and major
+   difference from Java Lucene is that terms are searched through /all fields/
+   by default.
+
+   在 Zend_Search_Lucene 中，有两个静态方法可显示当前的搜索域、设置默认的搜索域，即
+   
+   Zend_Search_Lucene::getDefaultSearchField()
+   Zend_Search_Lucene::setDefaultSearchField('域名')    // '域名'即在给 doc 添加域时人为设置的，默认是 null,即在所有的域中进行搜索
+   
+   可在 $index->find($query) 的 $query 中采用 "域名:要搜索的信息" 的形式在指定的
+   域中搜索信息，这种做法也可在用户界面中由用户输入，然后读取进来，不过这种方式
+   是在用户了解 field 信息的情况下，这种方法会更精准，会在搜索时动态改变搜索域。
+   
+   Note: The field is only valid for the term,  phrase or subquery that it
+   directly precedes, so the query
+   /title: Do it right/
+   will only find "Do" in the title field. If default field is set, or in that
+   all indexed fields, if default field is set to null, it will find "it" and
+   "right" in the default field.
+
+   即，若在搜索时指定了域，则只搜索提供的搜索信息的第一个空白符之前的内容，若想
+   搜索提供的搜索信息的全部，则需要修改默认的搜索域或把默认的搜索域设为 null.若
+   要搜索的信息在默认的域中，则可在搜索中以 phrase 的形式搜索数据，不同的搜索信
+   息前，若加上指定的域名，则会在指定的域中搜索，若不加域名，则会在默认的域中进
+   行搜索。
+** Term Modifiers
+*** Brief
+	Lucene supports modifying query terms to provide a wide range of searching
+    options.
+	Zend_Search_Lucene supports "~" modifier only for phrases now.
+*** Proximity Searches
+	Lucene supports finding words that are within a specific distance away. To
+    do a proximity search, use the tilde, "~", symbol at the end of a
+    phrase. For example, to search for a "Zend" and "Framework" within 10 words
+    of each other in a document, use the search:
+
+	"Zend Framework"~10
+
+	这样搜索的话，搜索到的只有是满足 Zend 和 Framework 之间严格有 10 个单词的情
+    况。
+	"~" for terms is used for fuzzy search, but fuzzy search queries are not
+    supported yet.
+*** Boosting a Term
+	以下的这段话解释了如何在搜索中，人为设定不同搜索部分的权重，这样搜索出的结果
+    按人们的意愿的顺序来排列。
+
+	Java Lucene and Zend_Search_Lucene provide the relevance level of matching
+    documents based on the terms found.
+
+	To boost a term, use the caret, "^", symbol with a boost factor (a number)
+    at the end of the term you are searching. The higher the boost factor, the
+    more relevant the term will be.
+
+	Boosting allows you to control the relevance of a document by boosting its
+    term. For example, you want the term "PHP" to be more relevant, boost it
+    using the ^ symbol along with the boost factor next to the term. You would
+    type:
+
+	PHP^4 framework
+
+	You can also boost Phrase Terms and subqueries as in the example:
+
+	"PHP framework"^4 "Zend Framework"
+
+	By default, the boost factor is 1. Although the boost factor must be
+    positive, it can be less than 1 (e.g. 0.2).
+*** Boolean Operators
+**** Brief
+	 Boolean operators allow term to be combined through logic operators.
+	 Lucene supports AND, OR, NOT, "+" and "-" as Boolean operators. 
+	 Java Lucene needs boolean operators to be ALL CAPS. Zend_Search_Lucene
+     doesn't.
+	 AND, OR, NOT operators and "+"、"-" defines two styles to construct boolean
+     queries. As opposed to Java Lucene, Zend_Search_Lucene doesn't allow to mix
+     these two styles.
+	 AND operators has higher precedence than OR.
+**** AND
+	 The AND operator means, that all terms in "AND group" must match
+     document. For example:
+
+	 "PHP framework" AND "Zend Framework"
+**** OR
+	 The OR operator devides query into several optional parts. For example:
+
+	 "PHP framework" OR "Zend Framework"
+**** NOT
+	 The NOT operator excludes documents that contain the term after NOT. For
+     example:
+
+	 "PHP framework" AND NOT "Zend Framework"
+**** &&, ||, and ! operators
+	 &&, ||, and ! may be used instead of AND, OR, and NOT operators.
+**** +
+	 The "+" operator requires that the term after the "+" symbol must match the
+     document.
+	 For example, to search for documents that must contain "Zend" and may
+     contain "Framework", use the query:
+
+	 +Zend Framework
+**** -
+	 The "-" operator excludes documents that matches the term after "-" symbol.
+	 For example, to search for documents that contain "PHP framework" but not
+     "Zend Framework", use the query:
+
+	 "PHP framework" -"Zend Framework"
+**** no operators
+	 以下这段话解释了在不使用操作符时的行为。
+
+	 If no operator is used, then behavior is defined by "default boolean
+     operator".
+	 It's OR by default.
+	 That means, the term is optional. It may be or may not be presented within
+     document, but documents with this term will have higher score.
+	 Default boolean operator may be set or retrieved with
+
+	 Zend_Search_Lucene_Search_QueryParser::setSefaultOperator($operator)
+	 and 
+	 Zend_Search_Lucene_Search_QueryParser::getDefaultOperator()
+
+	 methods.
+	 These methods operate with 
+	 Zend_Search_Lucene_Search_QueryParser::B_AND
+	 and 
+	 Zend_Search_Lucene_Search_QueryParser::B_OR constants.
+**** Grouping
+	 Java Lucene and Zend_Search_Lucene support using parentheses to group
+     clauses to form sub queries. For example:
+
+	 +(framework OR libraray) +php
+	 
+	 Zend_Search_Lucene supports subqueries of any level.
+**** Field Grouping 
+	 Lucene supports using parentheses to group multiple clauses to a single
+     field. For example:
+
+	 title:(+return +"pink panther")
+	 Zend_Search_Lucene supports subqueries of any level.
+**** Escaping Special Characters
+	 Lucene supports escaping special characters that are part of the query syntax. 
+	 The current list special characters are:
+	 +  -  &&  ||  !  (  )  {  }  [  ]  "  ~  *  ?  :  \
+		'+' and '-' inside single terms are treated as common characters.
+** 查询类型
+*** 单项查询
+	它用于搜索一个搜索项。有两种方法:
+	+ $hits = $index->find('搜索项');
+	+ $term = new Zend_Search_Lucene_Index_Term('搜索项');
+	  $query = new Zend_Search_Lucene_Search_Query_Term($term);
+	  $hits = $index->find($query);
+*** 多项查询
+	它用于搜索一组搜索项。
+	每个搜索项可被定义为必须的、禁止的或可选的。
+	这意味着，若一个包含必须的搜索项加入了可选的搜索项，返回的搜索结果集合是一样
+    的，但那些包含可选搜索项的搜索结果，将会上升到结果清单的前面。
+	有两种方法:
+	+ 查询字串
+	  $hits = $index->find('+word1 author:word2 -word3');
+	  '+'表示必选，'-'表示禁止, 'author' 表示 field.
+	+ 通过 API 查询
+	  $query = new Zend_Search_Lucene_Search_Query_MultiTerm();
+	  $query->addTerm(new Zend_Search_Lucene_Index_Term('word1'), true);
+	  $query->addTerm(new Zend_Search_Lucene_Index_Term('word2'), null);
+	  $query->addTerm(new Zend_Search_Lucene_Index_Term('word3'), false);
+	  $hits->find($query);
+	  'true' 表示必须，'false'表示禁止，'null'表示可选。
+*** 短语查询
+	它用于搜索短语。
+	它既可以搜索精确短语，也可搜索模糊短语。精确短语可包含搜索项和空隙(可使用分
+    需程序生成以用于不同的用途，搜索项可被复制以提升该搜索项的权重或一些同义词可
+    放在相同的地方。)，目前短语查询只能通过 API 创建。
+
+	
+	$query1 = new Zend_Search_Lucene_Search_Query_Phrase();
+	// Add 'word1' at 0 relative position
+	$query1->addTerm(new Zend_Search_Lucene_Index_Term('word1'));
+	// Add 'word2' at 1 relative position
+	$query1->addTerm(new Zend_Search_Lucene_Index_Term('word2'));
+	// Add 'word3' at 3 relative position
+	$query1->addTerm(new Zend_Search_Lucene_Index_Term('word3', 3));
+	
+	$query2 = new Zend_Search_Lucene_Search_Query_Phrase(
+	array('word1', 'word2', 'word3'), array(0, 1, 3));
+	
+	// Query without a gap.
+	$query3 = new Zend_Search_Lucene_Search_Query_Phrase(
+	array('word1', 'word2', 'word3'));
+	
+	$query4 = new Zend_Search_Lucene_Search_Query_Phrase(
+	array('word1', 'word2'), array(0, 1), 'author');
+	
+	短语查询可使用类的构造方法一次性创建，也可使用
+    Zend_Search_Lucene_Search_Query_Phrase::addTerm() 方法一步步创建。
+	类 Zend_Search_Lucene_Search_Query_Phrase 的构造方法:
+	Zend_Search_Lucene_Search_Query_Phrase([array $terms [, array $offset [, string $field]]]);
+	其中, $terms 是字符串数组，包含一组短语搜索项，若被省略或为 null，则会创建一个空查询。
+	$offset 是一个整数数组，包含短语搜索项的偏移值。若被省略或为 null，则搜索项的位置被认为是 array(0, 1, 2, 3, ...).
+	$field 是一个字符串，表示要搜索的文档字段。若被省略或为 null，则默认的 field 会被搜索。
+	这里的"位置"，是指搜索项的相对位置。
+	方法 Zend_Search_Lucene_Query_Phrase::addTerm() 的原型:
+	Zend_Search_Lucene_Search_Query_Phrase::addTerm(Zend_Search_Lucene_Index_Term $term [, $position=null]);
+	其中，$term 描述了短语中的下一个搜索项，它必须位于上一个搜索项同样的字段中，否则将会抛出异常。
+	$position 指出了它的位置.例:
+	
+	$query = new Zend_Search_Lucene_Search_Query_Phrase();
+	$query->addTerm(new Zend_Search_Lucene_Index_Term('zend'), 0);
+	$query->addTerm(new Zend_Search_Lucene_Index_Term('framework'), 2);
+	
+	$query = new Zend_Search_Lucene_Search_Query_Phrase();
+	$query->addTerm(new Zend_Search_Lucene_Index_Term('zend', 'title'));
+	$query->addTerm(new Zend_Search_Lucene_Index_Term('framework', 'title'));
+	注意若设置了域名，则添加的项中域名必须一样，因为它们是同一个短语。
+	
+	模糊因子设置了查询短语中两个词之间允许出现的其它次的数量。若为 0，则这是一个精确短语搜索。
+	模糊因子事实上是一个"编辑距离"，表示移动搜索项到查询短语以外的位置上相对应的
+    移动单位。如，交换两个词的顺序需要两次移动(一次把一个词放到另一个前面)，因此
+    要允许短语的重新排列，模糊因子至少必须为 2.更精确的匹配相比更模糊的匹配得分
+    更高，因此搜索结果将按照精确度排序。模糊因子默认为 0，也就是需要精确匹配。
+	模糊因子可在查询后创建赋值:
+	
+	// Query without a gap
+	$query = new Zend_Search_Lucene_Search_Query_Phrase(array('word1', 'word2'));
+	
+	//Search for 'word1 word2', 'word1 ... word2'
+	$query->setSlop(1);
+	$hits1 = $index->find($query);
+	
+	// Search for 'word1 word2', 'word1 ... word2' 'word1 ...  ... word2', 'word2 word1'
+	$query->setSlop(2);
+	$hits = $index->find($query);
+	
+	从第二个查询中可以看出，模糊短语查询还是很强大的！可在搜索中尽量用模糊短语查
+    询，这样可以提供更多可能的搜索结果。
+* 形象理解 index 和 search
+  可通过字典的组织形式和查字典的过程来理解 index 和 search.
+* 教训
+  想查看修改源码时，先对源码进行备份，然后再看备份的源码。
+* 待改进的功能和修改的功能
+** 在搜索那块，增加查询语句的灵活度，比如我搜索 "dang"，那么返回的结果要包括 "dang" "dangdang" "dang ... dang" 这类的。
+   输入 "dang" 想要得到类似于 "dangdang"、"dangdangdang" 的做法，本质上是对单词
+   内部进行搜索。目前想到的一种方法是建立一个字典，然后对用户输入的关键词进行分
+   解，然后在各个单词中查找是否有子串存在于字典中，若有，则把这个子串也加入到搜
+   索语句中。可通过 Zend_Search_Lucene_Search_Query_MultiTerm() 类来把不同的搜索
+   条目组合在一起。
+   而若想得到 "dang ... dangdang" 的做法，本质上是指定单词之间存在间距来进行搜索，
+   目前一种解决方法是通过短语查询，利用其中的模糊查询，
+   要先把用户输入的关键词转变为数组。
+   这块儿涉及到分词。
+** 改善搜索界面，美化返回的结果
+   + 改进了对于超链接的显示，但是有个问题是同一个结果返回了多次 
+		- 对这个问题已解决，是因为我把以前的一段代码复制到了下面做参考，没有进行修改……不细心。
+** 一键索引文件
+** 用 AJAX 的方法建立和更新索引
+** 添加删除指定索引和全部索引的功能
+** 未测试对中文的支持
+   ++ 添加了 AJAX 实时显示搜索结果的功能
+   ++ 将建立更新索引与查询分离开，为以后使用爬虫建立索引做准备
+   ++ 修改了添加索引的大小的转换，使存入的所有数据都是小写形式，目的是使搜索与大小写无关
+   * 但这也带来了问题，即加入到索引的文件想要保持原有的大小写形式。
+	 ++ 增加了模糊短语搜索功能。
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
