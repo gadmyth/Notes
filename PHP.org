@@ -145,3 +145,6 @@
    & 作为参数的分隔符。
    解决方法是，可用 $_SERVER['QUERY_STRING'] 来获得用户传入的所有参数，然后自己
    解析字符串。
+* HTML 解析相关
+  可通过 DOMDocument 类来解析 HTML 文件，其中涉及到 CSS selector 或 xpath 来快速
+  定位某个元素。
