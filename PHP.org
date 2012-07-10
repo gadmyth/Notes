@@ -49,3 +49,15 @@
   expires before anything interesting happends. On error, -1 is returned, an
   errno is set appropriately; the sets and timeout become undefined, so do not
   rely on their contents after an error.
+* 数组
+  除了常规的建立数组的方法，也可通过如下方法建立数组:
+   
+  $arr = array();
+
+  foreach (range(0, 10) as $_v) {
+	$arr[] = $_v;
+  }
+
+  foreach ($arr as $_v) {
+	echo $_v . "\n";
+  }
