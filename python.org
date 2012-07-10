@@ -1431,3 +1431,60 @@
    | \c       | Match any special character /c/ verbatim (i.e., without its special meaning, literal) | \.  \\  \*  |
    | \A (\Z)  | Match start (end) of string                                                           | \ADear      |
 ** 
+* 47、在 nginx 中配置和使用 python 程序
+** 通过 uwsgi
+*** 配置 nginx
+   安装号 uwsgi 后，在 nginx.conf 中添加如下语句:
+
+   # pass the Python scripts to uwsgi server listening on 127.0.0.1:3031
+   #
+   location ~ \.py$ {
+   root       /home/flyer/nginx/html;
+   include    uwsgi_params;
+   uwsgi_pass 127.0.0.1:3031;
+   }
+
+   重启下 nginx.
+*** 使用 uwsgi
+ 	使用 uwsgi 时，可以通过命令行形式或配置文件的形式(以 xml 和 ini 文件为例).以
+    下都假设 uwsgi 在 nginx 配置的根目录下运行.
+	nnnnnnn
+	加入在 nginx 配置的根目录下有名为 hello.py 的程序，代码为 
+	
+	def application(env, start_response):
+        start_response('200 OK', [('Content-Type', 'text/html')])
+        print "I'm here.\n"
+
+        return "Hello flyer"
+
+	+ 通过命令行
+	  $ uwsgi --socket 127.0.0.1:3031 --file hello.py --callable application
+      --process 2
+	+ 通过 ini 文件
+	  假如创建了名为 uwsgi.ini 的文件，内容为 
+
+	  [uwsgi]
+	  socket   = 127.0.0.1:3031
+	  file     = hello.py
+	  callable = application
+	  process  = 2
+	  master   = true
+	  
+	  直接运行
+	  $ uwsgi --ini uwsgi.ini
+	+ 通过 xml 文件
+	  假如创建了名为 uwsgi.xml 的文件，内容为
+
+	  <uwsgi>
+	  <socket>127.0.0.1:3031</socket>
+	  <file>hello.py</file>
+	  <callable>application</callable>
+	  <process>2</process>
+	  <master />
+	  </uwsgi>
+	  
+	  直接运行
+	  $ uwsgi --xml uwsgi.xml
+
+    这样之后，可在浏览器中通过如下方式来运行程序了
+	http://localhost/hello.py

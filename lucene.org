@@ -244,7 +244,6 @@
     搜索结果是否过滤了不相关的内容。
 *** search user interface
 *** build query
-    
 ** the core indexing classes
 *** IndexWriter
    /IndexWriter/ is the central component of the indexing process. This class
@@ -383,7 +382,6 @@
      Hibernate Search, Compass, LuSQL, DBSight, Browse Engine, and
      Oracle/Lucene integration, each has different and interesting
      approaches for handling this denormalization.
-
 ** Understanding the indexing process
 *** Brief
     During indexing, the text is first extracted from the original content and
@@ -444,12 +442,36 @@
     single new segment and then removing the old segments. The selection of
     segments to be merged is governed by a separate /MergePolicy/. Once merges
     are selected, their execution is done by the /MergeSecheduler/.
-*** Basic Index Operations
-**** Add documents in the index
-**** Delete documents in the index
-**** Updating documents in the index
+** Basic Index Operations
+*** Add documents in the index
+*** Delete documents in the index
+*** Updating documents in the index
      Lucene deletes the entire previous document and then adds a new document to
      the index. 
+** Term Vectors
+   /Term Verctors/ are a mix between an indexed field and a stored
+   field. They're similar to a stored field because you can quickly retrieve all
+   term vector fields for a given document: term vectors are keyed first by
+   document ID. But then, they're keyed secondarily by term, meaning they store
+   a miniautre inverted index for that one document. Unlike a stored field,
+   where the original *String* content is stored verbatim, term verctors store
+   the actual separate terms that were produced by the analyzer, allowing you to
+   retrieve all terms for each field, and the frequency of their occurrence
+   within the document, sorted in lexicographic order. Because the tokens coming
+   out of an analyzer also have position and offset information, you can choose
+   separately whether these details are also stored in your term vectors by
+   passing these constants as the fourth argument to the /Field/ constructor.
+** Optimization
+   Optimizing only improves searching speed, not indexing speed.
+** Index locking
+   To enforce a single writer at a time, which means an /IndexWriter/ or an
+   /IndexReader/ doing deletions or changing norms, Lucene uses a file-based
+   lock: if the lock file (*writelock* by default) exists in your index
+   directory, a writer currenly has the index open. Any attempt to create
+   another writer on the same index will hit a _LockObtainFailedException_
+   . This is a vital protection mechanism, because if two writers are
+   accidentally created on a single index, that would quickly lead to index
+   corruption.
 * PyLucene
 ** 使用方法
    PyLucene 的 API 和 Java 版的 Lucene 一模一样。
@@ -461,3 +483,15 @@
    还可
    from lucene import API_name
    这样之后，可直接在代码中使用 Java Lucene 的 API。
+
+** 可能出现的问题
+   在索引部分，操作时可能会提示出现异常时 e 要是个整数。出现该情况是与存放索引的
+   目录中自动建立了 write.lock 锁文件造成的，删除这个锁文件就可。
+** TODO
+*** 实现索引中加入中文和中文搜索两个功能
+*** 实现直接通过 html 文件建立索引
+*** 建立索引时添加时间戳
+	通过 NumericField() 方法时有些问题。
+*** 在添加含有非字母的符号
+	比如在我目前的 updateIndex 过程中，若 Title 的值包含非字母的符号，会报错，而
+    其它的域包含非字母的符号不会报错。
