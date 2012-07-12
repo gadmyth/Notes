@@ -3,6 +3,11 @@
    在通过 prepare() 时， '?' 不能加任何引号。在 execute() 时，不能使用 SQL 的默
    认函数，这点儿在添加当前日期时尤其明显。若要添加日期，先通过 date() 函数建立
    一个指定格式的日期，然后加入到 execute() 语句中。
+** 使用 PDO 后获得数据库查询的行数
+  $sql_num         = "SELECT COUNT(*) FROM $table";
+  $proxy_total_num = $dbh->query($sql_num)->fetchColumn();
+** error_log()
+   可以用它方便地记录日志。
 * stream_select()
   和 Linux 下的 select() 系统调用作用一样，看 PHP 手册时看不明白，通过 man
   select 更容易理解些。
@@ -118,11 +123,7 @@
   echo "in parent\n";
   system("sleep 10");
   echo "after 10 seconds, parent wakes.\n";
-  }
-* 使用 PDO 后获得数据库查询的行数
-  $sql_num         = "SELECT COUNT(*) FROM $table";
-  $proxy_total_num = $dbh->query($sql_num)->fetchColumn();
-
+  
 * 打印文件、函数、行号、类名等信息
   可通过变量 __FILE__、__FUNCTION__、__LINE__、__CLASS__ 来获取。
 * phpize
@@ -162,3 +163,31 @@
   可通过 DOMDocument 类来解析 HTML 文件，其中涉及到 CSS selector 或 xpath 来快速
   定位某个元素。
 >>>>>>> aebaab8201adab903c58041562553f75a1bb7b65
+* break 加参数
+  跳出循环时常用 break，它可加数字参数，表示跳出几层循环，不加参数时等价于
+  "break 1"，即跳出最近的一层循环。
+* 将函数名赋給变量
+  PHP 中的这种做法类似于 C\C++ 中将函数名赋給一个变量，简单的例子如下：
+
+  function test($i = 1)
+  {
+	echo "In function $i.\n";
+  }
+
+  $func = "test";
+  echo $func(2);
+* json 相关
+  注意 json 中 key 和 value 若是字符串，必须用双引号。
+  可通过如下两种方式访问解析后的 json 数据:
+
+  $json_raw = '{"flyer":"flyer0", "flx":"flx0"}';
+  $json_dec = json_decode($json_raw);
+
+  echo "Test0:\n";
+  echo $json_dec->{'flyer'} . "\n";
+  echo $json_dec->{'flx'} . "\n\n";
+
+  echo "Test1:\n";
+  foreach ($json_dec as $_k => $_v) {
+	echo $_k . " : " . $_v . "\n";
+  }

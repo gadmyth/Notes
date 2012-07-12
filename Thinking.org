@@ -831,7 +831,7 @@
    插上 U 盘后，用
    # fdisk -l
    可发现，硬盘的信息显示格式与 U 盘的相同，它们的 heads 和
-   sectors/track 数目项目，柱面数不同，这个不理解。
+   sectors/track 数目项目，柱面数不同，这个不理解
 * Wiki
   访问地址是：
   http://ip/wiki 
