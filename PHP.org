@@ -8,7 +8,8 @@
   $proxy_total_num = $dbh->query($sql_num)->fetchColumn();
 ** error_log()
    可以用它方便地记录日志。
-* stream_select()
+* 一些函数的注意
+** stream_select()
   和 Linux 下的 select() 系统调用作用一样，看 PHP 手册时看不明白，通过 man
   select 更容易理解些。
   Linux 下 select() 原型:
@@ -55,27 +56,7 @@
   errno is set appropriately; the sets and timeout become undefined, so do not
   rely on their contents after an error.
 <<<<<<< HEAD
-* 数组
-  除了常规的建立数组的方法，也可通过如下方法建立数组:
-   
-  $arr = array();
-
-  foreach (range(0, 10) as $_v) {
-	$arr[] = $_v;
-  }
-
-  foreach ($arr as $_v) {
-	echo $_v . "\n";
-  }
-* 设置报错
-  最好每次写 PHP 时，都在开头使用
-  error_reporing(E_ALL);
-  来打印所有可能的出错信息。
-* 使用时间时要注意的
-  若在程序中需要使用时间，则需要在使用之前设置下时区，在国内一般用
-  date_default_timezone_set("Asia/Chongqing");
-
-* sleep() 使用时注意
+** sleep() 使用时注意
   若是在多进程中使用 sleep(),如想在父进程 sleep() 一段时间，而子进程正常运行，这
   样 sleep() 可能会失效，因为子进程在退出时会向父进程发出一个信号，sleep() 可能
   在父进程接受到该信号时会退出，如下:
@@ -124,6 +105,45 @@
   system("sleep 10");
   echo "after 10 seconds, parent wakes.\n";
   
+** exec()
+   观察如下形式:
+
+   $suffix = "-l";
+   $output = array();
+
+   exec("ls $suffix", $output);
+
+   foreach ($output as $item) {
+	echo $item . "\n";
+   }
+
+   即可以在命令中用 PHP 变量。
+* 数组
+** 特殊的建立数组的方法
+   除了常规的建立数组的方法，也可通过如下方法建立数组:
+   
+   $arr = array();
+
+   foreach (range(0, 10) as $_v) {
+      $arr[] = $_v;
+   }
+
+   foreach ($arr as $_v) {
+      echo $_v . "\n";
+   }
+** 数组赋给另一个变量
+   可直接把一个数组赋值给另一个变量，类似于普通变量之间的赋值。如:
+
+   $arr = array(1, 2, 3, 4);
+   $var = $arr;    // $var 就变成了和 $arr 一样的数组
+* 设置报错
+  最好每次写 PHP 时，都在开头使用
+  error_reporing(E_ALL);
+  来打印所有可能的出错信息。
+* 使用时间时要注意的
+  若在程序中需要使用时间，则需要在使用之前设置下时区，在国内一般用
+  date_default_timezone_set("Asia/Chongqing");
+
 * 打印文件、函数、行号、类名等信息
   可通过变量 __FILE__、__FUNCTION__、__LINE__、__CLASS__ 来获取。
 * phpize
@@ -191,3 +211,9 @@
   foreach ($json_dec as $_k => $_v) {
 	echo $_k . " : " . $_v . "\n";
   }
+* 保证进程唯一性
+  有时需要保证在一段时间内，同一个程序只能运行一次，即不能在该程序运行期间再次运
+  行该程序，解决方案是采用文件锁。
+  在第一次运行程序时，建立一个文本文件，在对该文件写入数据(通常是 pid)前，要先对
+  文件加上 _互斥锁_ 和 _非阻断锁_ ，若能获得锁，则可写入数据，否则表示该程序已经
+  运行了。当程序结束时，会自动释放锁。
