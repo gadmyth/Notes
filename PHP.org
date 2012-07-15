@@ -182,7 +182,7 @@
 * HTML 解析相关
   可通过 DOMDocument 类来解析 HTML 文件，其中涉及到 CSS selector 或 xpath 来快速
   定位某个元素。
->>>>>>> aebaab8201adab903c58041562553f75a1bb7b65
+  >>>>>>> aebaab8201adab903c58041562553f75a1bb7b65
 * break 加参数
   跳出循环时常用 break，它可加数字参数，表示跳出几层循环，不加参数时等价于
   "break 1"，即跳出最近的一层循环。
@@ -217,3 +217,63 @@
   在第一次运行程序时，建立一个文本文件，在对该文件写入数据(通常是 pid)前，要先对
   文件加上 _互斥锁_ 和 _非阻断锁_ ，若能获得锁，则可写入数据，否则表示该程序已经
   运行了。当程序结束时，会自动释放锁。
+* curl
+** 并行抓取及多资源命名技巧
+   通过采用 curl_multi_* 系列的函数，可以实现并行抓取，这比串行抓取的效率高了很
+   多。
+   有个问题是对每个 curl 资源命名的问题，可通过数组来实现，即每个 curl 资源都是
+   数组的一个元素，这样避免了命名的困难。如下例
+
+   <?php
+   error_reporting(E_ALL | E_STRICT);
+
+   $urls = array("http://www.dangdang.com",
+        	  "http://www.amazon.com",
+		  "http://www.amazon.cn",
+		  "http://www.360buy.com",
+		  "http://xdlinux.info",
+		  "http://weibo.com");
+   $user_agent = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.57 Safari/536.11";
+   $curl_options = array(CURLOPT_HEADER         => 0,
+                         CURLOPT_AUTOREFERER    => 1,
+			 CURLOPT_FOLLOWLOCATION => 1,
+			 CURLOPT_FAILONERROR    => 1,
+			 CURLOPT_RETURNTRANSFER => 1,
+			 CURLOPT_USERAGENT      => $user_agent);
+   $curl_arr = array();
+
+   $mh = curl_multi_init();
+   foreach ($urls as $_k => $_url) {
+	$curl_arr[$_k] = curl_init($_url);
+	curl_setopt_array($curl_arr[$_k], $curl_options);
+	curl_multi_add_handle($mh, $curl_arr[$_k]);
+   }
+
+   $running = NULL;
+   do {
+	curl_multi_exec($mh, $running);
+   } while ($running > 0);
+
+   foreach ($curl_arr as $_k => $_ch) {
+	var_dump(curl_multi_getcontent($curl_arr[$_k]));
+   }
+
+   foreach ($curl_arr as $ch) {
+	curl_multi_remove_handle($mh, $ch);
+   }
+
+   curl_multi_close($mh);
+** curl_multi_
+   对于这个函数族，即使在设置 curl 参数时设置了 CURLOPT_FAILONERROR，通过
+   curl_multi_getcontent() 在 curl 发生错误时不能获得任何信息，但可以通过
+   curl_multi_info_read() 来获取最后一次执行时的信息。
+* 作用域
+** 包含另一文件时在函数中的作用域
+   当在一个文件中包含另一个文件，而在本文件的函数中需要使用另一个文件中的变量，
+   则需要在本文件的函数中使用 global 关键字声明。
+   除了这种情况外，在本文件其他地方均可直接使用另一个文件中的变量。
+
+
+
+
+
