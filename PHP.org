@@ -277,3 +277,32 @@
 
 
 
+* Memcached 
+** 不要以顺序数字作为 key
+   如下两段代码，第一段可以得到结果，第二段没有返回结果：
+
+   片段一：
+   $mc = new Memcached();
+   $mc->addServer("127.0.0.1", 11211);
+
+   $data_arr = array("key1" => "flyer",
+                     "key2" => "flx",
+		     "key3" => "dangdang");
+
+   $mc->setMulti($data_arr);
+
+   $res_arr = $mc->getMulti(array("key1", "key2", "key3"));
+   var_dump($res_arr);
+
+   片段二：
+   $mc = new Memcached();
+   $mc->addServer("127.0.0.1", 11211);
+
+   $data_arr = array("1" => "flyer",
+		    "2" => "flx",
+		    "3" => "dangdang");
+
+   $mc->setMulti($data_arr);
+
+   $res_arr = $mc->getMulti(array("key1", "key2", "key3"));
+   var_dump($res_arr);
