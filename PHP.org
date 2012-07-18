@@ -136,6 +136,15 @@
 
    $arr = array(1, 2, 3, 4);
    $var = $arr;    // $var 就变成了和 $arr 一样的数组
+** 数组合并的两种方法的区别
+   数组合并可用 array_merge() 或 "+"，但效果不同：
+   
+   1) $arr = array_merge($arr_0, $arr_1);
+      把两个数组合并，若 $arr_1 中含有非数值索引，且 $arr_0 也有相同的非数值索引，
+      则后者中的这个值会覆盖前者。对于数值索引的元素，不影响，即 $arr_0 中和
+      $arr_1 中都有数值索引的元素，它们仍旧会出现在新的数组中，只是索引值不同。
+   2) $arr = $arr_0 + $arr1;
+      把两个数组合并，会把相同键值的元素用 $arr_0 中的替换，而不是 $arr_1 中的。
 * 设置报错
   最好每次写 PHP 时，都在开头使用
   error_reporing(E_ALL);
@@ -264,19 +273,21 @@
 
    curl_multi_close($mh);
 ** curl_multi_
-   对于这个函数族，即使在设置 curl 参数时设置了 CURLOPT_FAILONERROR，通过
-   curl_multi_getcontent() 在 curl 发生错误时不能获得任何信息，但可以通过
-   curl_multi_info_read() 来获取最后一次执行时的信息。
+*** 获取值
+    对于这个函数族，即使在设置 curl 参数时设置了 CURLOPT_FAILONERROR，通过
+    curl_multi_getcontent() 在 curl 发生错误时不能获得任何信息，但可以通过
+    curl_multi_info_read() 来获取最后一次执行时的信息。
+*** 注意事项
+    在同时对 100 个以上的 url 进行操作时，这个函数可能会有些问题，一般不要超过这
+    个数。
+    http://stackoverflow.com/questions/7776833/curl-multi-threading
+    解决方法可参考:
+    http://www.onlineaspect.com/2009/01/26/how-to-use-curl_multi-without-blocking/
 * 作用域
 ** 包含另一文件时在函数中的作用域
    当在一个文件中包含另一个文件，而在本文件的函数中需要使用另一个文件中的变量，
    则需要在本文件的函数中使用 global 关键字声明。
    除了这种情况外，在本文件其他地方均可直接使用另一个文件中的变量。
-
-
-
-
-
 * Memcached 
 ** 不要以顺序数字作为 key
    如下两段代码，第一段可以得到结果，第二段没有返回结果：
