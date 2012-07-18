@@ -1,4 +1,29 @@
 * 数据类型
-  @ 是数组的前缀，$ 是单值的前缀。
+  @ 是数组的前缀.
+  $ 是单值的前缀，有三类单值，分别是 numbers, strings 和 references.
+* 帮助文档
+  通过 
+  $ perldoc -h
+  查看帮助参数，查看内置函数，一般用
+  $ perldoc -f 函数名
 * 内置变量
   @_ ：在函数中表示参数数组
+
+* 操作符
+** shift
+   从数组中返回第一个元素，并删除数组中的第一个元素。若是在函数中使用，若不加参
+   数，则默认是对 '@_' 操作。
+* 常用的包
+  use strict;
+  use warnings;
+* Remember
+  The way an expression is evaluated depends on context.
+
+  In an assginment statement, the left side determines the context. If the left
+  side is a scalar, the right side is evaluated in scalar context. If the left
+  side is an array, the right side is evaluated in list context.
+
+  When you evaluate a list in a scalar context, you get the last element of the
+  list.
+  When you evaluate an array in a scalar context, you get the length of the
+  array.
