@@ -866,6 +866,11 @@
 ** ERROR 2002 (HY000)
    先检查 /var/run/mysql/mysql.sock 文件是否存在，若不存在，建立一个。然后关闭
    mysql,再重启 mysql.
+** 查看 MySQL 端口号
+   进入 MySQL 后，可用 
+   show variables like "port";
+   来查看。
+   默认的是 3306.
 * Apache 相关
 ** 支持 PHP
    修改 /etc/httpd/httpd.conf 文件，改为:
