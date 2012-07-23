@@ -842,10 +842,12 @@
    来设置，若有密码，则用
    # mysqladmin -u root password  oldpass "newpass"
 ** 无法启动
-   检查下 /var/lib/mysql/ 中文件的 owner 和 group,都改为 mysql.
+   检查下 /var/lib/mysql/ 中文件的 owner 和 group,都改为 mysql.修改方法为:
+   # chown -R mysql.mysql /var/lib/mysql
    然后再启动 mysqld_safe ，若依旧不行，则再在 /etc/rc.d/ 中启动 rc.mysqld,方法
    是
    # rc.mysqld start
+   这个其实可以看下 /etc/rc.d/rc.mysqld 脚本，其中有提示。
 ** 出现 ERROR 1045(28000)
    解决方法:
    # pkill mysql
