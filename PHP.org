@@ -334,3 +334,51 @@
    这样可避免编写打开、写入文件的代码。
 ** number_format()
    格式化数字，使数字更易读。
+
+* 特殊的用法
+** 在 PHP 中嵌入 HTML 文件，包含多个 <?php?>
+   有时想动态生成页面，可在一个 php 文件中嵌入 HTML 代码，使用多组 <?php?>。在这
+   种情况下，这些不同组中的 <?php?> 中的代码都是有关联的，是一个整体。在这个过程
+   中，也可以加入 CSS+JS 代码。如
+
+   <?php
+   echo "This is an example that embed html code into php code\n";
+   ?>
+
+   <html>
+   <head>
+   <title>This is just a test</title>
+   </head>
+
+   <body>
+   <?php
+   $var = 3;
+   ?>
+   <table border="2">
+	<?php
+	if ($var == 1) {
+	?>
+	<tr>
+	<td>Col 1</td>
+	</tr>
+	<?php
+	} else if ($var == 2) {
+	?>
+	<tr>
+	<td>Col 2</td>
+	<td>Col 2</td>
+	</tr>
+	<?php
+	} else if ($var == 3) {
+	?>
+	<tr>
+	<td>Col 3</td>
+	<td>Col 3</td>
+	<td>Col 3</td>
+	</tr>
+	<?php
+	}
+	?>
+   </table>
+   </body>
+   </html>
