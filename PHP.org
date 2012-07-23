@@ -327,3 +327,10 @@
 
    $res_arr = $mc->getMulti(array("key1", "key2", "key3"));
    var_dump($res_arr);
+* 常用的函数
+** error_log()
+   可用它方便的记录日志到指定的文件中，我常用
+   error_log(error_info, 3, file);
+   这样可避免编写打开、写入文件的代码。
+** number_format()
+   格式化数字，使数字更易读。
