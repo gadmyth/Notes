@@ -8,6 +8,16 @@
   $proxy_total_num = $dbh->query($sql_num)->fetchColumn();
 ** error_log()
    可以用它方便地记录日志。
+** 中文支持
+   字段中可能有中文，有两种方法可以解决中文支持问题，一种是修改数据库的配置文件，
+   另一种方法是在查询时设置编码方式，建议后一种。参考文档：
+   http://www.busfly.net/post/58.html
+
+   在连接到数据库后，执行以下 sql 语句的查询(好像执行第一个就可以达到效果):
+   $sql_0 = "SET NAMES UTF8";
+   $sql_1 = "SET CHARACTER SET UTF8";
+   $sql_2 = "SET CHARACTER_SET_RESULTS=UTF8";
+   之后再进行其它操作。
 * 一些函数的注意
 ** stream_select()
   和 Linux 下的 select() 系统调用作用一样，看 PHP 手册时看不明白，通过 man
