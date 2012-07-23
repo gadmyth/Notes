@@ -382,3 +382,22 @@
    </table>
    </body>
    </html>
+   
+** 在 PHP 中 include html 文件
+   可在 PHP 文件中使用如下的形式
+   include "file.html";
+   来打开 html 文件，如
+   
+   <?php
+   include "css_test.html";
+   ?>
+
+   <html>
+   <head>
+   <title>This is just a test.</title>
+   </head>
+
+   <body>
+   <p>This is another message.</p>
+   </body>
+   </html>
