@@ -1,3 +1,11 @@
 * TODO 查下如何 mirror.
 * TODO 学习 sed 和 awk
 * TODO 深入 grep 和 find
+* TODO 深入 Python 时间处理
+* TODO 深入 Python 数据库连接
+* TODO 深入 Python 字符串处理
+* TODO 深入 Python 使用 libcurl
+* TODO 深入 Python 正则匹配
+* TODO 深入 Pyhon I/O
+* TODO 深入 Python 类
+* TODO 深入 Python 处理 XML/HTML 文件

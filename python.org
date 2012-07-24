@@ -115,7 +115,7 @@
    for item in ['item1', 'item2', 'item3', ...]:
        expression
    也可用 
-   for item in range(num)
+   for item in range(num):
        expression
    其中，range() 是自动产生一个 0~'num-1' 的 list 的函数。
    也可对字符串中的字符遍历，方法是
@@ -174,29 +174,24 @@
     对 obj 逆序输出，使用时一般用 for 语句来输出，例
     for t in reversed(obj):
         print t, 
-** 19、enumerate()
-    例
-    albums = ['tales', 'robot', 'pyramid']
-    for i, album in enumerate(albums):
-        print i, album
-** 20、zip()
+** 19、zip()
     例
     fn = ['ian', 'stuart', 'david']
     ln = ['bairnson', 'elliott', 'paton']
     for i, j in zip(fn, ln):
         print ('%s %s' % (i, j)).title()
-** 21、sum(seq [, start])
+** 20、sum(seq [, start])
     计算 seq 中所有数值的和，若省略 start, 则默认从 seq 首位到末尾计算和，若指定
     start 值，则计算 seq 从 start 到末尾的数值的和。
-** 22、xrange([start,] stop [, step])
+** 21、xrange([start,] stop [, step])
     作用同 range()，但返回的是 xrange object，比 range() 速度快同时更节省内存。
     它一般只用于 for 遍历中。
-** 23、map(function, sequence [, sequence, ...]) -> list
-** 24、filter(function or None, sequence) -> list, tuple, or string
-** 25、chr(i) -> Character
+** 22、map(function, sequence [, sequence, ...]) -> list
+** 23、filter(function or None, sequence) -> list, tuple, or string
+** 24、chr(i) -> Character
     0 <= i <= 256
     返回数字 i 对应的 ASCII 字符
-** 26、ord(c) -> integer
+** 25、ord(c) -> integer
     返回字符 c 对应的 ASCII 码.
 * 16、有趣的技巧
 ** 1、在类数组中中使用 for 
@@ -438,11 +433,9 @@
     set(aList) 和 aList 的长度来判断。
 ** 技巧
 *** 1、循环输出字符串，每次除去末尾一个字符(不输出原始字符串)
-     i = -1
      for i in range(-1, -len(seq), -1):
          print seq[:i]
 *** 2、循环输出字符串，每次除去末尾一个字符(输出原始字符串)
-     i = -1
      for i in [None]+range(-1, -len(seq), -1):
          print seq[:i]
     不能用字符串的 extend() 函数，因为它返回 None。
@@ -469,7 +462,7 @@
     类型:
     dict((['x', 1], ['y', 2]))
     dict(zip(('x', 'y'), (1, 2)))
-    dict([ ['x', 1], ['y', 2]]
+    dict([ ['x', 1], ['y', 2]])
     dict([('xy'[i-1], i) for i in range(1, 3)])
     dict(x=1, y=2)
 ** 2、使用方法 fromkeys() 创建 dict 类型数据
@@ -498,9 +491,7 @@
     返回 key-value 对。
 ** 8、排序输出 dict 的 key 值
     由于在 dict 类型数据中，key 值无序，可以用 sorted () 函数来使 dict 类型数据
-    的 key 值有序，且用这个函数后，返回的是排序后的 key 值 tuple，但我发现新版本
-    的 Python 在建立后会自动对 key 值排序，故我觉得无须再使用这个函数获得有序的
-    key 序列。
+    的 key 值有序，且用这个函数后，返回的是排序后的 key 值 tuple。
 ** 9、键冲突
     当发生键冲突时， Python 只保留冲突的最后一个 key-value 对，冲突的 key-value
     对会被删除。本质是对冲突的 key 的 value 重新赋值。
@@ -584,11 +575,9 @@
       extension objects that emulate sequences and mappings
    6) Result in more concise and readable code that iterates over non-sequence
       collections (mappings and files, for instance)
-
 ** 2、method
    经过 iter() 函数变换后的对象具有 next() 方法，当遍历结束时，会产生
    StopIteration 异常。
-
 * 30、list comprehension
 ** 1、基本用法
    有两种形式:
@@ -596,7 +585,7 @@
    [expr for iter_var in iterable if cond_expr]
    稍复杂的例子为：
    [(x, y) for x in range(4) for y in range(5)]
-   The one weakness of list comps is that all of teh data have to be made
+   The one weakness of list comps is that all of the data have to be made
    available in order to create the entire list. This can have negative
    consequences if an iterator with a large dataset is involved.
 ** 2、高级应用
@@ -611,9 +600,9 @@
    sum(len(word) for line in f for word in line.split())
 * 31、generator expressions
 ** 1、Basic concept and format
-   A generator si a specialized function that allows you to return a value and
+   A generator is a specialized function that allows you to return a value and
    "pause" the execution of that code and resume it at a later time.
-   Instead of building a list with valuse, generator expressions return a
+   Instead of building a list with values, generator expressions return a
    generator that "yields" after processing each item. Because of this,
    generator expressions are much more memory efficient by performing "lazy
    evaluation".
@@ -733,7 +722,6 @@
     teletype or tty-like device and normal buffering for everything else. Under
     normal circumstances, a /buffering/ value is not given, thus using the
     system default.
-
 *** 2、file()
     file() 的用法和 open() 完全一样，可以互相替换。建议用法:
     Generally, the accepted style is that you use /open()/ for reading/writing
@@ -817,10 +805,10 @@
    | uu              | uuencode and uudecode files                                                 |
    | zipfile         | Tools and utilities to read and write ZIP archive files                     |
 * 35、加密
-** 1、crypy
+** 1、crypt
    用法:
    import crypt
-   crypt.crypt.(word, salt)
+   crypt.crypt(word, salt)
    把 word 加密成 string 类型的数据，其中, salt 是两位的字符串，用来选择 DES 的
    4096 种变体中的一种。salt 中的字符可以是 '.'、'/' 或字母数字。
    返回的结果的前两位是 salt 代表的两位的字符。
@@ -839,7 +827,6 @@
    net_conn('chino', 8080)
    或
    net_conn(port=8080, host='kappa')
-
 ** formal arguments
 *** positional arguments
     Positional arguments must be passed in the exact order in which they are
@@ -881,12 +868,12 @@
 
    One is the *PYTHONPATH* envirionment variable set in the /shell/ or
    comamnd-line interpreter that invokes Python. The contents of this variable
-   consist of a colon-delimited set of dictionary paths. if you want the
+   consist of a colon-delimited set of dictionary paths. If you want the
    interpreter to use the contents of this variable, make sure you set or update
    it before you start the interpreter or run a Python script.
    
-   once the interpreter has started, you can access the path itself, which is
-   stored in the *sys* module as the *sys.path* variable. Rather tahn a single
+   Once the interpreter has started, you can access the path itself, which is
+   stored in the *sys* module as the *sys.path* variable. Rather than a single
    string that is colon-delimited, the path has been "split" into a list of
    individual directory strings.
     
@@ -908,7 +895,7 @@
    The *__builtins__*  module consists of a set of build-in names for the built-ins
    namespaces. Most, if not all, of these names come from the *__builtin__*
    module, which is a module of the built-in functions, exceptions, and other
-   attributes. in standard Python execution, *__builtins__* contains all the
+   attributes. In standard Python execution, *__builtins__* contains all the
    name from *__builtin__* .
 ** Namespaces and Variable Scope
    *Namespaces* are purely mappings between names and objects, but *scope* 
@@ -917,9 +904,9 @@
 ** Module ordering for /import/ statements
    It is recommended that all modules imports happen at the top of Python
    modules. Furthermore, imports should follow this ordering:
-   1)Python Standard Library modules
-   2)Python third party modules
-   3)Application-specific modules
+   1) Python Standard Library modules
+   2) Python third party modules
+   3) Application-specific modules
    Separate these groups with an empty line between the imports of these three
    types of modules. This helps ensure that modules are imported in a consistant
    manner and helps minimize the number of *import* statements required in each
@@ -956,7 +943,7 @@
    representing the instance object, is passed to the method implicitly by the
    interpreter when you invoke a method on an instance.
    It is all part of Python's philosophy of being explicitly clear.
-   Requiring the instantce only applies to regular methods and not static or
+   Requiring the instance only applies to regular methods and not static or
    class methods, although the latter requires the class the class rather than
    the instance.
 ** 在子类中调用基类的构造函数
@@ -978,7 +965,7 @@
 	   print 'Updated email address for:', self.name
 ** Some Concepts
 *** Abstraction/Implementation
-    /Abstracttion/ refers to the modeling of essential aspects, behavior, and
+    /Abstraction/ refers to the modeling of essential aspects, behavior, and
     characteristics of real-word problems and entities, providing a relevant
     subset as the definition of a programmatic structure that can realize such
     models. Abstractions not only contain the data attributes of such a model,
@@ -1029,7 +1016,7 @@
     determination and verification.
 *** Introspection/Reflection
     /Introspection/ is what gives you, the programmer, the ability to perform an
-    activity such as "manual type checking." Also called /reflection/, this
+    activity such as "manual type checking". Also called /reflection/, this
     property describes how information about a particular object can be accessed
     by itself during runtime. The *dir()* and *type()* built-in functions would
     have a very difficult time working if Python did not support some sort of
@@ -1183,7 +1170,7 @@
     Built-in types are classes, too. We can use /dir()/ to get their attributes.
 *** Instance Attributes versus Class Attributes
     _Class Attributes_ are simply data vlaues associated with a class and not
-    nay particular instances like instance attributes are. Such values are also
+    any particular instances like instance attributes are. Such values are also
     referred to as static members because their values stay constant, even if a
     class is invoked due to instantiation multiple times.
 
@@ -1225,8 +1212,8 @@
 
     class C(P):
         def __init__(self):
-	    super(C, slef).__init__(self)
-	    pritn "Calling C's constructor"
+	    super(C, self).__init__(self)
+	    print "Calling C's constructor"
 *** Multiple Inheritance
     There are two different aspects to remember when using multiple
     inheritance. The first is being able to find the correct attribute. Another

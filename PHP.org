@@ -13,8 +13,13 @@
    另一种方法是在查询时设置编码方式，建议后一种。参考文档：
    http://www.busfly.net/post/58.html
 
+<<<<<<< HEAD
    在连接到数据库后，执行以下 sql 语句的查询(好像执行第一个就可以达到效果):
    $sql_0 = "SET NAMES UTF8";
+=======
+   在连接到数据库后，执行以下 sql 语句的查询:
+   $sql_0 = "SET NAMES 'UTF8'";
+>>>>>>> a2700d69ccb1dcdd040b58adf09bd41f7494c526
    $sql_1 = "SET CHARACTER SET UTF8";
    $sql_2 = "SET CHARACTER_SET_RESULTS=UTF8";
    之后再进行其它操作。
