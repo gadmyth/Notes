@@ -5,7 +5,9 @@
 * TODO 深入 Python 数据库连接
 * TODO 深入 Python 字符串处理
 * TODO 深入 Python 使用 libcurl
-* TODO 深入 Python 正则匹配
+* DONE 深入 Python 正则匹配
+  CLOSED: [2012-07-25 三 15:00]
 * TODO 深入 Pyhon I/O
 * TODO 深入 Python 类
 * TODO 深入 Python 处理 XML/HTML 文件
+* TODO 解决 Python MySQLdb 中文乱码问题

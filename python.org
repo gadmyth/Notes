@@ -1,4 +1,4 @@
-* 2、输出的几种表示
+* 输出的几种表示
 ** 1、输出到 stdout
     print num  # num 表示数字
     print var  # var 表示已定义的变量
@@ -25,12 +25,12 @@
     若 print 打印时采用如下形式
     print item1, item2, ...
     则会打印所有的，且不同的部分之间有一个空格隔开。
-* 3、把字符串转化为整数
+* 把字符串转化为整数
     int(var)
     例
     num = raw_input("Please enter the number : ")
     print "Double the number %d" % (int(num) * 2)
-* 4、查看帮助文档
+* 查看帮助文档
    $ pydoc 名字
    还可
    $ pydoc -p 8000 &
@@ -38,9 +38,9 @@
    http://localhost:8000
    也可在交互式输如中输入
    >>> help(名字)
-* 5、添加注释
+* 添加注释
    使用 #
-* 6、运算符
+* 运算符
 ** 1、算数运算符
    +  -  *  /  //  **  
    用 ** 可实现乘方运算。
@@ -50,9 +50,9 @@
     and   or   not
 ** 3、比较运算符 
     <  <=  >  >=  ==  <>  !=
-* 7、变量
+* 变量
    变量根据赋予的值自动决定类型。
-* 8、数据类型
+* 数据类型
 ** 1、基本数值类型
     1)int (signed  integers) 
       long (long integers)
@@ -63,7 +63,7 @@
     import decimal
     模块后，可使用 decimal 数值类型，因为若不加这个模块，类似于 1.1 这样的数值可
     能会不精确。
-* 9、字符串
+* 字符串
 ** 1、表示方式
     用单引号、双引号均可，三个引号是作为转义用。
 ** 2、表示字符
@@ -72,12 +72,12 @@
     是 0,最后一位的数字的位置是 -1.
     ‘+’  表示字符串之间的联接， '*' 表示字符串串的重复，如 str * 2 表示字符串
     重复两次，注意，不管哪种形式，两部分之间直接相连。
-* 10、list and tuple
+* list and tuple
    它们类似于数组，可存储任意类型的任意长度的数据，不同之处在于， list 中的数据
    可以修改，而 tuple 中的数据不能修改。list 用 [] 存储数据，各个数据间用 ',' 隔
    开，tuple 用 () 存储数据，数据间用 ',' 隔开。
    它们保存的数据的存储方法与字符串中介绍到的方法相同。
-* 11、directories
+* directories
    是 key-value 对，存储在 {} 中，不同的 key-value 对用 ',' 隔开，如
    examp = {'name': 'zhang', 'gender': 'male'}
    也可向其中添加，如
@@ -91,7 +91,7 @@
    若在 for 或其它语句中使用
    for key in examp
    时，取出的都是 key 值
-* 12、if 语句
+* if 语句
    if expression:
        expression
    或
@@ -106,10 +106,10 @@
        expression2.1
    else:
        expression3
-* 13、while 语句
+* while 语句
    while expression1:
        expression2
-* 14、for 语句
+* for 语句
    它不像 C 中的 for，在 Python 中起一个遍历的作用。
    格式如下：
    for item in ['item1', 'item2', 'item3', ...]:
@@ -125,7 +125,7 @@
    也可用 for...else... 结构，它表示当 for 遍历完全遍历后执行 else 之后的代码。
    注: 如果对 list、tuple、dict 进行遍历，不能在 for 的语句中对这个遍历的集合进
    行修改，否则会中断遍历。
-* 15、有用的函数
+* 有用的函数
 ** 1、enumerate(str)
     一般在 for 语句中使用，每次循环返回两个值，依次是位置和字符，位置从 0 开始计
     数。如
@@ -193,7 +193,7 @@
     返回数字 i 对应的 ASCII 字符
 ** 25、ord(c) -> integer
     返回字符 c 对应的 ASCII 码.
-* 16、有趣的技巧
+* 有趣的技巧
 ** 1、在类数组中中使用 for 
     square = [x**2 for x in range(4)]
     则最终 square = [0, 1, 4, 9]
@@ -243,20 +243,20 @@
     x if c else y
     等同于 C 中的
     c?x:y
-* 17、函数
+* 函数
    格式为：
    def function_name([parameters]):
        'comment'
        expression
    可在定义函数时指定一些参数的具体值，这可以作为参数的默认值，如果调用函数时不
    加参数，则默认使用这些参数值。
-* 18、module
+* module
    创建 module 的方法与普通的 python 文件相同，只是在 import 时不加 .py
    在载入模块后，模块的使用方法和使用类的变量、函数的方法相同。
-* 19、显示最大的 int
+* 显示最大的 int
    import sys
    print sys.maxint
-* 20、随机数
+* 随机数
    import random
    # [0, 1) 之间的随机数
    print random.random()  
@@ -274,7 +274,7 @@
    print random.sample(populaition, k)
    # 对 list 中的值随机排列
    print random.shuffle(list)
-* 21、Sequences
+* Sequences
 ** 1、包含
     包括 strings、lists、tuples。
 ** 2、Standard Type Operators
@@ -439,7 +439,7 @@
      for i in [None]+range(-1, -len(seq), -1):
          print seq[:i]
     不能用字符串的 extend() 函数，因为它返回 None。
-* 22、shadow copy and deep copy
+* shadow copy and deep copy
    Python 默认的是 shadow copy, 即把一个对象的引用传给新的变量，如先定义一个
    obj, 然后把这个 obj 赋给另一个 obj,此时只是传递的是第一个 obj 的引用。意思是
    对于这两个 obj，若它是个 container, 即含有其它类型的 obj，则最初赋值后，这两
@@ -455,7 +455,7 @@
    import copy
    new_obj = copy.deepcopy(old_obj)
    具体的区别与用法可查看 copy 模块。
-* 23、Mapping Type
+* Mapping Type
 ** 1、用 dict() 创建 dict 类型数据
     它的用法很灵活，注意领会。
     注意以下例子的格式，至少要有两个数据, 若没有一个参数，则表明建立一个空 dict
@@ -511,7 +511,7 @@
     以上两种方法都是按照 value 进行排序，输出的是 dict 类型，但不改变原来的 dict
     型数据。
     以上四种方法都是升序排序，若想逆序，则在 sorted() 函数最后加上 reverse = True
-* 24、Set Type
+* Set Type
 ** 1、Description
    In mathematics, a set is any collection of distinct items, and its members
    are often referred to as set elements. Python captures this essence in its
@@ -538,16 +538,18 @@
    Retention/Intersection Update: &=
    Difference Update: -=
    Symmetric Difference Update: ^=
-* 25、time module
+* time module
   这个 module 提供了很多与时间相关的操作，在 ipython 中通过
   import time
   help(time)
   来查看。
-* 26、在 Python 源码中输入中文
+* 在 Python 源码中输入中文
   在第一行或第二行添加如下语句
   #coding:utf-8
+  或
+  # -*- utf-8 -*-
   若用 gb2312，可能会出现一些小问题，建议用 utf-8.
-* 27、pass 关键字
+* pass 关键字
   它的作用同 C 中的空语句，一般用在三个地方：
   1) 需要使用空语句的地方
   2) 在程序没有完善前，写出了某些模块，但暂时没有完成其中的代码，可以用这个关键
@@ -555,10 +557,10 @@
      def foo_fun():
          pass
   3) 在异常处理中
-* 28、else 在 while 和 for 中
+* else 在 while 和 for 中
   关键字 *else* 用在 *while* 和 *for* 中，表示当正常循环结束时要执行的代码，说明
   没有被 *break* 中断。
-* 29、iterator
+* iterator
 ** 1、Description
    Iterators were added to Python in version 2.2 to give sequence-like objects a
    sequence-like interface. 
@@ -578,7 +580,7 @@
 ** 2、method
    经过 iter() 函数变换后的对象具有 next() 方法，当遍历结束时，会产生
    StopIteration 异常。
-* 30、list comprehension
+* list comprehension
 ** 1、基本用法
    有两种形式:
    [expr for iter_var in iterable]
@@ -598,7 +600,7 @@
    统计 test.txt 中所有非空白的字符数
    f.seek(0)
    sum(len(word) for line in f for word in line.split())
-* 31、generator expressions
+* generator expressions
 ** 1、Basic concept and format
    A generator is a specialized function that allows you to return a value and
    "pause" the execution of that code and resume it at a later time.
@@ -665,12 +667,12 @@
    6)更简化的结构
 
    return max(len(x.strip()) for x in open('test.txt'))
-* 32、list 化为 str
+* list 化为 str
   有时为了输出的形式更好看，需要把 list 转化为 str 类型，方法为:
   a_string = ''
   for i in aList:
      a_string = ''.join((a_string, str(i)))
-* 33、根据已知格式来格式化输出
+* 根据已知格式来格式化输出
   如已知如下格式:
   name    phone
   flyer   150
@@ -682,7 +684,7 @@
   print phone_fun()
   其中 name_fun() 和 phone_fun() 是要自己输出的数据，若它们返回的是数字，则要通
   过 str() 函数进行转换。
-* 34、File and I/O
+* File and I/O
 ** 1、Basic concepts
    Files are simply a contiguous sequence of bytes. Anywhere data need to be
    sent usually involves a byte stream of some sort, whehter the stream occurs
@@ -804,7 +806,7 @@
    | tempfile        | Generates temporary file names or files                                     |
    | uu              | uuencode and uudecode files                                                 |
    | zipfile         | Tools and utilities to read and write ZIP archive files                     |
-* 35、加密
+* 加密
 ** 1、crypt
    用法:
    import crypt
@@ -812,7 +814,7 @@
    把 word 加密成 string 类型的数据，其中, salt 是两位的字符串，用来选择 DES 的
    4096 种变体中的一种。salt 中的字符可以是 '.'、'/' 或字母数字。
    返回的结果的前两位是 salt 代表的两位的字符。
-* 36、Functions
+* Functions
 ** Return value
    When no items are explicitly returned or if *None* is returned, then Python
    returns *None*. If the function returns exactly one object, then that is the
@@ -854,9 +856,9 @@
     that can be used like an other funciton.
 *** Built-in Functions: apply(), filter(), map(), reduce()
 ** Generators
-* 38、定义全局变量
+* 定义全局变量
   global var1[, var2 [, var3 ...]]
-* 39、Modules
+* Modules
 ** Brief
    *Modules* are a means to organize Python code, and *packages* help you
    organize modules.
@@ -918,9 +920,9 @@
    或
    import Tkinter as tk
    from cgi import FieldStorage as form
-* 40、查看 Python 哲学
+* 查看 Python 哲学
   import this
-* 41、Object-Oriented Programming
+* Object-Oriented Programming
 ** Brief
    The "mother of all classes" is *object*. If you don't have any ancestor to
    inherit from, use *object* as your default. It must exist at the top of every
@@ -1227,7 +1229,7 @@
 
     Classic classes have a depth-first MRO algorithm.
     New-style classes have a breadth-first MRO algorithm.
-* 42、Errors and Exceptions
+* Errors and Exceptions
 ** 1、Errors/Exception
 *** Notice
     其中, KeyboardInterrupt 和 SystemExit 不算 exceptions, 它们是正常情况
@@ -1315,18 +1317,17 @@
    Exceptions can be detected by incorporating them as part of a /try/
    statement. Any code suite of a /try/ statement will be monitored for
    Exceptions.
-   There are two main forms fo the /try/ statement: *try-except* and
+   There are two main forms of the /try/ statement: *try-except* and
    *try-finally*. These statements are mutually exclusive, meaning that you pick
    only one of them. A /try/ statement can be accompained by one or more
    /except/ clauses, exaclty one /finally/ clause, or a hybrid
    *try-except-finally* combination.
    *try-except* statements allow one to dectect and handle exceptions. There is
    even an optional /else/ clause for situations where code needs to run only
-   when no exceptions are detected. Meanwhile, *tyr-finally* statements allow
+   when no exceptions are detected. Meanwhile, *try-finally* statements allow
    only for detection and processing of any obligatory cleanup (whether or not
    exceptions occur), but otherwise have no facility in dealing with
    exceptions. The combination does both.
-
 ** 3、try-except
    Basic format:
 
@@ -1396,13 +1397,13 @@
 ** 6、Context Management
 ** 7、Raising Exceptions
 ** 8、Assertions
-* 43、服务器接口 
+* 服务器接口 
   我知道的有三种方式: cgi、mod_python、WSGI
-* 44、安装 egg 文件
+* 安装 egg 文件
   # easy_install egg文件
-* 45、包管理器
+* 包管理器
   pip
-* 46、Regular Expressions
+* Regular Expressions
 ** Common re sysmbols and special characters
    | Notation | Description                                                                           | Example     |
    | (...)    | Match encloed RE and save as subgroup                                                 | ([0-9]{3})? |
@@ -1417,8 +1418,7 @@
    | \nn      | Matched saved subgroup /nn/                                                           | price: \16  |
    | \c       | Match any special character /c/ verbatim (i.e., without its special meaning, literal) | \.  \\  \*  |
    | \A (\Z)  | Match start (end) of string                                                           | \ADear      |
-** 
-* 47、在 nginx 中配置和使用 python 程序
+* 在 nginx 中配置和使用 python 程序
 ** 通过 uwsgi
 *** 配置 nginx
    安装号 uwsgi 后，在 nginx.conf 中添加如下语句:
@@ -1475,3 +1475,8 @@
 
     这样之后，可在浏览器中通过如下方式来运行程序了
 	http://localhost/hello.py
+* 常用的扩展
+** 数据库相关
+   MySQLdb
+** HTML/XML 处理相关
+   BeautifulSoup, lxml
