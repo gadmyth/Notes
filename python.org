@@ -1481,10 +1481,15 @@
   http://stackoverflow.com/questions/2632677/python-integer-incrementing-with
 
 * 常用的扩展
-** 数据库相关
+** 数据库相关(第三方)
    MySQLdb
-** HTML/XML 处理相关
+** HTML/XML 处理相关(第三方)
    BeautifulSoup, lxml
-
-** 和网页动态交互
+** 和网页动态交互(第三方)
    mechanize
+
+** 处理配置文件
+   ConfigParser
+* 遇到的问题
+** 从配置文件中读取配置，连接数据库
+   要注意对读出的信息的格式进行查看，可能会多出引号而造成程序异常。

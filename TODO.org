@@ -5,7 +5,8 @@
   CLOSED: [2012-07-26 四 09:48]
 * DONE 深入 Python 数据库连接
   CLOSED: [2012-07-26 四 09:48]
-* TODO 深入 Python 字符串处理
+* DONE 深入 Python 字符串处理
+  CLOSED: [2012-07-26 四 16:00]
 * TODO 深入 Python 使用 requests
 * DONE 深入 Python 正则匹配
   CLOSED: [2012-07-25 三 15:00]
@@ -18,3 +19,7 @@
   CLOSED: [2012-07-26 四 14:01]
 * TODO 学习 Python 处理配置文件
 * TODO 学习 Python 的 BeautifulSoup 模块
+* TODO 学习 Python 与 gearman 交互
+* TODO 学习 Python 与 Memcached 交互
+* TODO 学习 Python 与 MongoDB 交互
+* TODO 解决 Python 在解析 XML 文件时出现 “Extra content at the end of the document” 异常，异常是 "XMLSyntaxError"
