@@ -9,9 +9,12 @@
 * TODO 深入 Python 使用 requests
 * DONE 深入 Python 正则匹配
   CLOSED: [2012-07-25 三 15:00]
-* TODO 深入 Pyhon I/O
+* DONE 深入 Pyhon I/O
+  CLOSED: [2012-07-26 四 14:01]
 * TODO 深入 Python 类
 * TODO 深入 Python 处理 XML/HTML 文件
 * TODO 解决 Python MySQLdb 中文乱码问题
-* TODO 学习 Python 的 os、sys 模块
+* DONE 学习 Python 的 os、sys 模块
+  CLOSED: [2012-07-26 四 14:01]
 * TODO 学习 Python 处理配置文件
+* TODO 学习 Python 的 BeautifulSoup 模块

@@ -1474,13 +1474,17 @@
 
     这样之后，可在浏览器中通过如下方式来运行程序了
 	http://localhost/hello.py
-* 常用的扩展
-** 数据库相关
-   MySQLdb
-** HTML/XML 处理相关
-   BeautifulSoup, lxml
 * ++ 和 --
   Python 中没有这种自増自减操作符，因为在 Python 中，对于值相同的 immutable 变量，
   它们的 id 是一样的，即相同的值可以用不同的变量名来表示。
   解释可参考:
   http://stackoverflow.com/questions/2632677/python-integer-incrementing-with
+
+* 常用的扩展
+** 数据库相关
+   MySQLdb
+** HTML/XML 处理相关
+   BeautifulSoup, lxml
+
+** 和网页动态交互
+   mechanize
