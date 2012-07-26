@@ -1421,7 +1421,7 @@
 * 在 nginx 中配置和使用 python 程序
 ** 通过 uwsgi
 *** 配置 nginx
-   安装号 uwsgi 后，在 nginx.conf 中添加如下语句:
+   安装好 uwsgi 后，在 nginx.conf 中添加如下语句:
 
    # pass the Python scripts to uwsgi server listening on 127.0.0.1:3031
    #
@@ -1435,14 +1435,13 @@
 *** 使用 uwsgi
  	使用 uwsgi 时，可以通过命令行形式或配置文件的形式(以 xml 和 ini 文件为例).以
     下都假设 uwsgi 在 nginx 配置的根目录下运行.
-	nnnnnnn
 	加入在 nginx 配置的根目录下有名为 hello.py 的程序，代码为 
 	
 	def application(env, start_response):
-        start_response('200 OK', [('Content-Type', 'text/html')])
-        print "I'm here.\n"
+            start_response('200 OK', [('Content-Type', 'text/html')])
+            print "I'm here.\n"
 
-        return "Hello flyer"
+            return "Hello flyer"
 
 	+ 通过命令行
 	  $ uwsgi --socket 127.0.0.1:3031 --file hello.py --callable application
@@ -1480,3 +1479,8 @@
    MySQLdb
 ** HTML/XML 处理相关
    BeautifulSoup, lxml
+* ++ 和 --
+  Python 中没有这种自増自减操作符，因为在 Python 中，对于值相同的 immutable 变量，
+  它们的 id 是一样的，即相同的值可以用不同的变量名来表示。
+  解释可参考:
+  http://stackoverflow.com/questions/2632677/python-integer-incrementing-with
