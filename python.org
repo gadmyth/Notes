@@ -1531,3 +1531,17 @@
    except Exception, e:
        print e
 XS
+** 使用 lxml.html 解析 html 文件，获取所有的内容
+   有如下的 html 文件片段
+
+   <div class="ds-list">
+    <b>1. </b> 
+    A domesticated carnivorous mammal 
+    <i>(Canis familiaris)</i> 
+    related to the foxes and wolves and raised in a wide variety of breeds.
+   </div>
+   
+   如果只是查找 div.ds-list ，然后通过 text 属性输出内容时，只会输出该标签内的部
+   分内容。若想全部输出，得用 text_content() 方法，如
+   
+   div_html.cssselect('div.ds-list').text_content()
