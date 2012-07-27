@@ -1493,3 +1493,41 @@
 * 遇到的问题
 ** 从配置文件中读取配置，连接数据库
    要注意对读出的信息的格式进行查看，可能会多出引号而造成程序异常。
+   如下代码:
+
+   #!/usr/bin/env python
+   #coding: utf-8
+
+   #
+   # @ GOAL : 测试结合配置文件来查询数据库
+   # @ NOTICE : 
+   # 1) 注意对从配置文件中读取到的信息的处理
+   #
+
+   import MySQLdb
+   import ConfigParser
+
+   # 获取数据库配置信息
+   config_file = "db.ini"
+   cf          = ConfigParser.ConfigParser()
+   cf.read(config_file)
+
+   db_host   = cf.get("host", "db_ip").replace('"', '')
+   db_user   = cf.get("pass", "db_user").replace('"', '')
+   db_passwd = cf.get("pass", "db_passwd").replace('"', '')
+   db_name   = cf.get("db", "db_name").replace('"', '')
+   db_table  = cf.get("db", "db_table").replace('"', '')
+
+   # 连接数据库并进行查询
+   try:
+       db_conn = MySQLdb.connect(host=db_host, user=db_user, passwd=db_passwd, db=db_name)
+       db_cursor = db_conn.cursor()
+       sql_query = "SELECT * FROM %s LIMIT 0,10" % db_table
+       db_cursor.execute(sql_query)
+       res = db_cursor.fetchall()
+    
+       for row in res:
+           print row
+   except Exception, e:
+       print e
+XS
