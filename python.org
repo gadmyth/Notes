@@ -1545,3 +1545,18 @@ XS
    分内容。若想全部输出，得用 text_content() 方法，如
    
    div_html.cssselect('div.ds-list').text_content()
+
+** reload(sys) 后才有 sys.setdefaultencoding() 方法
+   这是因为在 python2.5 之后的版本中，初始化之后会删除 sys.setdefaultencoding()
+   方法，故需要重新载入 sys 模块后才能使用。
+** 编码问题
+   python 文件中的字符串默认是 Unicode 编码，python 处理字符串时，先将字符串转换
+   为 Unicode 编码，输出时再转化为其它的编码方式。
+   使用时注意编码。有时想把结果通过管道输出到终端上时会提示编码错误，这是因为
+   python 程序输出的字符串的编码与终端的编码方式不一样。可把终端中的编码方式调为
+   utf-8，然后在 python 程序开头设置:
+
+   import sys
+   reload(sys)
+
+   sys.setdefaultencoding('utf-8')
