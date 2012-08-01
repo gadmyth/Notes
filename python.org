@@ -1480,6 +1480,9 @@
   解释可参考:
   http://stackoverflow.com/questions/2632677/python-integer-incrementing-with
 
+* XPATH 中标签的多个元素
+  可用 and 或 or 连接 html 文件中标签的多个属性，如
+  hxs.select("//ul[@id='flyer' and @class='flx']")
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
@@ -1490,6 +1493,10 @@
 
 ** 处理配置文件
    ConfigParser
+** 文件、目录相关
+   可用 os 模块下的方法做文件、目录相关的操作，用 os.path 模块下的方法做判断相关
+   的操作。
+   若想递归删除不空的目录，可用 shutil 模块中的 rmtree() 方法。
 * 遇到的问题
 ** 从配置文件中读取配置，连接数据库
    要注意对读出的信息的格式进行查看，可能会多出引号而造成程序异常。
@@ -1560,3 +1567,7 @@ XS
    reload(sys)
 
    sys.setdefaultencoding('utf-8')
+** 使用 HtmlXPathSelector 选择数据
+   在 http://digi.zol.com.cn 中，选择手机的侧边栏，即 TOP10 中的数据时，都不能取
+   得数据，而其它的部门都正常。
+   以后再抓取数据时，要特别注意有些情况下可能通过 XPATH 的方法抓取不到数据。

@@ -1,0 +1,221 @@
+* 常用的命令行工具
+   分两种，一种是只能在项目内部使用的，另一种是也可在项目外使用的。
+   
+   创建新的项目:
+   $ scrapy startproject 项目名
+   
+   在项目内运行爬虫
+   $ scrapy crawl 爬虫名
+   
+   在项目内显示当前项目中所有爬虫的名称
+   $ scrapy list
+   
+   在项目内编辑爬虫，默认的编辑器通过 shell 的 EDITOR 环境变量来设置
+   $ scrapy edit 爬虫名
+   
+   在项目内显示可用的爬虫的类型
+   $ scrapy genspider -l
+   在项目内显示爬虫模板
+   $ scrapy genspider -d 爬虫类型
+   在项目内利用爬虫模板编辑新的爬虫
+   $ scrapy genspider -t 爬虫类型 爬虫name 爬虫allowed_domains
+   
+   在浏览器中查看 scrapy 看到的网页的数据，可能 scrapy 看到的网页的数据和人看到
+   的有不同，通过这个方法可以检测下
+   $ scrapy view 网页url
+   
+   starts the Scrapy shell for the given URL (if given) or empty if not URL is
+   given，可通过这种方法来交互查看爬虫中某些语句的执行效果，如 XPATH
+   $ scrapy shell 网页url
+   
+   Run a spider self-contained in a Python file, without having to create a
+   project，在项目外执行
+   $ scrapy runspider <spider_file.py>
+* Items
+*** goal
+    The main goal in scraping is to extract structured data from unstructured
+    sources, typically, web pages. Scrapy provides teh /Item/ class for this
+    purpose.
+    /Item/ objects are simple containers used to collect the scraped data. They
+    provide a dictionary-like API with a convenient syntax for declaring their
+    available fields.
+*** Fields
+    /Field/ objects are used to specify metadata for each field.
+    The main goal of /Field/ objects is to provide a way to define all field
+    metadata in one place. Typically, those components whose behaviour depends
+    on each field use certain field keys to configure that behaviour. You must
+    refer to their documentation to see wich metadata keys are used by each
+    component.
+* Spiders
+** goal
+    Spiders are classes which define how a certain site (or domain) will be
+    scraped, including how to crawl the site and how to extracted items from
+    their pages. In other words, Spiders are the place where you define the
+    curstom behaviour for crawling and parsing pages for a particular site.
+** 可用的爬虫
+*** scrapy.spider.BaseSpider
+     This is the simplest spider, and the one from which every other spider must
+     inherit from (either the ones that come bundled with Scrapy, or the ones
+     that you write yourself). It doesn't provide any special functionality. It
+     just requests the given _start_urls/start_requests_, and calls the spider's
+     method _parse_ for each of the resulting responses.
+     
+     + *name*
+       The spider name is how the spider is located (and instantiated) by
+       Scrapy, so it must be unique.
+       It is recommended to name your spiders after the domain that their crawl.
+     + *allowed_domains*
+       An optional list of strings containing domains that this spider is
+       allowed to crawl. Requests for URLs not belonging to the domain names
+       specified in this list won't be followed if _OffsiteMiddleware_ is
+       enabled.
+     + *start_urls*
+       A list.
+     + *start_requests()*
+       _认真理解这个方法。_
+       This method must return an iterable with the first Requests to crawl for
+       this spider.
+       This is the method called by Scrapy when the spider is opened for
+       scraping when no particular URLs are specified. If particular URLs are
+       specified, the _make_requests_from_url()_ is used instead to create the
+       Requests. This method is also called only once from Scrapy, so it's safe
+       to implement it as a generator.
+       The default implementation uses _make_requests_from_url()_ to generate
+       Requests for each url in _start_urls_ .
+       If you want to change the Requests used to start scraping a domain, this
+       is the method to override. For example, if you need to start by logging
+       in using a POST request, you could do:
+       
+       def start_requests(self):
+           return [FormRequest("http://www.example.com/login",
+	                        formdata={'user': 'john', 'pass': 'secret'},
+				callback=self.logged_in)]
+       def logged_in(self, response):
+           # here you would extract links to follow and return Requests for
+           # each of them ,with another callback
+           pass
+     + *make_requests_from_url(url)*
+       A method that receives a URL and returns a /Request/ object (or a list of
+       /Request/ objects) to scrape. This method is used to construct the
+       initial requests in the _start_requests()_ method, and is typically used
+       to convert urls to requests.
+       Unless overridden, this method returns Requests with the _parse()_ method
+       as their callback function, and with dont_filter parameter enabled.
+
+     + *parse(response)*
+       This is the default callback used by Scrapy to process downloaded
+       responses, when their requests don't specify a callback.
+       The _parse_ method is in charge of processing the response and returning
+       scraped data and/or more URLs to follow. Other Requests callbacks have
+       the same requirement as the /BaseSpider/ class.
+       This method, as well as any other Request callback, must return an
+       iterable of /Item/ objects.
+
+     + *log(message [, level, component])*
+       Log a message using the _scrapy.log.msg()_ function, automatically
+       populating the spider argument with the /name/ of this spider.
+
+*** scrapy.contrib.spiders.CrawlSpider
+     This is the most commonly used spider for crawling regular websites, as it
+     provides a convenient mechanism for following links by defining a set of
+     rules. 
+     Apart from teh attributes inherited from /BaseSpider/ (that you must
+     specify), this class supports a new attribute:
+     
+     + *rules*
+       Which is a list of one (or more) /Rule/ objects. Each /Rule/ defines a
+       certain behavior for crawling the site. If multiple rules match the same
+       link, the first one will be used, according to the order they're defined
+       in this attribute.
+
+     + scrapy.contrib.spiders.Rule(link_extractor, callback=None,
+       cb_kwargs=None,follow=None, process_links=None, process_request=None)
+       - *link_extractor*
+	 It's a /Link Extractor/ object which defines how links will be
+         extracted from each crawled page.
+       - *callback*
+	 It's a callable or a string (in which case a method from the spider
+         object with that name will be used) to be called for each link
+         extracted with the specified /link_extractor/. _This callback receives a_
+         _response as its first argument and must return a list containing /Item/_
+         _and/or /Request/ objects (or any subclass of them)._ 也可以返回一个
+         Item 对象。
+	 
+	 When writing crawl spider rules, avoid using /parse/ as callback, since
+         the _CrawlSpider_ uses the /parse/ method itself to implement its
+         logic. So if you override the /parse/ method, the crawl spider will no
+         longer work.
+       - *cb_kwargs*
+	 It's a dict containing the keyword arguments to be passed to the
+         callback function.
+       - *follow*
+	 It's a boolean which specifies if links should be followed from each
+         response extracted with this rule. If _callback_ is None *follow*
+         defaults to True, otherwise it defaults to False.
+       - *process_links*
+	 It's a callable, or a string (in which case a method from the spider
+         object with that name will be used) which will be called for each list
+         of links extracted from each response using the specified
+         *link_extractor*. This is mainly used for filtering purposes.
+	 It must return a request or None (to filter out the request).
+*** scrapy.contrib.spiders.XMLFeedSpider
+     XMLFeedSpider is designed for parsing XML feed by iterating through them by
+     a certain node name. The iterator can be chosen from: /iternodes, xml/
+     /html/ . It's recommended to use the /iternodes/ iterator for performance
+     reasons, since the /xml/ and /html/ iterators generate the whole DOM at
+     once in order to parse it. However, using /html/ as the iterator may be
+     useful when parsing XML with bad markup.
+     
+     + *iterator*
+       A string which defines the iterator to sue. It can be either:
+       - *iternodes* --- a fast iterator based on regular expressions
+       - *html* --- an iterator which uses HtmlXPathSelector. Keep in mind this
+         uses DOM parsing and must load all DOM in memory which could be a
+         problem for big feeds
+       - *xml* --- an iterator which uses XmlXPathSelector. Keep in mind this
+         uses DOM parsing and must load all DOM in memory which could be a
+         problem for big feeds
+       
+       It defaults to *iternodes*
+     + *itertag*
+       A string with the name of the node (or element) to iterate in.
+     + *namespace*
+       A list of _(prefix, url)_ tuples which define the namespaces available in
+       that document that will be processed with this spider. The _prefix_ and
+       _url_ will be used to automatically register namespaces using the
+       _register_namespace()_ method.
+       You can specify nodes with namespaces in the _itertag_ attribute.
+     + *adapt_response(response)*
+       A method that receives the response as soon as it arrives from the spider
+       middleware, before the spider starts parsing it. It can be used to modify
+       the resp body before parsing it. This method receives a response and also
+       returns a response (it could be the same or another one).
+     + *parse_node(response, selector)*
+       This method is called for the nodes matching the provided tag name
+       (/itertag/). Receives the response and an XPathSelector for each
+       node. Overriding this method is mandatory. Otherwise, your spider won't
+       work. This method must return either a _Item__ object, a _Request_
+       object, or an iterable containing any of them.
+     + *process_results(response, results)*
+       This method is called for each result (item or request) returned by the
+       spider, and it's intended to perform any last time processing required
+       before returning the results to the framework core, for example setting
+       the item IDs. It receives a list of results and the response which
+       originated those results. It must return a list of results (Items or
+       Requests).
+* 常见的问题
+** 提示找不到 items 模块
+    这可能是因为在 spiders/ 目录下的爬虫的文件名和项目名相同造成的，导致 python
+    执行时从爬虫文件所在的目录开始查找模块。
+
+** 抓取 Retry 时提示 scapy Connection to the other side was lost in a non-clean fashion: Connection lost
+   网上的解释是:
+   He wrote a test-case (connection breaker) and compared the log of broken
+   connection and a cleanly closed one, noticing that former gets connectionLost
+   event before removing the session, while latter gets it as a result, and
+   exploited this difference by introducing a "active_close" flag to session and
+   a simple session re-creation sequence in removeMe method.
+   参见: http://code.google.com/p/pyicqt/issues/detail?id=5
+   
+   经过查看我的代码，发现的问题是，我的 pipelines.py 文件中的函数写错了，造成这
+   种问题，修改后就正常了。
