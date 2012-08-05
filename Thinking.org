@@ -873,6 +873,8 @@
    show variables like "port";
    来查看。
    默认的是 3306.
+** 清空表中数据
+   TRUNCATE TABLE 表名
 * Apache 相关
 ** 支持 PHP
    修改 /etc/httpd/httpd.conf 文件，改为:

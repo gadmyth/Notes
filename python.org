@@ -1571,3 +1571,10 @@ XS
    在 http://digi.zol.com.cn 中，选择手机的侧边栏，即 TOP10 中的数据时，都不能取
    得数据，而其它的部门都正常。
    以后再抓取数据时，要特别注意有些情况下可能通过 XPATH 的方法抓取不到数据。
+** MySQldb 向 MySQL 插入数据后无法在 MySQL 中查询到
+   这可能是因为用到的 MySQL 带有事务操作,MySQL 在 5.5 之后默认是用 InnoDB，
+   InnoDB 支持事务.可通过在 MySQL 中通过
+   SELECT VARIABLES LIKE "have_innodb";
+   来查看是否支持事务，若为 YES 则支持。
+   要在插入数据后执行提交事务的操作。假设 conn 是 MySQLdb 对象，插入数据后要执行
+   conn.commit()
