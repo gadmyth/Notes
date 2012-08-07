@@ -1228,8 +1228,7 @@
 ** 子类中的 __init__
    若在子类中不定义 __init__() 方法，则会自动调用父类的 __init__() 方法。若定义
    了子类的方法，则若不显示调用父类的 __init__()，就不会调用父类的 __init__() 方
-   法。若想调用父类的 __init__() 方法，则在子类的 __init__() 开始处使用如下的格
-   式:
+   法。若想调用父类的 __init__() 方法，则在子类的 __init__() 中使用如下的格式:
    父类.__init__(self, 其它参数)
 ** 好的命名习惯
    Use nouns for data values names and predicates (verbs plus direct objects)

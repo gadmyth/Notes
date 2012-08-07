@@ -27,7 +27,8 @@
 * DONE 解决 Python 在解析 XML 文件时出现 “Extra content at the end of the document” 异常，异常是 "XMLSyntaxError"
   CLOSED: [2012-07-27 五 13:24]
 
-* TODO 解决 Python 中字符串编码的问题
+* DONE 解决 Python 中字符串编码的问题
+  CLOSED: [2012-08-07 Tue 23:34]
 * TODO 查找 Python 如何等宽输出
 * DONE 查找 XPATH 中标签包含多个属性的情况
   CLOSED: [2012-08-07 Tue 13:49]
@@ -35,3 +36,6 @@
   CLOSED: [2012-08-07 Tue 13:27]
 * DONE 查找 XPATH 不含某个标签时的返回结果
   CLOSED: [2012-08-07 Tue 13:38]
+* TODO 学习 Python 中 assert 的用法
+* TODO 学习 Python 中 @ 修饰符的作用和用法
+* TODO 学习 Python 中 yield 用法
