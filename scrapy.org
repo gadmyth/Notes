@@ -69,6 +69,7 @@
        allowed to crawl. Requests for URLs not belonging to the domain names
        specified in this list won't be followed if _OffsiteMiddleware_ is
        enabled.
+	   若不设置这个参数，则允许所有的域。
      + *start_urls*
        A list.
      + *start_requests()*
@@ -207,7 +208,6 @@
 ** 提示找不到 items 模块
     这可能是因为在 spiders/ 目录下的爬虫的文件名和项目名相同造成的，导致 python
     执行时从爬虫文件所在的目录开始查找模块。
-
 ** 抓取 Retry 时提示 scapy Connection to the other side was lost in a non-clean fashion: Connection lost
    网上的解释是:
    He wrote a test-case (connection breaker) and compared the log of broken
@@ -219,3 +219,19 @@
    
    经过查看我的代码，发现的问题是，我的 pipelines.py 文件中的函数写错了，造成这
    种问题，修改后就正常了。
+** BaseSpider 没有 start_urls 时的情况
+   结合 BaseSpider 源码和文档，通过 start_requests() 方法可以解决这个问题。
+   在 start_requests() 中可以有三种方法。
+   一种是模仿 BaseSpider 中的方法，返回 FormRequest() 的对象列表，通过这种方法可
+   以指定 callback 函数，默认是调用 parse() 方法作为回调函数。
+   第二种是模仿 BaseSpider 源码中的 start_requests() 的实现，通过调用
+   make_requests_from_url() 方法，我觉得使用这种方法只能默认使用 parse() 作为回
+   调函数（这种想法得需要验证）.
+   第三种方法是用 Request() 对象，在 start_requests() 中对于每个 url，使用
+   yield Request()
+   来做。
+   有个问题时，当没有 response 时，似乎不会调用回调函数。
+
+** 递归函数
+   可通过 Request() 中的 callback 来调用自身处理响应。但我发现，如果请求的 url
+   相同，则不会执行回调函数。

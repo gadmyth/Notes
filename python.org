@@ -940,14 +940,6 @@
    mathObj.x = 4
    mathObj.y = 5
    print mathObj.x + mathObj.y
-** Method and self
-   The *self* keyword must be present in all method declarations. That argument,
-   representing the instance object, is passed to the method implicitly by the
-   interpreter when you invoke a method on an instance.
-   It is all part of Python's philosophy of being explicitly clear.
-   Requiring the instance only applies to regular methods and not static or
-   class methods, although the latter requires the class the class rather than
-   the instance.
 ** 在子类中调用基类的构造函数
    Each subclass must define its own constructor if desired, otherwise the base
    class constructor will be called. However, if a subclass overrides a base
@@ -1064,6 +1056,10 @@
     that they must contain their own documentation strings.
 *** Class Attributes
     data and methods.
+	Class data attributes are useful only when a more 'static' data type is
+	required which is independent of any instances.
+	要理解 class attributes 和 instance attributes，我觉得可以从 "在 Python 中一
+	切都是 objects" 来理解，并且要记住，attribute 包含 data 和 method 两部分。
 ** Instances
 *** Brief
     Keep in mind that when you define a class, you are not creating a new type,
@@ -1229,6 +1225,19 @@
 
     Classic classes have a depth-first MRO algorithm.
     New-style classes have a breadth-first MRO algorithm.
+** 子类中的 __init__
+   若在子类中不定义 __init__() 方法，则会自动调用父类的 __init__() 方法。若定义
+   了子类的方法，则若不显示调用父类的 __init__()，就不会调用父类的 __init__() 方
+   法。若想调用父类的 __init__() 方法，则在子类的 __init__() 开始处使用如下的格
+   式:
+   父类.__init__(self, 其它参数)
+** 好的命名习惯
+   Use nouns for data values names and predicates (verbs plus direct objects)
+   for methods.
+** 属性的公开性
+   Python 中所有的 attributes 都是 public.
+** 要记住
+   Python 中一切都是 objects，即使是定义的 class.
 * Errors and Exceptions
 ** 1、Errors/Exception
 *** Notice
@@ -1480,9 +1489,25 @@
   解释可参考:
   http://stackoverflow.com/questions/2632677/python-integer-incrementing-with
 
-* XPATH 中标签的多个元素
+* XPATH
+** XPATH 中标签的多个元素
   可用 and 或 or 连接 html 文件中标签的多个属性，如
   hxs.select("//ul[@id='flyer' and @class='flx']")
+** 标签 text() 为空时
+   若便签的 text() 为空，则用 extract() 抽取出的是 []
+** 不含某个标签时的返回结果(HANG)
+   会返回一个类型为 scrapy.selector.list.XPathSelectorList 的对象，即使不存在这
+   个节点。一个简单的方法是根据 text() 来判断是否为 [] 来粗略判断该节点是否存在。
+   但这种方法不能证明某个标签不存在。
+   目前还没找到合理的方法来验证某个便签是否存在。
+** 标签中包含多个属性
+   如标签 div 中含有 id、class、style 属性，想选出所有包含这三个属性的 div 节点，
+   XPATH 可写为
+   div[@id and @class and @style]
+** 取出节点链表的最后一个
+   可用索引为 [-1] 的方法取处节点链表的最后一个节点。
+** extract() 方法取出的值
+   取出的是 list，这点儿要格外注意。
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb

@@ -1,0 +1,3 @@
+* 从 chrome 中查找网页元素
+  有时通过 chrome 的 developer tools 查看到的是多次请求后的网页，而不是最开始的
+  网页。

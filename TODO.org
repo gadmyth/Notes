@@ -29,3 +29,9 @@
 
 * TODO 解决 Python 中字符串编码的问题
 * TODO 查找 Python 如何等宽输出
+* DONE 查找 XPATH 中标签包含多个属性的情况
+  CLOSED: [2012-08-07 Tue 13:49]
+* DONE 查找 XPATH 的标签 text() 为空时的情况
+  CLOSED: [2012-08-07 Tue 13:27]
+* DONE 查找 XPATH 不含某个标签时的返回结果
+  CLOSED: [2012-08-07 Tue 13:38]
