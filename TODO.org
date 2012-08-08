@@ -15,7 +15,8 @@
 * TODO 深入 Python 类
 * DONE 深入 Python 处理 XML/HTML 文件
   CLOSED: [2012-07-27 五 17:14]
-* TODO 解决 Python MySQLdb 中文乱码问题
+* DONE 解决 Python MySQLdb 中文乱码问题
+  CLOSED: [2012-08-08 Wed 17:00]
 * DONE 学习 Python 的 os、sys 模块
   CLOSED: [2012-07-26 四 14:01]
 * DONE 学习 Python 处理配置文件
@@ -39,3 +40,10 @@
 * TODO 学习 Python 中 assert 的用法
 * TODO 学习 Python 中 @ 修饰符的作用和用法
 * TODO 学习 Python 中 yield 用法
+* TODO 查找 Scrapy 中使用代理的方法
+* TODO 查找 Scrapy 限制爬虫使用资源的方法
+* TODO 查找 Scrapy 中发送请求时如何加上 User-agent 等参数来模拟浏览器行为
+* TODO 查找 Scrapy 中如何设置抓取的时间间隔
+* TODO 查找如何判定自己的 IP 被目标网站限制的方法
+* TODO 学习 Python 中的队列
+* TODO 学习 Python 的 Twisted 框架

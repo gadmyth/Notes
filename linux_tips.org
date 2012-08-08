@@ -793,3 +793,19 @@
   http://www.centos.org/docs/5/html/5.2/Deployment_Guide/s2-proc-locks.html 
 * 131、网页加载速度评测及建议的工具
   google speedpage
+* 132、grep
+** 完全匹配
+   $ grep -w '要查询的' 查询的文件
+* 133、ssh 隧道
+  $ ssh -D 自己设的端口 用户名@充当代理的机器的ip
+  然后在浏览器中设置 SOCKS v5 代理， ip:port 为 127.0.0.1:本机设置的端口
+* 134、Linux 解析域名顺序
+  1、/etc/hosts
+  2、named
+  3、DNS
+
+
+
+
+
+

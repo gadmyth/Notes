@@ -913,7 +913,7 @@
     <Directory />
     Options Indexes FollowSymLinks
     AllowOverride None
-    </Directory>
+    </Directory>i
 * Slackware 启动过程
   The first program to run under Slackware besides the Linux kernel is *init(8)*
   . This program reads the */etc/inittab(5)* file to see hwo to run the

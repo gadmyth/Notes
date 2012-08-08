@@ -1237,6 +1237,10 @@
    Python 中所有的 attributes 都是 public.
 ** 要记住
    Python 中一切都是 objects，即使是定义的 class.
+** 查看 Class 的属性
+   有两种方法，即 dir() 和 __dict__
+   通过 dir(类名) 返回的是类的属性 list.
+   通过 类名.__dict__ 返回的是属性字典，key 是类的属性名，value 是类的属性的类型。
 * Errors and Exceptions
 ** 1、Errors/Exception
 *** Notice
