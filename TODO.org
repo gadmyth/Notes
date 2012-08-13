@@ -50,3 +50,4 @@
 * TODO 学习 Python 的 Twisted 框架
 * TODO 查查 HTTP 代理的特征
 * TODO 学习 Python 如何串行化
+* TODO 学习使用 Python 的 log 模块

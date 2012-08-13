@@ -204,6 +204,12 @@
        the item IDs. It receives a list of results and the response which
        originated those results. It must return a list of results (Items or
        Requests).
+* 使用
+** 初始化
+   在爬虫根目录下执行
+   $ scrapy list
+   会执行爬虫里类中的方法之上的代码，检查爬虫的正确性。
+   比如在爬虫的类的方法前创建文件，则执行以上命令后会执行创建文件的操作。
 * 常见的问题
 ** 提示找不到 items 模块
     这可能是因为在 spiders/ 目录下的爬虫的文件名和项目名相同造成的，导致 python
@@ -238,3 +244,60 @@
 ** scrapy shell 无法获得子页的数据
    出现这种情况时，用 scrapy shell 抓取该网站的首页，然后调用 fetch() 方法来获取
    想要的网页的数据。
+* 源码剖析
+** scrapy/spider.py
+   定义了 BaseSpider 类，它继承 obejct_ref 类。object_ref 类的作用是记录当前类的
+   对象的引用。?????? (对 object_ref 类还不太了解，暂时知道这么多)
+   BaseSpider 类中主要定义了发送 Request 对象的方法、设置爬虫、设置 log。默认的
+   log 级别是 log.DEBUG。
+   BaseSpider 会自动从 start_urls 中发送 Request 对象，通过 start_requests() 方
+   法实现，而该方法调用 make_requests_from_url() 方法来发送 Request 对象。若根据
+   需求需要手动建立 Request 对象，可不定义 start_urls 变量，而是重新定义
+   start_requests() 方法，可在 Request 对象中指定 callback，而使用默认的
+   parse() 方法来分析 response.
+   该类中只对 parse() 方法做了返回 NoImplementedError 异常的处理，若需要使用该默
+   认方法，需要使用者在subclass 该类时重新定义该方法。
+   BaseSpider 类没有定义默认的处理 response 的方法，主要做的是发送 Request、设置
+   log 和爬虫名等。它是所有爬虫的基类，所有的爬虫必须是该类的 subclass.
+** scrapy/contrib/spiders/crawl.py (需要着重理解)
+   有两个类，即 Rule 和 CrawlSpider，Rule 类是为 CrawlSpider 服务的。
+
+   CrawlSpider 类的一个特性是可以自动分析 response 中的所有链接，并自动对分析出
+   的链接进行抓取，然后继续这个过程。Rule 类定义了抽取 response 中链接的方法、规
+   则、对链接的处理、是否继续爬链等。
+
+   Rule 类中需要注意的主要参数有:
+   + link_extractor
+	 定义了抽取链接的方法。
+   + callback
+	 定义了处理对爬取到的链接的处理方法
+   + follow
+	 定义了是否继续爬链。默认为 None.
+	 若没设置 follow, 则当 callback 设置时，follow 默认为 False，否则为 True.
+   + process_links
+	 定义了对分析出的链接的处理方法，如修改格式等
+   + process_requests (???)
+	 作用暂时不清楚，默认的作用是返回参数。
+
+   CrawlSpider 返回 item 对象或 Request 对象。在这个类中，大量使用了 yield
+   + _requests_to_follow()
+     处理爬链的方法是 _requests_to_follow()，在这个方法中会遍历 rules 变量中定义的
+     Rule 对象，处理每个 Rule 时，会有对符合规则的链接的去重处理，是通过使用 set
+     类型来实现的。在这个过程中，可对抓取到的链接进行一些辅助性的工作，通过 Rule
+     中的 process_links() 方法来实现。
+   + _parse_response()
+     _parse_response() 方法对返回的 response 进行处理，要么返回 item 对象，要么返
+     回 Request 对象。其中有两部分处理，第一部分是通过 callback 对 response 进行处
+     理，第二部分是对是否进行爬链的处理。
+
+   TODO:
+   + 需要再理解的方法:
+	 - parse()
+	   我不理解 CrawlSpider 用这个方法是做什么的。
+	 - _parse_response()
+	 - _requests_to_follow()
+	   不理解 CrawlSpider 是如何代用该方法的。
+	 - _response_downloaded()
+	   不理解该方法的作用。
+
+** 
