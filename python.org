@@ -243,6 +243,9 @@
     x if c else y
     等同于 C 中的
     c?x:y
+** 6、把 "2012-07-26" 类似的时间变为 Unix 时间戳
+   import time, datetime
+   stamp = time.mktime(datetime.datetime.strptime("2012-07-26", '%Y-%m-%d').timetuple())
 * 函数
    格式为：
    def function_name([parameters]):
@@ -1518,7 +1521,6 @@
    BeautifulSoup, lxml
 ** 和网页动态交互(第三方)
    mechanize
-
 ** 处理配置文件
    ConfigParser
 ** 文件、目录相关
@@ -1608,3 +1610,19 @@ XS
    来查看是否支持事务，若为 YES 则支持。
    要在插入数据后执行提交事务的操作。假设 conn 是 MySQLdb 对象，插入数据后要执行
    conn.commit()
+** re.find()
+   假如有下面的语句：
+   
+   test_time = '"CreationTime":"2012-09-10 10:20:23","ReferenceDate":"2012-01-02"
+                "CreationTime":"2012-02-10 14:23:12","ReferenceDate":"2010-02-23"
+   pattern = '"CreationTime":"(\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2}","ReferenceDate":"\d{4}-\d{2}-\d{2}"'
+   res_time = re.findall(pattern, test_time)
+
+   那么 res_time 的结果是:
+   ['2012-09-10', '2012-02-10']
+
+   
+   若
+   pattern = '"CreationTime":"(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})","ReferenceDate":"\d{4}-\d{2}-\d{2}"'
+   那么 res_time 的结果是：
+   [('2012-09-10', '10:20:23'), ('2012-02-10', '14:23:12')]

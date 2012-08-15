@@ -244,6 +244,35 @@
 ** scrapy shell 无法获得子页的数据
    出现这种情况时，用 scrapy shell 抓取该网站的首页，然后调用 fetch() 方法来获取
    想要的网页的数据。
+** 提高抓取效率的几个设置
+   可修改 DOWNLOAD_TIMEOUT 和 CONCURRENT_REQUESTS 来提高抓取效率，方法为：
+   在爬虫中添加
+   
+   from scrapy.conf import settings
+
+   settings.overrides['DOWNLOAD_TIMEOUT'] = 5 (默认是 180)
+   settings.overrides['CONCURRENT_REQUESTS'] = 100 (默认是 16)
+   settings.overrides['CONCURRENT_REQUESTS_PER_DOMAIN'] = 100 (默认是 8)
+** 使用 Http 代理
+   假如爬虫工程名为 commentid，在 commentid 目录下，建立名为 httpproxy.py 文件，
+   在其中写入:
+   
+   class ProxyMiddleware(object):
+       def process_request(self, request, spider):
+	       request.meta['proxy'] = 'http://代理ip:代理port'
+
+   然后在 settings.py 中添加如下语句:
+   
+   DOWNLOADER_MIDDLEWARES = {
+    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':110,
+    'commentid.middlewares.ProxyMiddleware':100,
+    'scrapy.contrib.downloadermiddleware.httpcompression.HttpCompressionMiddleware':None,
+    }
+
+	尤其要注意最后一条语句，如果不加，可能会返回 "Not a gzipped file" 的错误。
+** 抓取京东数据时可能会出现的比较严重的问题
+   有时向京东发送请求后返回 error 页面，但该 url 其实是有正常数据的。在处理京东
+   的数据时要注意这点儿，记住加条 url 的判断。
 * 源码剖析
 ** scrapy/spider.py
    定义了 BaseSpider 类，它继承 obejct_ref 类。object_ref 类的作用是记录当前类的
