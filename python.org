@@ -246,6 +246,9 @@
 ** 6、把 "2012-07-26" 类似的时间变为 Unix 时间戳
    import time, datetime
    stamp = time.mktime(datetime.datetime.strptime("2012-07-26", '%Y-%m-%d').timetuple())
+** 7、enumerate(fp)
+   若 enumerate() 的参数是文件描述符，则返回的是
+   [行号，对应行的内容]
 * 函数
    格式为：
    def function_name([parameters]):
@@ -1132,10 +1135,10 @@
     will never be deallocated (because of your extra reference to them).
 ** Instance Attributes
 *** Brief
-    Instances have only data attribute (methods are strictly class attributes)
-    and are simply data values that you want to be associated with a particular
-    instance of any class and are accessible via the dotted-attribute
-    notation. These values are independent of any other instance or of the class
+    _Instances have only data attribute (methods are strictly class attributes)_
+    _and are simply data values that you want to be associated with a particular_
+    _instance of any class and are accessible via the dotted-attribute_
+    _notation_. These values are independent of any other instance or of the class
     it was instantiated. When an instance is deallocated, so are its attributes.
 *** "Instantiating" Instance Attributes
     Instance attributes can be set any time after an instance has been created,
@@ -1244,6 +1247,17 @@
    有两种方法，即 dir() 和 __dict__
    通过 dir(类名) 返回的是类的属性 list.
    通过 类名.__dict__ 返回的是属性字典，key 是类的属性名，value 是类的属性的类型。
+** __del__()
+   Python manages garbage collection of objects by reference counting.
+   If you do override /__del__()/, be sure to call any parent class /__del__()/
+   first so those pieces can be adequately deallocated.
+** __init__() should return None
+   If a constructor is defined, it should not return any object because the
+   instance object is automatically returned after the instantiation
+   call. Correspondingly, __init__() should not return any object (or return
+   *None*); otherwise, there is a conflict of interest because only the instance
+   should be returned. Attempting to return any object other than *None* will
+   result a *TypeError* exception.
 * Errors and Exceptions
 ** 1、Errors/Exception
 *** Notice
@@ -1529,6 +1543,10 @@
    若想递归删除不空的目录，可用 shutil 模块中的 rmtree() 方法。
 ** 测试框架
    PyUnit
+** 执行 js 代码的模块
+   Ghost
+** 模拟浏览器行为
+   splinter
 * 遇到的问题
 ** 从配置文件中读取配置，连接数据库
    要注意对读出的信息的格式进行查看，可能会多出引号而造成程序异常。
@@ -1626,3 +1644,28 @@ XS
    pattern = '"CreationTime":"(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})","ReferenceDate":"\d{4}-\d{2}-\d{2}"'
    那么 res_time 的结果是：
    [('2012-09-10', '10:20:23'), ('2012-02-10', '14:23:12')]
+** 真正的退出
+   import sys
+   sys.exit([num | msg])
+** 随机从文件中随机取几行
+   有三种思路：
+   1) 把文件的内容通过 readlines() 读入到一个 list 中，然后随机取。
+   2) 把文件的行首偏移读入到 list 中，随机取出行首偏移，通过 seek() 和
+      readline() 方法来取出文件内容。
+   3) 随机取文件中的某个位置，然后通过 readline() 舍弃本行的内容，取出下一行的内
+      容，若开始取得的位置在最后一行，则循环到第一行。取第一行的内容。
+
+   三种方法都要判断是否重复取得某行的内容。
+   第三种方法的效率是最高的！
+
+** 获取随机数
+   用时间做种子时，可能会有安全问题。可以通过使用 Linux 提供的 /dev/urandom
+   和 /dev/random 文件来获得随机数。Linux 把计算机本身产生的偶然操作，如硬盘操作、
+   键盘和鼠标操作等数据存入到这两个文件中。这些操作比起那些通过固定算法生成的伪
+   随机数来说，更真实些，被叫做“熵”。
+   可参照 http://zh.wikipedia.org/wiki//dev/random 来理解这两个文件。
+   
+   产生随机数的方法：
+   
+   fp_random = open('/dev/urandom', 'rb')
+   random_num = struct.unpack('@i', fp_random.read(4))[0]

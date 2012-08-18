@@ -46,8 +46,13 @@
 * TODO 查找 Scrapy 中如何设置抓取的时间间隔
 * DONE 查找如何判定自己的 IP 被目标网站限制的方法
   CLOSED: [2012-08-09 Thu 11:26]
-* TODO 学习 Python 中的队列
+* DONE 学习 Python 中的队列
+  CLOSED: [2012-08-16 Thu 20:03]
 * TODO 学习 Python 的 Twisted 框架
 * TODO 查查 HTTP 代理的特征
 * TODO 学习 Python 如何串行化
 * TODO 学习使用 Python 的 log 模块
+* TODO 学习 Rediss
+* TODO 学习 RabitMQ
+* TODO 统计出亚马逊的有评论数据的商品的具体情况，如不同的商品对应的评论个数
+* TODO 学习 struct 模块
