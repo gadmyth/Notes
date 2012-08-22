@@ -40,7 +40,8 @@
 * TODO 学习 Python 中 assert 的用法
 * TODO 学习 Python 中 @ 修饰符的作用和用法
 * TODO 学习 Python 中 yield 用法
-* TODO 查找 Scrapy 中使用代理的方法
+* DONE 查找 Scrapy 中使用代理的方法
+  CLOSED: [2012-08-22 Wed 09:27]
 * TODO 查找 Scrapy 限制爬虫使用资源的方法
 * TODO 查找 Scrapy 中发送请求时如何加上 User-agent 等参数来模拟浏览器行为
 * TODO 查找 Scrapy 中如何设置抓取的时间间隔
@@ -56,3 +57,7 @@
 * TODO 学习 RabitMQ
 * TODO 统计出亚马逊的有评论数据的商品的具体情况，如不同的商品对应的评论个数
 * TODO 学习 struct 模块
+* TODO 学习 XML 中的 namespace
+* TODO 模块中 __all__ 变量的作用？
+* TODO 了解下 gevent.
+* TODO 查找通过 google site 估计网站的页面数

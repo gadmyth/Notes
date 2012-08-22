@@ -273,6 +273,18 @@
 ** 抓取京东数据时可能会出现的比较严重的问题
    有时向京东发送请求后返回 error 页面，但该 url 其实是有正常数据的。在处理京东
    的数据时要注意这点儿，记住加条 url 的判断。
+** 输入中文
+   在文件的第一行输入:
+   #coding: utf-8
+
+   这样之后，比如想判断某个中文词组是否在一个 list 中，可直接通过如下形式来实现，
+   不要转编码:
+
+   chinese_list = ['测试', '继续', '再次']
+   if test_chiese in chinese_list:
+       print 'yes'
+   else:
+       print 'no'
 * 源码剖析
 ** scrapy/spider.py
    定义了 BaseSpider 类，它继承 obejct_ref 类。object_ref 类的作用是记录当前类的
@@ -329,4 +341,31 @@
 	 - _response_downloaded()
 	   不理解该方法的作用。
 
-** 
+
+** scrapy 中的 selector
+*** 综述
+	默认是使用 lxml 作为后端，但可选择 libxml2。参见源码
+	scrapy/selector/__init__.py
+	即 scrapy 中的 selector 默认是调用 lxml 中的方法。
+	
+	从 scrapy/selector/lxmlsel.py 中可以看出，HtmlXPathSelector 和
+	XmlXPathSelector 都是基于 XPathSelector 类。
+	XPathSelector 默认使用的分析方法是 lxml 中的 etree.HTMLParser,默认的输出格式
+	是 html.
+	HtmlXPathSelector 默认使用的分析方法是 lxml 中的 etree.HTMLParser，默认的输
+	出格式是 html.
+	XmlXPathSelector 默认使用的分析方法是 lxml 中的 etree.XMLParser，默认的输出
+	格式是 xml.
+
+	在 XPathSelector 类中，最重要的是 select() 和 extract() 方法。
+	select() 在内部会把选择的结果转换为 list 类型。从这点儿要注意，使用
+	HtmlXPathSelector 的 select() 方法时，返回的都是 list 类型的数据。
+	extract() 会把结果使用 etree.tostring() 的方法返回。按照 etree.tostring() 的
+	方法，返回的应该是 str 类型的，但实际使用时发现返回的是 list 类型的数据。
+** 问题
+*** 模块重命名后的名字相同
+	在 scrapy/selector/dummysel.py 中为何在 import 中重命名一个模块时用相同的名
+	字?
+
+	from .list import XPathSelectorList as XPathSelectorList
+

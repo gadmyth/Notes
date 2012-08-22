@@ -1658,6 +1658,10 @@ XS
    三种方法都要判断是否重复取得某行的内容。
    第三种方法的效率是最高的！
 
+   对于小文件，还可以通过 Python 内置的模块 linecache 来随机取。
+   import linecache, random
+   lines = len(open(file_name).readlines())
+   print linecache.getline(file_name, random.randint(1, lines+1))
 ** 获取随机数
    用时间做种子时，可能会有安全问题。可以通过使用 Linux 提供的 /dev/urandom
    和 /dev/random 文件来获得随机数。Linux 把计算机本身产生的偶然操作，如硬盘操作、
@@ -1669,3 +1673,10 @@ XS
    
    fp_random = open('/dev/urandom', 'rb')
    random_num = struct.unpack('@i', fp_random.read(4))[0]
+
+** import 加载当前目录下的模块
+   比如运行程序的当前目录下有个模块是 list.py，则可在程序中通过 
+   
+   import .list 
+
+   的方法引入这个模块。

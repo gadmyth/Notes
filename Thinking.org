@@ -875,6 +875,9 @@
    默认的是 3306.
 ** 清空表中数据
    TRUNCATE TABLE 表名
+** 编码
+   设置 MySQL 中的编码时，尤其是 utf8 编码，注意不要写成 'utf-8' 的形式，没有中
+   间的短横杠。
 * Apache 相关
 ** 支持 PHP
    修改 /etc/httpd/httpd.conf 文件，改为:
