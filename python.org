@@ -1528,6 +1528,57 @@
    可用索引为 [-1] 的方法取处节点链表的最后一个节点。
 ** extract() 方法取出的值
    取出的是 list，这点儿要格外注意。
+* Python 的 5 个错误级别
+  DEBUG, INFO, WARNING, ERROR, CRITICAL
+* logging 模块用法
+  可由以下例子学习 logging 模块的用法:
+
+  #!/usr/bin/env python
+  #coding: utf-8
+
+  import logging
+
+  def initlog():
+      logger = logging.getLogger()
+      fdhd = logging.FileHandler('log/test.log')
+      formatter = logging.Formatter("%(asctime)s\t[%(levelname)s]\t%(message)s")
+      fdhd.setFormatter(formatter)
+      logger.addHandler(fdhd)
+      # logger.setLevel(logging.DEBUG)
+    
+      return logger
+
+  class Log(object):
+    
+      def __init__(self):
+          self.logger = initlog()
+
+      def info(self, msg):
+          self.logger.info(msg)
+
+      def debug(self, msg):
+          self.logger.debug(msg)
+
+      def warning(self, msg):
+          self.logger.warning(msg)
+    
+      def error(self, msg):
+          self.logger.error(msg)
+
+      def critical(self, msg):
+          self.logger.critical(msg)
+
+  logger = Log()
+  logger.debug('test0')
+  logger.info('test1')
+  logger.warning('test2')
+  logger.error('test3')
+  logger.critical('test4')
+
+  logger 默认的级别是 "logging.WARNING"，若不使用 setLevel() 方法设置级别，则在
+  使用 debug()、info()、warning()、error()、critical() 这些方法时，低于 WARNING
+  级别的都不会记录.设置级别后，只有该级别和该级别以上会记录。
+  记录级别从低到高依次是: DEBUG --> INFO --> WARNING --> ERROR --> CRITICAL
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
@@ -1547,6 +1598,10 @@
    Ghost
 ** 模拟浏览器行为
    splinter
+** 日志
+   logging
+** 探测文件的编码方式
+   chardet
 * 遇到的问题
 ** 从配置文件中读取配置，连接数据库
    要注意对读出的信息的格式进行查看，可能会多出引号而造成程序异常。
@@ -1680,3 +1735,6 @@ XS
    import .list 
 
    的方法引入这个模块。
+** 对规范的日期做比较
+   如有 "2012-07-26 09:20:12" 或 "12-08-12 09:12:22" 之类的日期，对于相同格式的，
+   可直接通过 <、> 之类的方法来比较日期大小。

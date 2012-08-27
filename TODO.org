@@ -42,9 +42,11 @@
 * TODO 学习 Python 中 yield 用法
 * DONE 查找 Scrapy 中使用代理的方法
   CLOSED: [2012-08-22 Wed 09:27]
-* TODO 查找 Scrapy 限制爬虫使用资源的方法
-* TODO 查找 Scrapy 中发送请求时如何加上 User-agent 等参数来模拟浏览器行为
-* TODO 查找 Scrapy 中如何设置抓取的时间间隔
+* TODO 查找 Scrapy 限制爬虫使用资源的方法，如 CPU、内存等
+* DONE 查找 Scrapy 中发送请求时如何加上 User-agent 等参数来模拟浏览器行为
+  CLOSED: [2012-08-23 Thu 17:55]
+* DONE 查找 Scrapy 中如何设置抓取的时间间隔
+  CLOSED: [2012-08-24 Fri 14:11]
 * DONE 查找如何判定自己的 IP 被目标网站限制的方法
   CLOSED: [2012-08-09 Thu 11:26]
 * DONE 学习 Python 中的队列
@@ -52,12 +54,26 @@
 * TODO 学习 Python 的 Twisted 框架
 * TODO 查查 HTTP 代理的特征
 * TODO 学习 Python 如何串行化
-* TODO 学习使用 Python 的 log 模块
-* TODO 学习 Rediss
+* DONE 学习使用 Python 的 log 模块
+  CLOSED: [2012-08-23 Thu 20:03]
+* TODO 学习 Redis
 * TODO 学习 RabitMQ
 * TODO 统计出亚马逊的有评论数据的商品的具体情况，如不同的商品对应的评论个数
 * TODO 学习 struct 模块
 * TODO 学习 XML 中的 namespace
 * TODO 模块中 __all__ 变量的作用？
 * TODO 了解下 gevent.
-* TODO 查找通过 google site 估计网站的页面数
+* DONE 查找通过 google site 估计网站的页面数
+  CLOSED: [2012-08-23 Thu 14:38]
+
+* TODO Python 中操作 json
+* TODO 学习 Scrapy 抓取图片
+* TODO 查找通过 Middleware 的方法添加 user-agent
+* TODO 学习 Scrapy 使用 http authorization
+* TODO 学习 Scrapy 使用 cookie
+* TODO 学习使用 tmux
+* TODO 写个更新 hosts 的程序
+* TODO 学习 Python 类中如 _var_ 和 __var__ 这样形式的变量的用法
+* TODO 学习 Python 中如 __method__ 和 _method_ 这样形式方法的用法
+* TODO 学习 Python 中 Sphinx 模块
+* TODO 解决 Scrapy 下载压缩的网页

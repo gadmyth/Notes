@@ -210,6 +210,44 @@
    $ scrapy list
    会执行爬虫里类中的方法之上的代码，检查爬虫的正确性。
    比如在爬虫的类的方法前创建文件，则执行以上命令后会执行创建文件的操作。
+* Downloader
+** 返回 Request()
+   若从 Downloader 返回的是 Request(), 则 scrapy engine 直接把该 Request() 返回
+   给 scheduler，而不是传给 spider 使用 callback 进行处理。
+* HtmlXPathSelector 对有些网页不能正确解析
+  参见
+  http://stackoverflow.com/questions/12084033/scrapy-couldnt-parse-some-html-file-correctly
+
+  有时通过 HtmlXPathSelector 解析网页时，即使网页中有某个 tag，但通过 xpath 却获
+  得不到该 tag。这是因为 HtmlXPathSelector 默认使用 lxml 作为解析后端，而
+
+  lxml determines the encoding of a document by looking at the charset
+  specified in the meta tag of the header. Thus, there is an encoding type
+  mismatch between what lxml and scrapy perceive.
+
+  有两种解决方案，一种是出现问题时使用 BeautifulSoup 来解析，另一种是在处理页面
+  前先探测页面的编码方式，若不是 utf-8，则转换为 utf-8 后再进行其他的操作，如下
+
+  from scrapy.selector import HtmlXPathSelector
+  from scrapy.spider import BaseSpider
+  import chardet
+
+  class TestSpider(BaseSpider):
+      name = "Test"
+
+      start_urls = [
+        "http://detail.zol.com.cn/series/268/10227_1.html"
+                 ]
+
+      def parse(self, response):
+
+          encoding = chardet.detect(response.body)['encoding']
+          if encoding != 'utf-8':
+              response.body = response.body.decode(encoding, 'replace').encode('utf-8')
+
+          hxs = HtmlXPathSelector(response)
+          data = hxs.select("//div[@id='param-more']").extract()
+          print data
 * 常见的问题
 ** 提示找不到 items 模块
     这可能是因为在 spiders/ 目录下的爬虫的文件名和项目名相同造成的，导致 python
@@ -285,6 +323,66 @@
        print 'yes'
    else:
        print 'no'
+** HtmlXPathSelector 不能正确解析页面
+   有时会出现这样的情况，网页中包含某个 tag，但通过 HtmlXPathSelector 却选择不到
+   该 tag。
+   出现这种情况的原因是，HtmlXPathSelector 默认使用 lxml 作为后端对页面进行解析，
+   而当页面结构不规范或存在非法字符时，lxml 对这类页面不能正常解析。lxml 默认使
+   用 utf-8 作为编码，而且根据网页中的 meta encoding 来获取网页的编码。GB2312 中
+   的有些编码不能被 utf-8 正确识别，因此可能会造成一些错误。
+   解决方法参见一级标题中的解决方法。
+** user-agent
+   默认的 user-agent 和 request header 可通过如下方式获得:
+   
+   from scrapy.conf import settings
+   settings.get('USER_AGENT')
+   settings.get('DEFAULT_REQUESTS_HEADERS')
+   
+   还可通过 settings.py 文件查看 user-agent。发送请求时传递的 user-agent 就是传
+   递这个文件中的 user-agent.
+   若想设置不同的 user-agent 来欺骗目标网站，可通过在 Request() 对象中添加
+   headers 参数来实现。方法为，在构造 Request() 对象时，如下:
+
+   user_header = {'user-agent': 自己设定的值}
+   yield Request(url, callback=回调函数, headers=user_header)
+
+   若想在回调函数中查看设定的 headers, 可通过 response.request.headers 来查看，
+   它是 dict 类型。
+   
+   有个网站是
+   http://www.useragentstring.com/pages/useragentstring.php
+   通过它可以获得很多 user-agent。
+** 设置抓取时间间隔
+   可通过如下方式在爬虫中修改:
+
+   from scrapy.conf import settings
+
+   settings.overrides['DOWNLOAD_DELAY'] = time_delay  # 请求之间的间隔时间(以秒作单位)
+   
+   默认情况下请求之间的时间间隔是在 [0.5*time_dealy, 1.5*time_dealy] 之间，若想
+   指定间隔时间，可加上
+
+   settings.overrides['RANDOMIZE_DOWNLOAD_DELAY'] = False # 默认是 True
+** 使用 CrawlSpider 时提示没有 _rules 属性和 callback 错误
+   在 CrawlSpider 的子类中，若定义了 __init__() 方法，则需要显示初始化
+   CrawlSpider.__init__(self) 。
+   在 Rule() 中设置 callback 时，不能使用 self，得用 "" 包围 callback 函数。
+** 使用 BaseSpider 时在定义的 __init__() 中初始化了 BaseSpider 的 __init__()
+   若在 BaseSpider 的子类中定义了 __init__() 方法，则最好不要再显示调用
+   BaseSpider.__init__() 方法，因为这时可能会提示如下类型的信息：
+
+   UNFORMATTABLE OBJECT WRITTEN TO LOG with fmt '[%(system)s] %(text)s\n',
+   MESSAGE LOST
+
+** 在 Request() 中设置 callback
+   假如在类中定义的 callback 函数名是 "test_parse"，在 Request() 中设置 callback
+   时要用如下形式:
+
+   callback=self.test_parse
+
+   而不能使用如下的形式:
+
+   callback="test_parse"
 * 源码剖析
 ** scrapy/spider.py
    定义了 BaseSpider 类，它继承 obejct_ref 类。object_ref 类的作用是记录当前类的
@@ -341,8 +439,7 @@
 	 - _response_downloaded()
 	   不理解该方法的作用。
 
-
-** scrapy 中的 selector
+** scrapy.selector
 *** 综述
 	默认是使用 lxml 作为后端，但可选择 libxml2。参见源码
 	scrapy/selector/__init__.py
@@ -358,10 +455,44 @@
 	格式是 xml.
 
 	在 XPathSelector 类中，最重要的是 select() 和 extract() 方法。
-	select() 在内部会把选择的结果转换为 list 类型。从这点儿要注意，使用
+	select() 在内部会把选择的结果转换为包含节点的 list 类型。从这点儿要注意，使用
 	HtmlXPathSelector 的 select() 方法时，返回的都是 list 类型的数据。
 	extract() 会把结果使用 etree.tostring() 的方法返回。按照 etree.tostring() 的
 	方法，返回的应该是 str 类型的，但实际使用时发现返回的是 list 类型的数据。
+** scrapy.http
+*** 综述
+	要使用与 HTTP 相关的类，直接从 scrapy.http 中调用，提供了 8 个类，一个是
+	Headers，3 个请求相关的类，4 个响应相关的类。 
+*** Headers 类
+	它应该处理的是请求头部。
+	------目前没发现它的用处------
+*** 请求相关的类
+	我常用的是 Request() 类，在初始化时常用的是设置 callback、传递给 Response()
+	的参数 meta、请求头部 headers。其中，headers 是 Headers 类的实例，可使用
+	Headers 中的属性。
+	
+	官方文档上说 FormRequest() 比 Request() 更方便，可能是我对函数中的 *args、
+	**kwargs 不太会用，因此几乎不用它。
+
+	暂时还没用到 XmlRpcRequest() 类，因为还对 xml-rpc 有深入理解。
+*** 响应相关的类
+	Response() 类中比较有用的是 response.url、response.status、response.headers、
+	response.request、response.body
+	其中，response.url 指响应的 url，不一定等于 response.request.url.因为可能发
+	     生了跳转，
+	     response.status 指响应的 HTTP 状态码，
+		 response.headers 指响应的头部(dict 类型)，
+		 response.body 可获得响应的 body 部分，
+		 response.request 是 Request() 对象，可通过它获得与请求相关的数据，如请
+		 求的头部，通过 response.request.headers (dict类型)，通过该头部可验证是
+		 否成功使用代理、设置 user-agent 等信息。在 DOWNLOADER_MIDDLEWARES 中不
+		 能使用该属性。
+	可通过 response.meta[] 的方式访问 Request() 中的参数 meta (dict 类型),其实是
+	通过 response.request.meta[] 的方式访问的。
+	
+	TextResponse 类基于 Response 类，加入了编码处理和发现的操作。
+
+	HtmlResponse 类和 XmlResponse 类是 TextResponse 类的子类，但没做任何处理。
 ** 问题
 *** 模块重命名后的名字相同
 	在 scrapy/selector/dummysel.py 中为何在 import 中重命名一个模块时用相同的名

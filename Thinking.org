@@ -1165,6 +1165,8 @@
   mtime 会随着文件内容的改变而改变。 
   可参考:
   http://stackoverflow.com/questions/79809/what-is-the-difference-between-file-modification-time-and-file-changed-time
+* HTTP header
+  header 的类型名不区分大小写。
 * 长期深入的 
 ** Python
    字符串处理，XML/HTML 解析，类
