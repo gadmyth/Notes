@@ -37,7 +37,8 @@
   CLOSED: [2012-08-07 Tue 13:27]
 * DONE 查找 XPATH 不含某个标签时的返回结果
   CLOSED: [2012-08-07 Tue 13:38]
-* TODO 学习 Python 中 assert 的用法
+* DONE 学习 Python 中 assert 的用法
+  CLOSED: [2012-08-28 Tue 22:52]
 * TODO 学习 Python 中 @ 修饰符的作用和用法
 * TODO 学习 Python 中 yield 用法
 * DONE 查找 Scrapy 中使用代理的方法
@@ -67,7 +68,8 @@
   CLOSED: [2012-08-23 Thu 14:38]
 
 * TODO Python 中操作 json
-* TODO 学习 Scrapy 抓取图片
+* DONE 学习 Scrapy 抓取图片
+  CLOSED: [2012-08-27 Mon 18:02]
 * TODO 查找通过 Middleware 的方法添加 user-agent
 * TODO 学习 Scrapy 使用 http authorization
 * TODO 学习 Scrapy 使用 cookie
@@ -77,3 +79,7 @@
 * TODO 学习 Python 中如 __method__ 和 _method_ 这样形式方法的用法
 * TODO 学习 Python 中 Sphinx 模块
 * TODO 解决 Scrapy 下载压缩的网页
+* TODO 把我的情况写在 Wordpress 博客上。
+* TODO 学习 datetime 的用法
+* DONE 查找 str.decode() 中的几个替代。
+  CLOSED: [2012-08-28 Tue 19:05]

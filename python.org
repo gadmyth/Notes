@@ -858,10 +858,23 @@
     Syntax:
     lambda [arg1 [, arg2, ..., argN]]: expression
 
+	/lambda/ expression returns callable function object.
+
     Calling /lambda/ with an appropriate expression yields a function object
     that can be used like an other funciton.
+	
+	/lambda/ 表达式在布尔环境中总为 True，即使它返回的是 False.
 *** Built-in Functions: apply(), filter(), map(), reduce()
 ** Generators
+*** best practice
+	The "best" places to use generators are when you are iterating through a
+	large dataset that is cumbersome to repeat or reiterate over, such as a
+	large disk file, or a complex database query. For every row of data, you
+	wish to perform non-elementary operations and processing, but you "do not
+	want to lose your place" as you are cursoring or iterating over it.
+	You want to grab a wad of data, yield it back to the caller for processing
+	and possible insertion into another database for example, and then you want
+	
 * 定义全局变量
   global var1[, var2 [, var3 ...]]
 * Modules
@@ -1579,6 +1592,58 @@
   使用 debug()、info()、warning()、error()、critical() 这些方法时，低于 WARNING
   级别的都不会记录.设置级别后，只有该级别和该级别以上会记录。
   记录级别从低到高依次是: DEBUG --> INFO --> WARNING --> ERROR --> CRITICAL
+* with...as... 用法
+  它是一个控制流语句，是 context management protocl 即 "上下文管理协议"。它简化
+  了 try...finally... 的用法，常用于文件操作中。它的实现方法是在类中定义
+  __enter__() 和 __exit__() 两个函数，在 with 语句执行时，进入 __enter__() 函数，
+  把值赋给 as 后的变量(也可不设置该变量)。接着执行 with-block 中的语句，当全部执
+  行完后，执行 __exit__() 函数，做些自动清理工作，如关闭在 with 语句中打开的文件
+  描述符等。
+  在 with 语句块结束时，as 后赋予的变量将被清除(即使发生了异常)，但 with 语句块
+  中的变量仍旧存在。
+
+  实例:
+
+  with open("file", "rb") as fp:
+      print len(fp.readlines())
+* MySQLdb
+** 通过可变的字典参数连接数据库
+   如下例，注意在 connect() 时的 "**" 符号。
+
+   #!/usr/bin/env python
+   #coding: utf-8
+
+   import MySQLdb, sys
+
+   reload(sys)
+   sys.setdefaultencoding('utf-8')
+
+
+   class SqlConnect(object):
+
+       def __init__(self):
+           self.kwargs = {'host':'localhost', 'user':'root', 'passwd':'passwd', 'db':'ProxyDB'}
+
+      def test(self):
+           try:
+               self.conn = MySQLdb.connect(**self.kwargs)
+               print "Yes!"
+           except:
+               print "No!"
+
+  sql_test = SqlConnect()
+  sql_test.test()
+** MySQldb 向 MySQL 插入数据后无法在 MySQL 中查询到
+   这可能是因为用到的 MySQL 带有事务操作,MySQL 在 5.5 之后默认是用 InnoDB，
+   InnoDB 支持事务.可通过在 MySQL 中通过
+   SELECT VARIABLES LIKE "have_innodb";
+   来查看是否支持事务，若为 YES 则支持。
+   要在插入数据后执行提交事务的操作。假设 conn 是 MySQLdb 对象，插入数据后要执行
+   conn.commit()
+
+   还可在连接数据库后，设置如下语句，以后可以自动 commit.
+   
+   conn.autocommit(True)
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
@@ -1676,13 +1741,6 @@ XS
    在 http://digi.zol.com.cn 中，选择手机的侧边栏，即 TOP10 中的数据时，都不能取
    得数据，而其它的部门都正常。
    以后再抓取数据时，要特别注意有些情况下可能通过 XPATH 的方法抓取不到数据。
-** MySQldb 向 MySQL 插入数据后无法在 MySQL 中查询到
-   这可能是因为用到的 MySQL 带有事务操作,MySQL 在 5.5 之后默认是用 InnoDB，
-   InnoDB 支持事务.可通过在 MySQL 中通过
-   SELECT VARIABLES LIKE "have_innodb";
-   来查看是否支持事务，若为 YES 则支持。
-   要在插入数据后执行提交事务的操作。假设 conn 是 MySQLdb 对象，插入数据后要执行
-   conn.commit()
 ** re.find()
    假如有下面的语句：
    
@@ -1738,3 +1796,25 @@ XS
 ** 对规范的日期做比较
    如有 "2012-07-26 09:20:12" 或 "12-08-12 09:12:22" 之类的日期，对于相同格式的，
    可直接通过 <、> 之类的方法来比较日期大小。
+** 对 list 使用分片
+   对 list 使用分片，作用是取得从第几个元素到第几个元素，返回的还是 list.
+
+** str.encode() 中的 errors 可选的参数
+   有三种
+   + strict
+	 raise a /UnicodeDecodeError/ exception
+   + replace
+	 add U+FFFD, 'REPLACEMENT CHARACTER'
+   + ignore
+	 just leave the character out of the Unicode result
+	 
+   示例:
+   >>> unicode('\x80abc', errors='strict')
+   Traceback (most recent call last):
+   File "<stdin>", line 1, in ?
+   UnicodeDecodeError: 'ascii' codec can't decode byte 0x80 in position 0:
+                    ordinal not in range(128)
+   >>> unicode('\x80abc', errors='replace')
+   u'\ufffdabc'
+   >>> unicode('\x80abc', errors='ignore')
+   u'abc'
