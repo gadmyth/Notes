@@ -1644,6 +1644,69 @@
    还可在连接数据库后，设置如下语句，以后可以自动 commit.
    
    conn.autocommit(True)
+** 使用 MySQLdb.cursors.DictCursor
+   通常通过 cursor 返回的数据都是 tuple 类型的，只有数值，但如果加上该参数，则返
+   回的也是 tuple，但 tuple 的每个项都是一个 dict 类型的，key 是表中每列的名字，
+   value 是对应的数值。
+
+   有两种设置方法，一种是在 connect() 时加上如下参数:
+   cursorclass=MySQLdb.cursors.DictCursor
+   另一种是在建立 cursor 对象时用如下方法:
+   cursor = conn.cursor(cursorclass=MySQLdb.cursors.DictCursor)
+
+   以下分别是不使用和使用该参数时的结果，
+   
+   ((1000L, 0L), (2000L, 0L), (3000L, 0L))
+
+   ({'age': 0L, 'num': 1000L}, {'age': 0L, 'num': 2000L}, {'age': 0L, 'num':
+   3000L})
+** 使用 ping 重连数据库
+   当长时间没有操作 MySQL 时，可使用 
+
+   conn.ping(True)
+
+   判断数据库连接是否持续，若断开，它会试图重连数据库。 
+** 防止 SQL 注入
+   在执行语句时，不要用如下的形式:
+   sql_query = "INSERT INTO talbe_name VALUES (%s, %s)" % (val0, val1)
+   cursor.execute(sql_query)
+
+   最好采用如下的形式:
+   sql_query = "INSERT INTO table_name VALUES (?, ?)"
+   sql_values = (val0, val1)
+   cursor.execute(sql_query, sql_values)
+* sqlite3
+** SQLITE_MASTER
+   这个表包含了当前数据库中所有的表的信息，它的结构为:
+   
+   CREATE TABLE sqlite_master (
+       type TEXT,
+       name TEXT,
+	   tbl_name TEXT,
+	   rootpage INTEGER,
+	   sql TEXT
+   );
+** 获取当前数据库中所有的表名
+   有两种方法:
+   
+   法一:
+   SELECT name FROM sqlite_master
+   WHERE type='table'
+   ORDER BY name;
+
+   法二:
+   在 terminal 中通过如下命令打开数据库
+
+   $ sqlite3 数据库
+
+   然后执行如下命令
+
+   .table
+** 命令行操作
+   .table						# 获得当前数据库中所有的表
+   .schema 表名 				# 查看表的结构
+   .database					# 查看当前的数据库
+   .dump 表名					# 表结构和索引都打印
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
@@ -1818,3 +1881,29 @@ XS
    u'\ufffdabc'
    >>> unicode('\x80abc', errors='ignore')
    u'abc'
+** 模块查找路径
+   可通过如下方式查看
+
+   import sys
+   print sys.path
+
+** list 去重
+   如果相对一个 list 类型的数据去重，并保持 list 类型，可模仿如下的形式:
+   
+   aList = [1, 2, 3, 3]
+   aList = list(set(aList))
+** 查看当前文件的文件名
+   通过如下变量查查看
+   __file__
+
+** 字符串替换 % 遇到单变量时
+   采用如下形式可提高替换效率
+
+   aStr = "% is a test" % val0
+   
+   但是，更为安全和快速的方法是
+
+   aStr = "% is a test" % (val0, )
+   
+   安全性在于，当 val0 是个 tuple 类型时，能够正确处理。而且，这种形式也比上述形
+   式效率更高。

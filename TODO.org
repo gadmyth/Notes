@@ -67,7 +67,8 @@
 * DONE 查找通过 google site 估计网站的页面数
   CLOSED: [2012-08-23 Thu 14:38]
 
-* TODO Python 中操作 json
+* DONE Python 中操作 json
+  CLOSED: [2012-08-29 Wed 20:04]
 * DONE 学习 Scrapy 抓取图片
   CLOSED: [2012-08-27 Mon 18:02]
 * TODO 查找通过 Middleware 的方法添加 user-agent
