@@ -1881,12 +1881,23 @@ XS
    u'\ufffdabc'
    >>> unicode('\x80abc', errors='ignore')
    u'abc'
-** 模块查找路径
+** 模块路径
    可通过如下方式查看
 
    import sys
    print sys.path
 
+   若模块是在一个文件夹下，需要载入这个文件夹下的模块，则需要在该文件夹下添加一
+   个名为 __init__.py 的 py 文件，它可以为空文件。
+
+   若路径不在 PYTHONPATH 中，可通过如下方式添加:
+
+   import sys
+   sys.path.append(路径)
+
+   如在 PYTHONPATH 中添加上层目录
+   
+   sys.path.append("..")
 ** list 去重
    如果相对一个 list 类型的数据去重，并保持 list 类型，可模仿如下的形式:
    
@@ -1907,3 +1918,9 @@ XS
    
    安全性在于，当 val0 是个 tuple 类型时，能够正确处理。而且，这种形式也比上述形
    式效率更高。
+** 获得当前的行号、函数名、文件名
+   import sys
+   
+   print sys._getframe().f_code.co_filename # 当前文件名，也可通过 __file__ 获得
+   print sys._getframe().f_code.co_name # 当前函数名
+   print sys._getframe().f_lineno # 当前行号

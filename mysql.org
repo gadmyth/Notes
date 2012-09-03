@@ -1,0 +1,17 @@
+* 特殊语法
+** INSERT ... ON DUPLICATE KEY UPDATE
+   If you specify *ON DUPLICATE KEY UPDATE* , and a row is inserted that would
+   cause a duplicate value in a UNIQUE index or PRIMARY KEY, an UPDATE of the
+   old row is performed. For example, if column a is declared as UNIQUE and
+   contains the value 1, the following two statements have identical effect:
+
+   INSERT INTO table (a,b,c) VALUES (1,2,3)
+   ON DUPLICATE KEY UPDATE c=c+1;
+
+   UPDATE table SET c=c+1 WHERE a=1;
+
+   The ON DUPLICATE KEY UPDATE clause can contain multiple column assignments,
+   separated by commas.
+
+   With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row
+   is inserted as a new row, and 2 if an existing row is updated.
