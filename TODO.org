@@ -40,7 +40,8 @@
 * DONE 学习 Python 中 assert 的用法
   CLOSED: [2012-08-28 Tue 22:52]
 * TODO 学习 Python 中 @ 修饰符的作用和用法
-* TODO 学习 Python 中 yield 用法
+* DONE 学习 Python 中 yield 用法
+  CLOSED: [2012-09-04 Tue 11:10]
 * DONE 查找 Scrapy 中使用代理的方法
   CLOSED: [2012-08-22 Wed 09:27]
 * TODO 查找 Scrapy 限制爬虫使用资源的方法，如 CPU、内存等

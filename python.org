@@ -872,9 +872,32 @@
 	large disk file, or a complex database query. For every row of data, you
 	wish to perform non-elementary operations and processing, but you "do not
 	want to lose your place" as you are cursoring or iterating over it.
+
 	You want to grab a wad of data, yield it back to the caller for processing
 	and possible insertion into another database for example, and then you want
-	
+	to do a /next()/ to get the next wad of data, and so forth. The state is
+	preserved across suspends and resumptions, so you are more comfortable that
+	you have a safe envirionment in which to process your data. Without
+	generators, your application code will likely have a very long function,
+	with a very lengthy /for/ loop inside of it.
+*** methods
+	有 next()、close()、send()，以下为例：
+
+	def counter(start=0):
+	    count = start
+		while True:
+		    val = (yiled count)
+			if val is not None:
+			    count = val
+			else:
+			    count += 1
+
+	count = counter()
+	count.next()
+	count.next()
+	count.send(5)
+	count.next()
+	count.close()
 * 定义全局变量
   global var1[, var2 [, var3 ...]]
 * Modules
