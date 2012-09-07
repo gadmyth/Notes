@@ -385,8 +385,13 @@
    from scrapy.conf import settings
 
    settings.overrides['DOWNLOAD_TIMEOUT'] = 5 (默认是 180)
-   settings.overrides['CONCURRENT_REQUESTS'] = 100 (默认是 16)
+   settings.overrides['CONCURRENT_REQUESTS'] = 200 (默认是 16)
    settings.overrides['CONCURRENT_REQUESTS_PER_DOMAIN'] = 100 (默认是 8)
+
+   在默认的设置中， CONCURRENT_REQUESTS 是 CONCURRENT_REQUESTS_PER_DOMAIN 的 2
+   倍，现在还不清楚为什么前者必须比后者大才能起到效果。
+   在设置中 CONCURRENT_REQUESTS 最好是 CONCURRENT_REQUESTS_PER_DOMAIN 的 2 倍以
+   上。
 ** 使用 Http 代理
    假如爬虫工程名为 commentid，在 commentid 目录下，建立名为 httpproxy.py 文件，
    在其中写入:
