@@ -1730,6 +1730,15 @@
    .schema 表名 				# 查看表的结构
    .database					# 查看当前的数据库
    .dump 表名					# 表结构和索引都打印
+* time
+** 修改 timezone
+   可现在 /usr/share/zoneinfo/ 文件中查看已有的时区，然后通过如下方式修改:
+   
+   import os
+   import time
+
+   os.environ['TZ'] = 'Asia/Chongqing'
+   time.tzset()
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
@@ -1947,3 +1956,12 @@ XS
    print sys._getframe().f_code.co_filename # 当前文件名，也可通过 __file__ 获得
    print sys._getframe().f_code.co_name # 当前函数名
    print sys._getframe().f_lineno # 当前行号
+** 测试语句的执行效率
+   若在 ipython 中，可执行类似下面的语句:
+
+   timeit 要测试的语句
+
+   在终端中，可执行类似下面的语句:
+   
+
+   $ python -mtimeit -s '要测试的语句'

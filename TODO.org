@@ -60,7 +60,6 @@
   CLOSED: [2012-08-23 Thu 20:03]
 * TODO 学习 Redis
 * TODO 学习 RabitMQ
-* TODO 统计出亚马逊的有评论数据的商品的具体情况，如不同的商品对应的评论个数
 * TODO 学习 struct 模块
 * TODO 学习 XML 中的 namespace
 * TODO 模块中 __all__ 变量的作用？
@@ -75,7 +74,8 @@
 * TODO 查找通过 Middleware 的方法添加 user-agent
 * TODO 学习 Scrapy 使用 http authorization
 * TODO 学习 Scrapy 使用 cookie
-* TODO 学习使用 tmux
+* DONE 学习使用 tmux
+  CLOSED: [2012-09-08 Sat 23:41]
 * TODO 写个更新 hosts 的程序
 * TODO 学习 Python 类中如 _var_ 和 __var__ 这样形式的变量的用法
 * TODO 学习 Python 中如 __method__ 和 _method_ 这样形式方法的用法
