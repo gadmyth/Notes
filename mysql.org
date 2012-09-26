@@ -16,3 +16,13 @@
    With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row
    is inserted as a new row, and 2 if an existing row is updated.
 
+** 获取表的所有信息
+   假设在数据库 ZolDB 中有表 digit，要获得关于表 digit 的所有信息，可用如下形式
+   查询:
+
+   SHOW TABLE STATUS FROM ZolDB LIKE 'digit';
+   
+   通过这种形式，可快速查询到有关表的行数等信息。
+
+   完整的语法是:
+   SHOW TABLE STATUS [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]

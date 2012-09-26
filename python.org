@@ -30,6 +30,27 @@
     例
     num = raw_input("Please enter the number : ")
     print "Double the number %d" % (int(num) * 2)
+* 字符串
+** unicode 字符串和字节串
+   一个 unicode 字符串和一个字节串之间的操作总会产生一个 unicode 字符串，除非这
+   个操作发生错误并抛出异常。
+
+   在 Python 中使用 unicode 字符串的最常见问题是，你正在处理的文本一部分是
+   unicode 对象，另一部分是字节串。Python 会简单地尝试把你的字节串隐式地转换成
+   unicode。它通常假设那些是 ASCII 编码，如果其中碰巧含有了非 ASCII 字符，它会给
+   你一个 UnicodeDecodeError 的异常。UnicodeDecodeError 异常通知你，你把 Unicode
+   和字节串混在了一起，而且 Python 无法(它根本也不会去尝试)猜测你的字节串代表何
+   种文本。
+   
+   最佳实践是:总在 IO 动作的关口做转换。
+   即:
+   + 无论何时，当你的程序接收到了来自 "外部" 的文本数据(来自网络、文件、或用户输
+     入等)时，应当立刻创建一个 unicode 对象，找出最适合的编码，如查看 HTTP 头，
+     或寻找一个合适的转化方法来确定所用的编码方式。
+   + 无论何时，当你的程序需要向 "外部" 发送文本数据(发到网络、写入文件或输出给用
+     户等)时，应当探察正确的编码，并用那种编码将你的文本转化成字节串。(否则，
+     Python 会尝试把 Unicode 转成 ASCII 字节串，这很有可能发生
+     UnicodeEncodeError 异常).
 * 查看帮助文档
    $ pydoc 名字
    还可
@@ -1564,6 +1585,15 @@
    可用索引为 [-1] 的方法取处节点链表的最后一个节点。
 ** extract() 方法取出的值
    取出的是 list，这点儿要格外注意。
+** 轴
+   其中包括获取兄弟节点之类的，参考
+   http://www.w3schools.com/xpath/xpath_axes.asp
+** 特殊的操作符
+   参考
+   http://www.w3schools.com/xpath/xpath_syntax.asp
+** contains 用法
+   参考
+   http://www.pin5i.com/showtopic-23231.html
 * Python 的 5 个错误级别
   DEBUG, INFO, WARNING, ERROR, CRITICAL
 * logging 模块用法
@@ -1698,6 +1728,12 @@
    sql_query = "INSERT INTO table_name VALUES (?, ?)"
    sql_values = (val0, val1)
    cursor.execute(sql_query, sql_values)
+** 在 sql 语句中使用 'LIKE'
+   如果此时使用 '%' 通配符，则会出现问题，需要在 LIKE 中用如下的形式:
+
+   "LIKE '%%something%%'"
+
+   通过 '%' 对 '%' 进行转义。
 * sqlite3
 ** SQLITE_MASTER
    这个表包含了当前数据库中所有的表的信息，它的结构为:
@@ -1739,6 +1775,29 @@
 
    os.environ['TZ'] = 'Asia/Chongqing'
    time.tzset()
+* inspect
+  这个模块可以获得当前栈中的信息，如下文件 (test_insepect.py) 为例:
+
+  import inspect
+
+  def test():
+      for k in inspect.stack():
+          print k
+
+  def func():
+      test()
+
+  if __name__ == '__main__':
+      func()
+
+  返回的信息是:
+
+  (<frame object at 0x813ed0c>, 'test_inspect.py', 10, 'test', ['    for k in inspect.stack():\n'], 0)
+  (<frame object at 0x819932c>, 'test_inspect.py', 14, 'func', ['    test()\n'], 0)
+  (<frame object at 0x8128c64>, 'test_inspect.py', 17, '<module>', ['    func()\n'], 0)
+  
+  分别是 
+  (栈位置，文件名，调用的行号，函数名，调用的语句，)
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
@@ -1762,6 +1821,8 @@
    logging
 ** 探测文件的编码方式
    chardet
+** 数学模块
+   math, Numeric (即 NumPy)
 * 遇到的问题
 ** 从配置文件中读取配置，连接数据库
    要注意对读出的信息的格式进行查看，可能会多出引号而造成程序异常。
@@ -1950,12 +2011,15 @@ XS
    
    安全性在于，当 val0 是个 tuple 类型时，能够正确处理。而且，这种形式也比上述形
    式效率更高。
-** 获得当前的行号、函数名、文件名
+** 获得当前的行号、函数名、文件名、类名
    import sys
    
    print sys._getframe().f_code.co_filename # 当前文件名，也可通过 __file__ 获得
    print sys._getframe().f_code.co_name # 当前函数名
    print sys._getframe().f_lineno # 当前行号
+   
+   在类中，
+   print self.__class__.__name__
 ** 测试语句的执行效率
    若在 ipython 中，可执行类似下面的语句:
 
@@ -1965,3 +2029,7 @@ XS
    
 
    $ python -mtimeit -s '要测试的语句'
+* Best Practice
+** 更快的迭代
+   可考虑 itertools 模块
+
