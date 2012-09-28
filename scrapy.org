@@ -497,6 +497,10 @@
    我觉得这种方法不太安全，试了两种不同类型的爬虫，都会出现再次执行上述命令后不
    能正常运行爬虫，爬虫自动结束。
    建议不要轻易使用这条命令。
+** 不建立工程使用爬虫
+   假设爬虫所在的文件名为 test.py，则可按如下方式运行:
+
+   $ scrapy runspider test.py
 * 源码剖析
 ** scrapy/spider.py
    定义了 BaseSpider 类，它继承 obejct_ref 类。object_ref 类的作用是记录当前类的
