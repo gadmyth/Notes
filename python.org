@@ -1725,9 +1725,16 @@
    cursor.execute(sql_query)
 
    最好采用如下的形式:
-   sql_query = "INSERT INTO table_name VALUES (?, ?)"
+   sql_query = "INSERT INTO table_name VALUES (%s, %s)"
    sql_values = (val0, val1)
    cursor.execute(sql_query, sql_values)
+
+   注意，在后一种情况下，在 %s 周围不用加 ''，执行时会自动加上去，若加上了单引号，
+   会报错。
+   这时会产生一个问题，就是若使用如下形式时
+   sql_query = "INSERT INTO %s VALUES (%s, %s)"
+   即把表名也隐藏，这时也会对表名加上单引号，这在 sql 语句中是不对的，所以如果要
+   想使用这种形式的 sql 语句，必须把表名显式添加上去。
 ** 在 sql 语句中使用 'LIKE'
    如果此时使用 '%' 通配符，则会出现问题，需要在 LIKE 中用如下的形式:
 
