@@ -1798,6 +1798,38 @@
   
   分别是 
   (栈位置，文件名，调用的行号，函数名，调用的语句，)
+* yield
+** NOTE
+   它会保留上次的状态，尤其要注意这一点。
+   我遇到过一种问题，在 scrapy 中通过 yield 生成 Request() 对象时，会把上次的
+   meta 中的记录的数据重复，要注意判断下。如下面的代码:
+
+   for node in nodes_a:
+       if len(node.select('./span')) == 2:
+           sentry = 0
+           url = node.select('@href').extract()[0]
+           url = ''.join(('http://www.amazon.cn', url))
+
+		   ########### 注意这里的判断 ###########
+           info_strong = hxs.select(rules['strong']).extract()[0]
+           info_last   = cate.split('-->')[-1]
+           if info_strong != info_last:
+           """做这种判断，是因为 yield 造成的，它会保留上次的状态"""
+               cate = '-->'.join((cate, info_strong))
+           url_last = path.split('-->')[-1]
+           if url_last != cu:
+           """做这种判断，是因为 yield 造成的，它会保留上次的状态"""
+               path = '%s\n-->\n%s' % (path, url)
+		   ########### 注意这里的判断 ###########
+
+           meta = {
+               'cate': cate,
+               'path': path,
+           }
+           yield Request(url, headers=headers, meta=meta,
+                        callback=self.parse_page)
+
+   若不判断，则 cate 和 path 都会重复多次已经记录过的数据，需要加上的判断语句。
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
