@@ -1836,7 +1836,33 @@
            yield Request(url, headers=headers, meta=meta,
                         callback=self.parse_page)
 
-   若不判断，则 cate 和 path 都会重复多次已经记录过的数据，需要加上的判断语句。
+   若不判断，则 cate 和 path 都会重复多次已经记录过的数据，需要加上的判断语句。* itertools
+* itertools
+** itertools.izip()
+   注意如下的代码片段:
+
+   a = ['a1', 'a2', 'a3']
+   b = ['b1', 'b2']
+
+   for x in itertools.izip(a, b):
+       yield x
+
+   for x in a:
+       yield x
+
+   将不会打印出 a 中的最后一个元素。如果 a 有多于 3 个的元素，将会打印出 a 中
+   'a3' 之后的元素。我觉得可能的原因是，当 b 中的元素遍历完后，在 for 中又取出 a
+   中的一个元素，但此时发现 b 中没有元素了，而 a 此时已经执行过 next() 函数，所
+   以 a 中再取得元素时，将是 'a3' 之后的元素。
+   
+   解决方案是使用 itertools.izip_longest()
+** itertools.groupby()
+   它仅把连续相邻的 key 相同的项组合成 group，若 key 相同的项之间有其它不同 key
+   的项，则只能把连续的项组成 group.
+* 生成器表达式
+  类似于 *列表推导* ,只是把 *列表推导* 的方括号换成了圆括号。 *列表推导* 生成的
+  是 list 类型的数据， *生成器表达式* 生成的是 iterator object。因此在使用时，
+  *生成器表达式* 比 *列表推导* 更省内存。
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
@@ -2068,6 +2094,8 @@ XS
    
 
    $ python -mtimeit -s '要测试的语句'
+** tuple 的 constructor
+   ',' 是 tuple 的 construtor,而不是 '()'
 * Best Practice
 ** 更快的迭代
    可考虑 itertools 模块

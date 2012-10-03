@@ -7,7 +7,8 @@
   CLOSED: [2012-07-26 四 09:48]
 * DONE 深入 Python 字符串处理
   CLOSED: [2012-07-26 四 16:00]
-* TODO 深入 Python 使用 requests
+* DONE 深入 Python 使用 requests
+  CLOSED: [2012-10-03 Wed 12:11]
 * DONE 深入 Python 正则匹配
   CLOSED: [2012-07-25 三 15:00]
 * DONE 深入 Pyhon I/O
@@ -39,7 +40,8 @@
   CLOSED: [2012-08-07 Tue 13:38]
 * DONE 学习 Python 中 assert 的用法
   CLOSED: [2012-08-28 Tue 22:52]
-* TODO 学习 Python 中 @ 修饰符的作用和用法
+* DONE 学习 Python 中 @ 修饰符的作用和用法
+  CLOSED: [2012-10-03 Wed 12:11]
 * DONE 学习 Python 中 yield 用法
   CLOSED: [2012-09-04 Tue 11:10]
 * DONE 查找 Scrapy 中使用代理的方法
@@ -55,7 +57,8 @@
   CLOSED: [2012-08-16 Thu 20:03]
 * TODO 学习 Python 的 Twisted 框架
 * TODO 查查 HTTP 代理的特征
-* TODO 学习 Python 如何串行化
+* DONE 学习 Python 如何串行化
+  CLOSED: [2012-10-03 Wed 12:11]
 * DONE 学习使用 Python 的 log 模块
   CLOSED: [2012-08-23 Thu 20:03]
 * TODO 学习 Redis
@@ -77,15 +80,19 @@
 * DONE 学习使用 tmux
   CLOSED: [2012-09-08 Sat 23:41]
 * TODO 写个更新 hosts 的程序
-* TODO 学习 Python 类中如 _var_ 和 __var__ 这样形式的变量的用法
-* TODO 学习 Python 中如 __method__ 和 _method_ 这样形式方法的用法
-* TODO 学习 Python 中 Sphinx 模块
+* DONE 学习 Python 类中如 _var_ 和 __var__ 这样形式的变量的用法
+  CLOSED: [2012-10-03 Wed 14:13]
+* DONE 学习 Python 中如 __method__ 和 _method_ 这样形式方法的用法
+  CLOSED: [2012-10-03 Wed 14:13]
+* DONE 学习 Python 中 Sphinx 模块
+  CLOSED: [2012-10-02 Tue 11:52]
+* DONE 学习 datetime 的用法
+  CLOSED: [2012-10-03 Wed 12:11]
 * TODO 解决 Scrapy 下载压缩的网页
-* TODO 把我的情况写在 Wordpress 博客上。
-* TODO 学习 datetime 的用法
 * DONE 查找 str.decode() 中的几个替代。
   CLOSED: [2012-08-28 Tue 19:05]
 
 * TODO 在但文件中使用 scrapy.
 * TODO 学习 Python 下的 cgi 模块。
-* TODO 找下 Python 的编程规范。
+* DONE 找下 Python 的编程规范。
+  CLOSED: [2012-10-03 Wed 12:11]
