@@ -112,164 +112,6 @@
    若在 for 或其它语句中使用
    for key in examp
    时，取出的都是 key 值
-* if 语句
-   if expression:
-       expression
-   或
-   if expression1:
-       expression1.1
-   else:
-       expression2
-   或
-   if expression1:
-       expression1.1
-   elif expression2:
-       expression2.1
-   else:
-       expression3
-* while 语句
-   while expression1:
-       expression2
-* for 语句
-   它不像 C 中的 for，在 Python 中起一个遍历的作用。
-   格式如下：
-   for item in ['item1', 'item2', 'item3', ...]:
-       expression
-   也可用 
-   for item in range(num):
-       expression
-   其中，range() 是自动产生一个 0~'num-1' 的 list 的函数。
-   也可对字符串中的字符遍历，方法是
-   for char in str
-       expression
-   char 是单个字符，str 是字符串
-   也可用 for...else... 结构，它表示当 for 遍历完全遍历后执行 else 之后的代码。
-   注: 如果对 list、tuple、dict 进行遍历，不能在 for 的语句中对这个遍历的集合进
-   行修改，否则会中断遍历。
-* 有用的函数
-** 1、enumerate(str)
-    一般在 for 语句中使用，每次循环返回两个值，依次是位置和字符，位置从 0 开始计
-    数。如
-    for i, ch in enumerate(str):
-        expression
-** 2、dir([obj])
-    显示 obj 的属性，若不加参数，则显示全局变量的名字。
-** 3、help([obj])
-    显示 obj 的帮助文档，若不加参数，则显示 help 的提示符，交互提供帮助服务，按
-    'q' 退出。
-** 4、int(obj)
-    把 obj 转为 整型
-** 5、len(obj)
-    返回 obj 的长度。
-** 6、open(fn, mode)
-    打开文件。
-** 7、range([start, ] stop [, step])
-    返回存储在 list 中的从 start 到 stop-1 的整型数，默认的 step 是1， 默认的
-    start 是0.
-    若 stop <= start，则返回 []
-    返回的是 list
-** 8、raw_input(str)
-    提示输入数据，
-** 9、str(obj)
-    把 obj 转化为字符串。
-** 10、type(obj)
-    显示 obj 的类型。
-** 11、print 相关
-    会自动在输出的结尾添加 '\n',若想不换行，可在改行最末添加逗号。
-** 12、数据转换
-    int()、long()、complex()、list()、str()、tuple()、unicode()、basestring()
-** 13、del
-    del obj
-    删除某个对象
-** 14、cmp
-    比较函数。
-** 15、isinstance(object, class-or-type-or-tuple)
-    判断 object 是否是后者中的类型，返回 Boolean 值.
-** 16、id(object)
-    返回 object 的整型 identity， 这个 identity 类似于地址，每个 object 的
-    identity 是唯一的。
-** 17、sorted(obj)
-    对其中的 obj 进行排序，但不改变 obj 原来的状态，若用 obj.sort() 函数，则排序
-    改变原来的状态。
-** 18、reversed(obj)
-    对 obj 逆序输出，使用时一般用 for 语句来输出，例
-    for t in reversed(obj):
-        print t, 
-** 19、zip()
-    例
-    fn = ['ian', 'stuart', 'david']
-    ln = ['bairnson', 'elliott', 'paton']
-    for i, j in zip(fn, ln):
-        print ('%s %s' % (i, j)).title()
-** 20、sum(seq [, start])
-    计算 seq 中所有数值的和，若省略 start, 则默认从 seq 首位到末尾计算和，若指定
-    start 值，则计算 seq 从 start 到末尾的数值的和。
-** 21、xrange([start,] stop [, step])
-    作用同 range()，但返回的是 xrange object，比 range() 速度快同时更节省内存。
-    它一般只用于 for 遍历中。
-** 22、map(function, sequence [, sequence, ...]) -> list
-** 23、filter(function or None, sequence) -> list, tuple, or string
-** 24、chr(i) -> Character
-    0 <= i <= 256
-    返回数字 i 对应的 ASCII 字符
-** 25、ord(c) -> integer
-    返回字符 c 对应的 ASCII 码.
-* 有趣的技巧
-** 1、在类数组中中使用 for 
-    square = [x**2 for x in range(4)]
-    则最终 square = [0, 1, 4, 9]
-    square = [x**2 for x in range(4) if not x%2]
-    则最终 square = [0, 4]
-    其实，[] 中的结构是（以后一个为例）
-    for x in range(4):
-        if not x%2:
-	    x = x ** 2
-** 2、查看 class、函数等的信息
-    一般在这类中都可使用 __doc__ 属性查看相关的介绍。
-** 3、对 if-elif-else 多条语句的简化
-    比如有如下语句
-
-    if user.cmd == 'create':
-        action = 'create item'
-    elif user.cmd == 'delete':
-        action = 'delete item'
-    elif user.cmd == 'update':
-        action = 'update item'
-    else:
-        action = 'invalid choice ... try again!'
-
-    /优化1/：
-    if user.cmd in ('create', 'delete', 'update'):
-        action = '%s item' % user.cmd
-    else:
-        action = 'invalid choice ... try again!'
-
-    /优化2/:
-    msgs = {'create': 'create item',
-            'delete': 'delete item',
-            'update': 'update item'}
-    default = 'invalid choice ... try again!'
-    action = msgs.get(user.cmd, default)
-    
-    One well-known benefit of using mapping types such as dictionaries is that
-    the searching is very fast compared to a sequential lookup as in the above
-    /if-else-else/ statements or using a /for/ loop, both of which have to scan
-    the elements one at a time.
-** 4、赋值和交换数据
-    var1, var2, var3 = val1, val2, val3
-    如上，可以给多个数据这样赋值。若想交换两个数的值，可用如下形式：
-    var1, var2 = var2, var1
-** 5、实现 C 中的 (?:) 操作
-    可用如下形式
-    x if c else y
-    等同于 C 中的
-    c?x:y
-** 6、把 "2012-07-26" 类似的时间变为 Unix 时间戳
-   import time, datetime
-   stamp = time.mktime(datetime.datetime.strptime("2012-07-26", '%Y-%m-%d').timetuple())
-** 7、enumerate(fp)
-   若 enumerate() 的参数是文件描述符，则返回的是
-   [行号，对应行的内容]
 * 函数
    格式为：
    def function_name([parameters]):
@@ -1565,7 +1407,6 @@
   它们的 id 是一样的，即相同的值可以用不同的变量名来表示。
   解释可参考:
   http://stackoverflow.com/questions/2632677/python-integer-incrementing-with
-
 * XPATH
 ** XPATH 中标签的多个元素
   可用 and 或 or 连接 html 文件中标签的多个属性，如
@@ -1859,10 +1700,6 @@
 ** itertools.groupby()
    它仅把连续相邻的 key 相同的项组合成 group，若 key 相同的项之间有其它不同 key
    的项，则只能把连续的项组成 group.
-* 生成器表达式
-  类似于 *列表推导* ,只是把 *列表推导* 的方括号换成了圆括号。 *列表推导* 生成的
-  是 list 类型的数据， *生成器表达式* 生成的是 iterator object。因此在使用时，
-  *生成器表达式* 比 *列表推导* 更省内存。
 * 常用的扩展
 ** 数据库相关(第三方)
    MySQLdb
@@ -2096,7 +1933,5 @@ XS
    $ python -mtimeit -s '要测试的语句'
 ** tuple 的 constructor
    ',' 是 tuple 的 construtor,而不是 '()'
-* Best Practice
-** 更快的迭代
-   可考虑 itertools 模块
+
 

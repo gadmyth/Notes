@@ -1,0 +1,68 @@
+* 对 if-elif-else 多条语句的简化
+  比如有如下语句
+
+  if user.cmd == 'create':
+  action = 'create item'
+  elif user.cmd == 'delete':
+  action = 'delete item'
+  elif user.cmd == 'update':
+  action = 'update item'
+  else:
+  action = 'invalid choice ... try again!'
+
+  /优化1/：
+  if user.cmd in ('create', 'delete', 'update'):
+  action = '%s item' % user.cmd
+  else:
+  action = 'invalid choice ... try again!'
+
+  /优化2/:
+  msgs = {'create': 'create item',
+  'delete': 'delete item',
+  'update': 'update item'}
+  default = 'invalid choice ... try again!'
+  action = msgs.get(user.cmd, default)
+  
+  One well-known benefit of using mapping types such as dictionaries is that
+  the searching is very fast compared to a sequential lookup as in the above
+  /if-else-else/ statements or using a /for/ loop, both of which have to scan
+  the elements one at a time.  
+
+* enumerate(fp)
+  若 enumerate() 的参数是文件描述符，则返回的是
+  [行号，对应行的内容]
+* 生成器表达式
+  类似于 *列表推导* ,只是把 *列表推导* 的方括号换成了圆括号。 *列表推导* 生成的
+  是 list 类型的数据， *生成器表达式* 生成的是 iterator object。因此在使用时，
+  *生成器表达式* 比 *列表推导* 更省内存。
+
+* sorted() 用法
+  它的排序不是 'IN PLACE', 原型:
+
+  sorted(iterable, cmp=None, key=None, reverse=False) --> new sorted list
+  
+  用法举例:
+  最基本的用法:
+  >>> print sorted([5, 2, 3, 1, 4])
+  [1, 2, 3, 4, 5]
+  
+  根据每项的第二项数据的大小排序
+  >>> L = [('b',2),('a',1),('c',3),('d',4)]
+  >>> print sorted(L, cmp=lambda x,y:cmp(x[1],y[1]))
+  [('a', 1), ('b', 2), ('c', 3), ('d', 4)]
+
+  根据每项的第二项数据排序，效果同上，但比上者快
+  >>> L = [('b',2),('a',1),('c',3),('d',4)]
+  >>> print sorted(L, key=lambda x:x[1]))
+  [('a', 1), ('b', 2), ('c', 3), ('d', 4)]
+
+  先根据每项的第二项数据排序，在根据每项的第一项数据排序
+  >>> L = [('d',2),('a',4),('b',3),('c',2)]
+  >>> print sorted(L, key=lambda x:(x[1],x[0]))
+  [('c', 2), ('d', 2), ('b', 3), ('a', 4)]
+
+  对排序后的结果反序输出
+  >>> print sorted([5, 2, 3, 1, 4], reverse=True)
+  [5, 4, 3, 2, 1]
+  >>> print sorted([5, 2, 3, 1, 4], reverse=False)
+  [1, 2, 3, 4, 5]
