@@ -71,3 +71,40 @@
   句被执行的时候)。
   这句话的意思是，若多次引用同一个函数，则这些操作中，函数的默认值是同一个，可通
   过 id() 函数来验证。可通过 decorator 来修改这种行为。
+* descriptor
+  它提供了访问 "私有变量" 的方法，为 get、set、delete 这些变量提供了控制方法，使
+  之在 get、set、delete 时能够提供其它的操作，如检查变量的正确性、改变变量的大小
+  写等操作。
+  descriptor 仅是个 object.
+  常见的有 property()
+
+  使用 descriptor 时需要满足的条件:
+
+  + You have a new-style class
+  + It has some object as a class attribute
+  + That object's class has the appropriate special descriptor method.
+
+  A descriptor will not work if it's assigned to an object instead of a class,
+  and an object is not a descriptor if you assign the object a function named
+  /__get__/. 
+  Descriptors are all about modifying behavior for classes, not individual
+  objects.
+* decorator
+  它提供了修改函数行为的方法。
+* self、cls
+  它们都不是 python 中的关键字，可通过 ipython 中输入 'keywords' 来查看所有的关
+  键字。
+
+  在类中，可用任何单词取代这两个单词，因为在 Python 中一切皆对象，类中方法的第一
+  个参数是类的实例，所以可以用任何单词来表示。
+  self、cls 只是惯用，而不是关键字。
+* encoding/decoding
+  根据 PEP-0263 的解释，在 py 文件前两行中的某行加入符合
+  'coding[:=]\s*([-\w.]+)' 正则的编码，会指导 Python 解释器采用指定的编码方式编
+  码 python 源文件中的代码。
+  print 等函数会在打印时会对数据进行转码，但 file 模块中的 write 等操作不会。
+  在实践过程中发现一个问题，得需要使用 sys.setdefaultencoding() 来来改变 Python
+  的默认编码(ASCII)，否则若把中文写入到文件中时，会提示编码错误。
+  这里有个疑问，不知为什么会需要设置。
+
+  还可参考 PEP-100 看下对 *the Unicode Implementation* 的解释。

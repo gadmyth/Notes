@@ -823,3 +823,18 @@
   $ cd pkg
   $ tar xvf ../data.tar.lzma
   # makepkg -l y -c n /tmp/chrome.txz
+* amarok 播放问题
+  可参考
+  http://www.linuxquestions.org/questions/slackware-14/amarok-doesnt-work-in-slackware-current-944685/#post4677683
+
+  下载安装
+  gst-plugins-bad-0.10.21-x86_64-1alien
+  gst-plugins-base-0.10.32-x86_64-1
+  gst-plugins-good-0.10.28-x86_64-2
+  gst-plugins-ugly-0.10.18-x86_64-1_SBo
+* 编译 PyQt
+  先安装 sip,在 PyQT make 步骤时，需要先
+  
+  # cp -r /usr/include/phonon/ /usr/lib/qt/include/
+  
+  不然 make 时会报错.
