@@ -89,6 +89,9 @@
   /__get__/. 
   Descriptors are all about modifying behavior for classes, not individual
   objects.
+
+  A descriptor simply implements /__get__/ , /__set__/ ,etc. and is then added
+  to another class in its definition.
 * decorator
   它提供了修改函数行为的方法。
 * self、cls
@@ -108,3 +111,8 @@
   这里有个疑问，不知为什么会需要设置。
 
   还可参考 PEP-100 看下对 *the Unicode Implementation* 的解释。
+
+
+
+
+

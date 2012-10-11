@@ -92,7 +92,11 @@
 * DONE 查找 str.decode() 中的几个替代。
   CLOSED: [2012-08-28 Tue 19:05]
 
-* TODO 在但文件中使用 scrapy.
+* DONE 在单文件中使用 scrapy.
+  CLOSED: [2012-10-11 Thu 09:42]
 * TODO 学习 Python 下的 cgi 模块。
 * DONE 找下 Python 的编程规范。
   CLOSED: [2012-10-03 Wed 12:11]
+* DONE 安装 lxml、selenium(通过 pip)、Sphinx(通过 pip)
+  CLOSED: [2012-10-10 Wed 22:10]
+* TODO 安装 pyvirtualdisplay

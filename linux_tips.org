@@ -838,3 +838,25 @@
   # cp -r /usr/include/phonon/ /usr/lib/qt/include/
   
   不然 make 时会报错.
+* 使用 Xvfb
+  按顺序运行如下命令
+  
+  $ Xvfb :100 -ac -screen 0 1024x768x8 &
+  $ export DISPLAY=:100
+  
+  然后在当前环境下直接运行其它命令。
+
+  但在 X 环境下，这个似乎有问题，看不出效果，仍然会运行图形界面。
+
+  还有另一种方法，但可能会提示字体问题，可通过 '-fp' 指定字体路径:
+
+  $ Xvfb -fp /usr/X11R6/fonts/TIF/ :100 -screen 0  1024x768x24
+  $ export DISPLAY=:100
+
+  然后再运行程序，这种方法我试了可以。
+
+  还可以使用 xvfb-run 脚本，从网上搜一个，然后通过如下方式运行:
+  
+  $ sudo ./xvfb-run -a -e fb.log -w 5 python 要运行的脚本
+  
+  其中 'fb.log' 指运行 Xvfb 时记录信息的日志。
