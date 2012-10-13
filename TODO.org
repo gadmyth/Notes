@@ -99,4 +99,8 @@
   CLOSED: [2012-10-03 Wed 12:11]
 * DONE 安装 lxml、selenium(通过 pip)、Sphinx(通过 pip)
   CLOSED: [2012-10-10 Wed 22:10]
-* TODO 安装 pyvirtualdisplay
+* DONE 安装 pyvirtualdisplay
+  CLOSED: [2012-10-13 Sat 22:56]
+
+* TODO 学习如何查看当前使用的网络端口、如何关闭某个端口
+* TODO 利用 bottle 搭建通过 web 管理的 ftp 服务
