@@ -1,0 +1,25 @@
+* 引言
+  这个笔记主要是总结在学习 QtWebKit 过程中遇到的问题，由于关于 QtWebKit 的资料太
+  少，能够起作用的是 API 手册，但在没有教程的情况下仅学习 QtWebKit 会没有头绪，
+  故做一个总结。
+* slot
+** 对同一个信号的 slot 设置多个函数名相同参数不同的函数
+   发现每次触发信号后，只会调用设置的最后一个同名函数。这是通过 QWebView 中的
+   loadFinished(bool) 信号的实验发现的。
+* 导致一次请求获得的网页信息量不同
+** 设置的浏览器大小
+   经测试，发现与 QSize 对象中的设置无关，而与 QWebView().resize() 设置的浏览器的
+   大小相关.
+** 网络状况
+   经过在本机和开发机上的测试，发现在只有网络情况不同而代码相同的情况下，发送的
+   请求数不同。
+
+   在同一台机器上、同样的代码，在不同的时间段内获取到的信息量也不一样。
+* 初始化 QtApplication
+  必须在任何 Qt 对象初始化前初始化 QtApplication 对象，参考
+  http://srinikom.github.com/pyside-docs/PySide/QtGui/QApplication.html
+* QWebPage
+** 线程
+   它不是线程安全的，参见
+   http://stackoverflow.com/questions/7146510/qtwebkit-multithreading
+   http://qt-project.org/forums/viewthread/3005/#19159

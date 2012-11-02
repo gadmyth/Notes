@@ -1,28 +1,106 @@
-* 特殊语法
-** INSERT ... ON DUPLICATE KEY UPDATE
-   If you specify *ON DUPLICATE KEY UPDATE* , and a row is inserted that would
-   cause a duplicate value in a UNIQUE index or PRIMARY KEY, an UPDATE of the
-   old row is performed. For example, if column a is declared as UNIQUE and
-   contains the value 1, the following two statements have identical effect:
+* 修改 MySQL root 密码
+  若原密码为空，则用
+  # mysqladmin -u root password "newpass"
+  来设置，若有密码，则用
+  # mysqladmin -u root password  oldpass "newpass"
+* 无法启动
+  检查下 /var/lib/mysql/ 中文件的 owner 和 group,都改为 mysql.修改方法为:
+  # chown -R mysql.mysql /var/lib/mysql
+  然后再启动 mysqld_safe ，若依旧不行，则再在 /etc/rc.d/ 中启动 rc.mysqld,方法
+  是
+  # rc.mysqld start
+  这个其实可以看下 /etc/rc.d/rc.mysqld 脚本，其中有提示。
+* 出现 ERROR 1045(28000)
+  解决方法:
+  # pkill mysql
+  # mysqld_safe --user=mysql --skip-grant-tables --skip-networking &
+  # mysql -u root mysql
+  mysql> UPDATE user SET Password=PASSWORD('newpassword') WHERE USER='root' and
+  host='root' or host='localhost';
+  mysql> FLUSH PRIVILEGES;
+  mysql>quit
+  # mysqld_safe &
+  # mysql -uroot -p
+* PHP 与 MySQL 连接
+  不管是在 Windows 下还是 Linux 下，只有 MySQl 安装时配置好，在安装成功后就不用
+  再配置 MySQL 即可通过 PHP 访问 MySQL。Windows 下的 MySQL 要完全安装，Linux 下
+  的 MySQL 默认编译安装就行。
+* ERROR 2002 (HY000)
+  先检查 /var/run/mysql/mysql.sock 文件是否存在，若不存在，建立一个。然后关闭
+  mysql,再重启 mysql.
+* 查看 MySQL 端口号
+  进入 MySQL 后，可用 
+  show variables like "port";
+  来查看。
+  默认的是 3306.
+* 清空表中数据
+  TRUNCATE TABLE 表名
+* 编码
+  设置 MySQL 中的编码时，尤其是 utf8 编码，注意不要写成 'utf-8' 的形式，没有中
+  间的短横杠。
+* 查看和设置编码
+  show variables like 'character\_set\_%'; 
+  show variables like 'collation_%'; 
 
-   INSERT INTO table (a,b,c) VALUES (1,2,3)
-   ON DUPLICATE KEY UPDATE c=c+1;
+  set names 'GBK' 
+  alter database payment character set GBK; 
+  create database mydb character set GBK; 
+  set character_set_client=gbk; 
+  set character_set_connection=gbk; 
+  set character_set_database=gbk; 
+  set character_set_results=gbk; 
+  set character_set_server=gbk; 
+  set character_set_system=gbk; 
+  set collation_connection=gbk; 
+  set collation_database=gbk; 
+  set collation_server=gbk;
+* slackware 中永久改变数据库的编码设置
+  根据电脑的内存大小，把 /etc/mysql/ 目录下相应的配置文件复制到 /etc/my.cnf 文
+  件中，然后在这个文件中的 mysqld 配置下添加如下的语句
 
-   UPDATE table SET c=c+1 WHERE a=1;
+  character-set-server=utf8
+  collation-server=utf8_general_ci
+  skip-character-set-client-handshake
 
-   The ON DUPLICATE KEY UPDATE clause can contain multiple column assignments,
-   separated by commas.
+  重启下 mysql 即可.
+* 获取表的所有信息
+  假设在数据库 ZolDB 中有表 digit，要获得关于表 digit 的所有信息，可用如下形式
+  查询:
+  
+  SHOW TABLE STATUS FROM ZolDB LIKE 'digit';
+  
+  通过这种形式，可快速查询到有关表的行数等信息。
+  
+  完整的语法是:
+  SHOW TABLE STATUS [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]
 
-   With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row
-   is inserted as a new row, and 2 if an existing row is updated.
+* INSERT ... ON DUPLICATE KEY UPDATE
+  If you specify *ON DUPLICATE KEY UPDATE* , and a row is inserted that would
+  cause a duplicate value in a UNIQUE index or PRIMARY KEY, an UPDATE of the
+  old row is performed. For example, if column a is declared as UNIQUE and
+  contains the value 1, the following two statements have identical effect:
 
-** 获取表的所有信息
-   假设在数据库 ZolDB 中有表 digit，要获得关于表 digit 的所有信息，可用如下形式
-   查询:
+  INSERT INTO table (a,b,c) VALUES (1,2,3)
+  ON DUPLICATE KEY UPDATE c=c+1;
 
-   SHOW TABLE STATUS FROM ZolDB LIKE 'digit';
-   
-   通过这种形式，可快速查询到有关表的行数等信息。
+  UPDATE table SET c=c+1 WHERE a=1;
 
-   完整的语法是:
-   SHOW TABLE STATUS [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]
+  The ON DUPLICATE KEY UPDATE clause can contain multiple column assignments,
+  separated by commas.
+
+  With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row
+  is inserted as a new row, and 2 if an existing row is updated.
+
+  UPDATE 后可跟多条语句，用逗号隔开.
+
+  这条语句特别适合更新表，但要注意设置好表的唯一索引，不然可能会起不到作用.
+* INSERT ... SELECT ...
+  通过这条语句可以从其它表中插入到这个表中多个数据，如
+
+  INSERT INTO tbl0 SELECT col0, col1 FROM tbl1;
+
+  使用这条语句需要满足的条件是：查询不能包含一个 ORDER BY 子句.
+
+  INSERT 语句的目标表不能出现在 SELECT 查询部分的 FROM 子句，因为这在 ANSI SQL
+  中被禁止让从你正在插入的表中 SELECT.
+

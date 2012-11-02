@@ -13,7 +13,8 @@
   CLOSED: [2012-07-25 三 15:00]
 * DONE 深入 Pyhon I/O
   CLOSED: [2012-07-26 四 14:01]
-* TODO 深入 Python 类
+* DONE 深入 Python 类
+  CLOSED: [2012-10-25 Thu 21:39]
 * DONE 深入 Python 处理 XML/HTML 文件
   CLOSED: [2012-07-27 五 17:14]
 * DONE 解决 Python MySQLdb 中文乱码问题
@@ -103,4 +104,4 @@
   CLOSED: [2012-10-13 Sat 22:56]
 
 * TODO 学习如何查看当前使用的网络端口、如何关闭某个端口
-* TODO 利用 bottle 搭建通过 web 管理的 ftp 服务
+* TODO 查找什么情况下会大量启动 mysqld 进程

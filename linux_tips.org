@@ -860,3 +860,10 @@
   $ sudo ./xvfb-run -a -e fb.log -w 5 python 要运行的脚本
   
   其中 'fb.log' 指运行 Xvfb 时记录信息的日志。
+
+* 查看内存频率
+  # dmidecode | grep -A 16 'Memory Device' | less
+* 查看 KDE 版本
+  $ kde4-config -v
+* 画流程图的软件
+  calligraflow

@@ -835,49 +835,6 @@
 * Wiki
   访问地址是：
   http://ip/wiki 
-* MySQL 相关
-** 修改 MySQL root 密码
-   若原密码为空，则用
-   # mysqladmin -u root password "newpass"
-   来设置，若有密码，则用
-   # mysqladmin -u root password  oldpass "newpass"
-** 无法启动
-   检查下 /var/lib/mysql/ 中文件的 owner 和 group,都改为 mysql.修改方法为:
-   # chown -R mysql.mysql /var/lib/mysql
-   然后再启动 mysqld_safe ，若依旧不行，则再在 /etc/rc.d/ 中启动 rc.mysqld,方法
-   是
-   # rc.mysqld start
-   这个其实可以看下 /etc/rc.d/rc.mysqld 脚本，其中有提示。
-** 出现 ERROR 1045(28000)
-   解决方法:
-   # pkill mysql
-   # mysqld_safe --user=mysql --skip-grant-tables --skip-networking &
-   # mysql -u root mysql
-   mysql> UPDATE user SET Password=PASSWORD('newpassword') WHERE USER='root' and
-   host='root' or host='localhost';
-   mysql> FLUSH PRIVILEGES;
-   mysql>quit
-   # mysqld_safe &
-   # mysql -uroot -p
-** PHP 与 MySQL 连接
-   不管是在 Windows 下还是 Linux 下，只有 MySQl 安装时配置好，在安装成功后就不用
-   再配置 MySQL 即可通过 PHP 访问 MySQL。Windows 下的 MySQL 要完全安装，Linux 下
-   的 MySQL 默认编译安装就行。
-** 我的 mysql root 密码
-   zyf103
-** ERROR 2002 (HY000)
-   先检查 /var/run/mysql/mysql.sock 文件是否存在，若不存在，建立一个。然后关闭
-   mysql,再重启 mysql.
-** 查看 MySQL 端口号
-   进入 MySQL 后，可用 
-   show variables like "port";
-   来查看。
-   默认的是 3306.
-** 清空表中数据
-   TRUNCATE TABLE 表名
-** 编码
-   设置 MySQL 中的编码时，尤其是 utf8 编码，注意不要写成 'utf-8' 的形式，没有中
-   间的短横杠。
 * Apache 相关
 ** 支持 PHP
    修改 /etc/httpd/httpd.conf 文件，改为:

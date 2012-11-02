@@ -111,8 +111,6 @@
   这里有个疑问，不知为什么会需要设置。
 
   还可参考 PEP-100 看下对 *the Unicode Implementation* 的解释。
-
-
-
-
-
+* 添加模块查询路径
+  与 PYTHONPATH 环境变量有关,可在 site-packages/ 或 PYTHONPATH 的任何 *.pth* 文
+  件来添加 PYTHONPATH

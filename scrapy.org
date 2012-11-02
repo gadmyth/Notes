@@ -501,6 +501,9 @@
    假设爬虫所在的文件名为 test.py，则可按如下方式运行:
 
    $ scrapy runspider test.py
+** 发送 url 后等待超长时间仍无法获得内容响应
+   可能的原因有很多中，如请求头部的信息、cookie 等，还可能是需要改变 url 的格式
+   再发送请求。要对比下发送的 url 和通过浏览器获得的 url 的区别。
 * 源码剖析
 ** scrapy/spider.py
    定义了 BaseSpider 类，它继承 obejct_ref 类。object_ref 类的作用是记录当前类的
