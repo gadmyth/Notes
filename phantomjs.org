@@ -6,3 +6,14 @@
 * 是否支持不发送某些请求
   不支持，参考
   http://stackoverflow.com/questions/9486377/how-can-i-control-phantomjs-to-skip-download-some-kind-of-resource
+* 禁止 js 后无法正常运行 evaluate() 方法
+  通过 
+  
+  page.settings.javascriptEnabled = false;
+
+  禁止 js 后，不能再通过 page.evaluate() 执行 js 语句。
+  参考:
+  http://stackoverflow.com/questions/7957516/javascriptenabled-issue-on-phantomjs
+
+  这可能是 PhantomJS(1.7版本，包括之前的) 的一个没有实现的功能，既然要模拟浏览器
+  的行为，应该实现这一功能.
