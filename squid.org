@@ -1,0 +1,23 @@
+* 日志
+  日志的 owner:group 必须设置为 squid:squid 才有权限写
+
+* acl
+** 注意
+   + acl 每行只能定义一个，不能多个规则写在一行，如下
+	 
+	 正确的写法:
+	 acl rule0 urlpath_regex http://www.360buy.com/.*jpg
+	 acl rule1 urlpath_regex http://www.360buy.com/.*png
+
+	 错误的写法
+	 acl rul urlpath_regex http://www.360buy.com/.*jpg
+     http://www.360buy.com/.*png
+* url_regex 和 urlpath_regex
+  *urlpath_regex* will not use hostname or transfer protocol.
+  *url_regex* will match on whole url.
+
+  具体的区别从以上的定义看不出来，通过实践，使用时，我觉得可以按照如下的标准来
+  做:
+
+  + 若是匹配完整的 url，如以 'http' 等开头，则用 *url_regex*
+  + 若只匹配 url 中部分，如 '\.css$'，则用 *urlpath_regex*

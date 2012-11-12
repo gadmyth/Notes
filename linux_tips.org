@@ -632,7 +632,10 @@
   若此时光标在一个进程上，如 Emacs 上，则 Emacs 被移动到制定的 workplace 中。
 
 * 89、文件编码转换
-  convmv
+  convmv 或 iconv
+  
+  例:
+  $ iconv -f 源编码 -t 目标编码 文件 -o 转换后的文件
 * 90、分大文件和拼装文件
   用 lxsplit 或 split 命令。
 * 91、mplayer 加载字幕
@@ -799,6 +802,15 @@
 * 133、ssh 隧道
   $ ssh -D 自己设的端口 用户名@充当代理的机器的ip
   然后在浏览器中设置 SOCKS v5 代理， ip:port 为 127.0.0.1:本机设置的端口
+
+  可能会因为网络的限制禁止连接某些端口，可以尝试在其它的机器上提供 ssh 端口转发
+  服务。
+  如本机不能通过 ssh 连接上，而另一台机器可以。假设另一台机器的 ip 是
+  10.255.251.28，提供 ssh 服务的开的端口是 543，则在另一台机器上输入
+  $ ssh -Nf -D 10.255.251.28:8532 -p 543 用户名@ssh服务ip或域名
+  然后在本机浏览器设置代理的地方，修改 SOCKS Host 为 10.255.251.28，Port 改为
+  8532 即可。
+  这样的风险是，任何知道 10.255.251.28:8532 的人都可以使用这个 ssh 端口转发服务.
 * 134、Linux 解析域名顺序
   1、/etc/hosts
   2、named
@@ -867,3 +879,19 @@
   $ kde4-config -v
 * 画流程图的软件
   calligraflow
+* chrome 中查看浏览器占用内存的情况
+  通过在地址栏中输入
+  chrome://memory-redirect
+  来查看.
+* 查看本机当前用户使用率最高的前 10 个 shell 命令
+  history | awk '{CMD[$2]++;count++;} END { for (a in CMD )print CMD[ a ]" " CMD[ a ]/count*100 "% " a }' | grep -v "./" | column -c3 -s " " -t |sort -nr | nl | head -n10 
+
+
+
+
+
+
+
+
+
+

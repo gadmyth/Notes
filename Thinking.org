@@ -1061,17 +1061,6 @@
    在地址栏输入:
    chrome://cache
    点击任意个 cache 信息，都能获得完整的服务器应答信息。
-
-
-
-
-
-
-
-
-
-
-
 ** 默认 https 连接
    地址栏输入 chrome://net-internals/
    在 HSTS 的标签栏里 Domain 里填上需要访问的 domain，比如 twitter.com

@@ -104,3 +104,7 @@
   INSERT 语句的目标表不能出现在 SELECT 查询部分的 FROM 子句，因为这在 ANSI SQL
   中被禁止让从你正在插入的表中 SELECT.
 
+* 查看索引
+  SHOW INDEX FROM 表名;
+* 连接数据库
+  $ mysql -h host地址 -P端口 -u用户名 -p密码 

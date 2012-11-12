@@ -1,0 +1,8 @@
+* phantom.exit()
+  程序退出时,一定要执行该语句,否则 PhantomJS 可能不会退出.
+* 网络监控
+  All the resource requests and responses can be sniffed using
+  _onResourceRequested_ and _onResourceReceived_ . 
+* 是否支持不发送某些请求
+  不支持，参考
+  http://stackoverflow.com/questions/9486377/how-can-i-control-phantomjs-to-skip-download-some-kind-of-resource
