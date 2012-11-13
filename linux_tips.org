@@ -475,6 +475,23 @@
   杀掉当前窗口: C-a k
   切换到下一个窗口: C-a n
   切换到前一个窗口: C-a p
+
+  若需要长时间在开发机上运行一个程序，但担心 ssh 断后程序中断，可通过 screen 的
+  会话控制功能来控制.
+  先执行
+  $ screen
+  在当前的会话中运行程序。若此时想退出该会话，按下组合键 "C-a d" 退出该会话，此
+  时即使中断了 ssh 也不会担心程序被终止.通过
+  $ screen -ls
+  可查看当前有多少个会话，假如其中有如下的会话
+  25566.pts-56.dev-flyer
+  要转到该会话下，通过如下命令运行
+  $ screen -r 25566
+
+  若需要频繁使用 screen 的该功能，可建立别名来减少输入
+
+  alias sls='screen -ls'
+  alias srun='screen -r'
 * 65、查询指定用户信息(可以是远程用户)
   $ finger 用户或邮箱
 * 66、网络工具
@@ -885,13 +902,17 @@
   来查看.
 * 查看本机当前用户使用率最高的前 10 个 shell 命令
   history | awk '{CMD[$2]++;count++;} END { for (a in CMD )print CMD[ a ]" " CMD[ a ]/count*100 "% " a }' | grep -v "./" | column -c3 -s " " -t |sort -nr | nl | head -n10 
+* grep && egrep
+** 只显示满足匹配的文件名
+   加 '-l' 参数
+** 多个匹配
+   用 egrep，如
+   
+   $ egrep '有货|无货' file.txt
+* bc
+** 单行使用
+   $ echo "scale=2; 4 / 10" | bc
 
-
-
-
-
-
-
-
-
-
+* printf && echo
+** 功能
+   打印信息，bash 下的 printf 能够对打印信息有更多的控制.

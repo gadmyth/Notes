@@ -1118,3 +1118,9 @@
    字符串处理，XML/HTML 解析，类
 ** 网络
    分层结构，常见的协议，如 HTTP、HTTPS、FTP、SMTP
+* 尝试使用新技术时需要思考的
+  + maturity of project
+  + activity on github
+  + community support 
+  + complexity
+  + activity on stackoverflow
