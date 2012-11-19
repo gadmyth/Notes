@@ -1124,3 +1124,9 @@
   + community support 
   + complexity
   + activity on stackoverflow
+* 网页中的 frame 和 iframe 概念
+  它们表示可以在网页中嵌入其它的网页,一个网页中有一个 mainframe 和多个子 frame,
+  即 mainframe 表示初始载入的网页,这时可以载入其它的网页嵌入到当前网页中,作为子
+  frame.
+
+  从这里可以明白在 QtWebKit 中的 mainFrame() 和 currentFrame() 概念.

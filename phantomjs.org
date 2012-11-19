@@ -17,3 +17,46 @@
 
   这可能是 PhantomJS(1.7版本，包括之前的) 的一个没有实现的功能，既然要模拟浏览器
   的行为，应该实现这一功能.
+* 记录每个请求耗费的时间
+  通过 JSON.stringify(response, null, 4) 可看出，每次返回的 response 对象中都有
+  一个 'time' 字段，格式为 '2012-11-14T02:20:26.709Z'，还有一个 'stage' 字段，内
+  容为 'start' 或 'end'.
+  若想计算每次请求耗费的时间，我觉得可以在 js 脚本中维护一个 object，key 为 url，
+  value 为一个 object，这个 object 的 key 为 stage，仅有两个 key，分别为 'start'
+  和 'end'，value 为每次返回的 response 对象的 'time' 字段的值.这样通过这两个
+  value 就可以计算出每个请求耗费的时间.
+
+  但根据 PhantomJS API 上对 'onResourceReceived' 的解释，若 server 返回的
+  response 太大，会分块发送，每一个块的到来都会调用每个 'onResourceReceived' 回
+  调函数.
+  这样看来，通过上述方法计算每个请求的时间，似乎是有些问题.待验证.
+
+* onResourceReceived 返回同一个的 url 的两个阶段,start 和 end
+  根据我在 PhantomJS 邮件列表上的提问， James 回答:
+
+  This is somewhat common idea in data streaming. The *start* stage is when the
+  first bytes of data for a resource are received by the client (WebPage in
+  PhantomJS), the *end* stage is when all of the data for a resource has been
+  received by the client.
+
+  Based on some reading I've done of PhantomJS and QtWebKit, it has been
+  suggested that large resource may have additional onResourceReceived events
+  fired if their transfer is chunked into several pieces (though I believe the
+  only values for stage are "start" and "end", so I'm not sure what stage such
+  an event would be marked as).  I have not seen this in action, though, and I
+  have not yet tried to confirm it.
+* 为什么 PhantomJS 获取网页速度快
+  PhantomJS 是基于 Qt 的 QtWebKit 的,然而对比我之前写的直接基于 PyQt4 的
+  'headless browser' 抓取网页,速度提高了很多.在 PhantomJS 邮件列表上提问后知道原
+  因:
+
+  PhantomJS eliminates the time that a browser would usually spend rendering the
+  visuals (painting, reflowing, etc.)
+
+
+* 待尝试的方法
+  + 修改 PhantomJS 发送的请求,对于京东库存来说,修改获取库存信息的请求 url
+* 要解决的问题
+  + 对于京东的百货 url,通过在 chrome 控制台中看不到发送的关于地理位置的请求,而在
+    PhantomJS 的网络请求中可以看到,也发现了有相应的应答
+  + 获取库存信息失败时,各种诡异的网络请求情况

@@ -487,11 +487,15 @@
   25566.pts-56.dev-flyer
   要转到该会话下，通过如下命令运行
   $ screen -r 25566
+  
+  给会话起个名字。在新建窗口时，通过如下命令:
+  $ screen -S session名字
 
   若需要频繁使用 screen 的该功能，可建立别名来减少输入
 
   alias sls='screen -ls'
   alias srun='screen -r'
+  alias sname='screen -S'
 * 65、查询指定用户信息(可以是远程用户)
   $ finger 用户或邮箱
 * 66、网络工具
@@ -916,3 +920,10 @@
 * printf && echo
 ** 功能
    打印信息，bash 下的 printf 能够对打印信息有更多的控制.
+* sed
+** 删除行首的空格
+   $ sed 's/^[[:space: ] ]*//g' 文件
+   使用时注意把中括号之间的空白全去掉，在这里这样写，是因为 Emacs 的 org-mode 会
+   把紧邻的两个中括号当作自身的特殊字符来对待.
+** 删除空行
+   $ sed '/^$/d' 文件

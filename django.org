@@ -1,0 +1,19 @@
+* 修改 ip:port
+  $ python manage.py runserver [ip:port]
+
+* 数据库相关
+  更新数据库
+  $ python manage.py syncdb
+  The *syncdb* command runs the SQL from *sqlall* on your database for all apps
+  in *INSTALLED_APPS* that don't already exist in your database. *syncdb* can be
+  called as often as you like, and it will only ever create the tables that
+  don't exist.
+
+  检验 model 构造中是否有错
+  $ python manage.py validate
+
+  检查某个 app 的索引信息
+  $ python manage.py sqlindexes app名
+
+  查看某个 app 数据库所有相关的
+  $ python manage.py sqlall app名

@@ -114,3 +114,21 @@
 * 添加模块查询路径
   与 PYTHONPATH 环境变量有关,可在 site-packages/ 或 PYTHONPATH 的任何 *.pth* 文
   件来添加 PYTHONPATH
+* 有时为什么要写 if __name__ == '__main__'
+  这在测试模块时非常有帮助. Python 解释器会从头至尾执行缩进级别为 0 的代码,会自
+  动为每个 module 设置一个 '__name__' 变量,若不是通过 import 载入该模块,则
+  '__name__' 被赋予值 '__main__',若是通过 import 载入该模块,则 '__name__' 被赋予
+  模块的文件名(除去路径和后缀).
+
+  通常在写完一个 module 后在当前的 module 文件中进行验证,加上上述语句时,会自动执
+  行该语句下的代码,而在通过 import 载入该 module 时,由于此时模块的 '__name__' 已
+  经被置为模块名而不是 '__main__',此时不会执行上述语句下面的代码.
+
+  通过 if __name__ == '__main__' 语句,使得这个 python 文件既可以作为一个可复用的
+  模块使用,又可以作为一个独立的程序使用.
+
+  参考:
+  http://stackoverflow.com/questions/419163/what-does-if-name-main-do
+  http://ibiblio.org/g2swap/byteofpython/read/module-name.html
+  http://blog.csdn.net/shark0001/article/details/1363154
+
