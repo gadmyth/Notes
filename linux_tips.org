@@ -498,6 +498,9 @@
   alias sls='screen -ls'
   alias srun='screen -r'
   alias sname='screen -S'
+
+  在 session 下，若想滚屏，先按下 'C-a [' 进入滚屏模式，可通过 'C-u' 'C-d' 向上、
+  向下翻屏，'/' 是查找.
 * 65、查询指定用户信息(可以是远程用户)
   $ finger 用户或邮箱
 * 66、网络工具
