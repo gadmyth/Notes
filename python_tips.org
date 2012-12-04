@@ -132,3 +132,11 @@
   http://ibiblio.org/g2swap/byteofpython/read/module-name.html
   http://blog.csdn.net/shark0001/article/details/1363154
 
+* 在 iPython 中计算某些语句的执行时间
+  可在 iPython 中通过如下的形式来使用
+
+  timeit -n 次数 要测试的语句
+* 使用清华的 pypi 源
+  如:
+  
+  $ python install -i http://e.pypi.python.org/simple 软件
