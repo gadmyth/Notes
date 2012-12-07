@@ -140,3 +140,27 @@
   如:
   
   $ python install -i http://e.pypi.python.org/simple 软件
+* 获得 26 个英文字母的 list
+  import string
+  
+  alist = list(string.ascii_lowercase)
+
+* 把 rst 格式的字符串转换为 html 文件
+  可通过如下的代码形式，把 rst 语法的字符串转换成 html 文件
+
+  import docutils.core
+
+  rest = '''
+  Heading
+  =========
+  SubHeading
+  -----------
+  This is just a simple little subsection. Now, we'll show a bulleted list:
+  
+  - item one
+  - item two
+  - item three
+  '''
+
+  html = docutils.core.publish_string(source=rest, writer_name='html')
+  """html 是字符串，写入文件中即可获得 html 文件"""
