@@ -1,0 +1,6 @@
+* 解压包后转向解压到的目录中
+  pkg='要解压的包'
+  dirname=$(tar xvf $pkg)
+  cd $dirname
+
+  即 cd 后若跟多个目录，只会转向第一个目录中.
