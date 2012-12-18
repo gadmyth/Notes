@@ -287,3 +287,15 @@
   http://rogerdudler.github.com/git-guide/index.zh.html
   why git is bettern than X
   http://zh-cn.whygitisbetterthanx.com/#git-is-fast
+* 打包
+  以下操作都是在 git 项目下进行
+
+  打包成 gzip :
+  $ git archive master --prefix='project/' | gzip > project.tar.gz
+
+  打包成 zip:
+  $ git archive master --prefix='project/' --format=zip > project.zip
+
+  打包成 tar:
+  $ git archive master --prefix='project/' --format=tar > project.tar
+
