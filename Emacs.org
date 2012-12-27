@@ -6,12 +6,12 @@
    可能是系统字体环境的设置问题，可把 /etc/X11/xorg.conf-vesa 中多余的字体
    路径注释掉。
 * 3、org-mode 
-*** 使用技巧
+** 使用技巧
    字体加粗 *bold*
    斜字体 /italics/
    加下划线 _underline_
 * 4、编程相关
-*** 1、编译程序
+** 1、编译程序
    先 M-x compile 
    在出现的提示中输入编译命令，然后会出现一个 *compilation* buffer。
    编译的结果会在这个 buffer 中显示，若有错误，可在这个 buffer 中通过
@@ -20,7 +20,7 @@
    C-u C-x `
    也可在 *compilation* buffer 中通过 M-n 或 M-p 上下移动选择错误的信
    息，然后通过 C-c C-c 来在源码中定位错误。
-*** 2、调试程序
+** 2、调试程序
    先按 M-x ，然后输入 gdb ，接着输入要调试的程序，打开后再按 M-x，输
    入 gdb-many-windows，此时会出现很棒的调试界面，共有5个 buffer：gdb
    调试 buffer、变量显示 buffer、源代码 buffer、栈 buffer、断点 buffer。
@@ -28,7 +28,7 @@
    可通过在 ~/.emacs 中添加如下语句，使得每次使用 gdb 调试时自动进入
    gdb-many-windows 模式：
    (setq gdb-many-windows t)
-*** 3、添加注释
+** 3、添加注释
     可通过
     M-;
     来添加 /**/ 类型的注释，且会自动调整注释出现的位置。
@@ -36,7 +36,7 @@
     M-j
     若想去除注释，先把光标移至注释开头所在行，然后输入
     M-x kill-comment
-*** 4、函数标签
+** 4、函数标签
     先要在 shell 中执行 etags 命令，假如搜索当前目录下所有 .c 程序中的
     函数，则执行
     $ etags *.c
@@ -50,7 +50,7 @@
     来继续查找。也可通过如下命令利用正则表达式来搜索某个函数
     M-x tags-search
     P.S：这种操作要多了解下，很有用。
-*** 5、字体高亮
+** 5、字体高亮
     可通过
     M-x font-lock-mode 
     来打开或关闭字体语法高亮，也可在 ~/.emacs 中添加
@@ -61,7 +61,7 @@
     来查看 Emacs 提供的各种界面，然后可通过
     M-x modify-face 或 M-x customize-face
     来选择。
-*** 6、c-mode 
+** 6、c-mode 
     M-a : 移动到句子开头
     M-e : 移动到句子结尾
     M-q : 若注释是分段的，则集合到一块儿
