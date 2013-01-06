@@ -4,3 +4,210 @@
   cd $dirname
 
   即 cd 后若跟多个目录，只会转向第一个目录中.
+* 清空文件
+  有如下几种方法
+
+  1) root 权限下，可通过 /dev/null 来清空文件
+  
+  # cat /dev/null > 文件
+
+  2) 普通用户权限下，通过如下方式清空文件
+
+  $ : > 文件
+
+  若此时文件不存在，上述命令效果同 touch
+* 获得当前用户的 UID
+  在 bash 下，通过 
+  
+  $ echo $UID
+  
+  可获得当前用户的 uid.
+* 获取当前的工作目录
+  除了可以通过 pwd 命令，还可以通过环境变量 $PWD
+* '#' 在引号中是否是注释
+  不管是在双引号还是单引号中，# 都不是注释的开始
+* ':' 作用
+  在 bash 中，":" 作为一个占位符，表示 true.如
+  
+  $ :
+  $ echo $?   // 输出为 0
+* {} 的一些黑魔法
+  1)
+  $ echo \"{these,words,are,quoted}\"
+  打印的是
+  $ "these" "words" "are" "quoted"
+
+  2)
+  $ cat {file1,file2,file3} > combined_file
+  把 file1,file2,file3 融合成一个文件
+  
+  3)
+  $ cp file.{txt,backup}
+  相当于
+  $ cp file.txt file.backup
+  
+  4)
+  $ echo {a..z}
+  打印从 a 到 z 的全部小写字母
+  $ echo {0..10}
+  打印从 0 到 10 的全部数字
+* () 和 {} 中的命令集合的区别
+  在 () 中的命令集合是在一个子 shell 中运行该命令集合，主 shell 不能读取子 shell
+  中的变量。
+  在 {} 中的命令集合相当于一个匿名函数，外部可以访问 {} 中的变量.
+* 重定向
+  &> 重定向 stdout 和 stderr
+  2> 重定向 stderr
+  1>&2 stdout 重定向到 stderr
+* 显示当前 shell 的 pid
+  $ echo $$
+* 特殊的 '-'
+  它表示从 stdin 读数据，向 stdout 写数据，如
+* ~+  ~-  =~
+  ‘~+’ 表示 pwd，该变量存储的是当前工作目录路径，等同于 $PWD
+  '~-' 变量存储的是上次的目录，等同于 $OLDPWD
+  '=~' 是正则表达式匹配
+* 字符换替换
+  $ a=2334
+  $ b=${a/23/flyer}
+  $ echo $b    // 打印 flyer34
+* export 的环境变量的作用范围
+  A script can export variables only to child processes, that is, only to
+  commands or processes which that pariticular script initates. 
+  A script invoked from the command-line cannot export variables back to the
+  command-line environment.
+  Child processes cannot export variables back to the parent processes that
+  spawned them.
+* 位置参数
+  包括 $0, $1, ... , $9, ${10}, ${11}, ...
+* [字符串] 作用和正则中的一样
+  如
+  
+  $ ls [Tt]est.txt
+
+  会匹配 Test.txt 和 test.txt 文件.
+* "" 中只对三个特殊的符号转义
+  即对 $、`、\ (转义符号) 进行转义
+* [ 0 ] 的判断值
+  返回的是 0,即表明在判断中为 true.
+* type 命令
+  返回对命令的描述
+* 判断操作符
+** 对文件判断
+   若满足以下语义，则返回 true (在 shell 中是 0)
+   | -e        | file exists                                                 |
+   | -f        | file is a regular file                                      |
+   | -s        | file is not zero size                                       |
+   | -d        | file is a directory                                         |
+   | -c        | file is a character device                                  |
+   | -b        | file is a block device                                      |
+   | -p        | file is a pipe                                              |
+   | -h        | file is a symbolic link                                     |
+   | -L        | file is a symbolic link                                     |
+   | -S        | file is a socket                                            |
+   | -t        | file is a file descriptor associated with a terminal device |
+   | -r        | file has read permission                                    |
+   | -w        | file has write permission                                   |
+   | -x        | file has execute permission                                 |
+   | -O        | you are owner of the file                                   |
+   | -G        | group-id of the file is same as yours                       |
+   | -N        | file modified since it was last read                        |
+   | f1 -nt f2 | file f1 is newer than f2                                    |
+   | f1 -ot f2 | file f1 is older than f2                                    |
+   | f1 -ef f2 | file f1 and f2 are hard links to the same file              |
+** 对数字比较
+   有两种方式
+   | -eq | [ $a -eq $b ] |
+   | -ne | [ $a -ne $b ] |
+   | -gt | [ $a -gt $b ] |
+   | -ge | [ $a -ge $b ] |
+   | -lt | [ $a -lt $b ] |
+   | -le | [ $a -le $b ] |
+   
+   | <  | (($a < $b))  |
+   | <= | (($a <= $b)) |
+   | >  | (($a > $b))  |
+   | >= | (($a >= $b)) |
+** 字符串比较
+   '=' 和 '==' 等效
+   | != | [ $a != $b ]                      |
+   | <  | [ $a < $b ]  按 ASCII 序          |
+   | >  | [ $a > $b ]  按 ASCII 序          |
+   | -z | [ -z $a ]  字符串为 null,长度为 0 |
+   | -n | 字符串不为 null                        |
+** 多个比较条件
+   可有如下几种等价形式：
+   if [ $cond1 ] && [ $cond2 ]
+   if [ $cond1 -a $cond2 ]
+   if [[ $cond1 && $cond2 ] ]  (注意最后的 ]] 之间没有空格)
+   
+   '||' 的情况与上一样.
+* $@ 和 $* 的区别
+  不加双引号时，二者是一样的，都表示所有的位置参数，
+  "$*" 把全部的位置参数置于一个字符串中，
+  "$@" 同 $@
+* 一些有用的 bash 下的环境变量
+  $BASH  :  the path to the bash 
+  $BASH_VERSION  :  the version of Bash installed on the system
+  $EUID  :  effective user id number
+  $UID   :  user id number
+  $GROUPS  :  groups current user belongs to
+  $FUNCNAME  :  name of the current function
+  $HOSTNAME  :  主机名
+  $HOSTTYPE  :  identify the system hardware
+  $MACHTYPE  :  identify the system hardware
+  $OSTYPE  :  操作系统类型
+  
+  $IFS  :  internal field separator  (这个非常有用)
+  默认是 whitespace (space, tab, newline)
+  
+  $LINENO  :  当前的行号
+  $$  :  当前 shell 的 pid
+  $PPID  :  当前 shell 的父进程 id
+  $SECONDS  :  当前脚本已经运行的秒数  (这个很有趣)
+  $RANDOM  :  bash 中的一个变量，返回一个随机数，范围是 0~32767
+* 定义变量的类型
+  通过 declare (或 typeset) builtins 可以设置 shell 变量的类型。
+ 
+  declare/typeset 的参数:
+  
+  -r readonly
+     e.g.  
+	 $ declare -r var1
+	 等同于  $ readonly var1
+	 不能修改只读变量的值，否则 bash 会报错
+  -i integer
+     e.g. 
+	 $ declare -i num
+	 $ num=1
+  -a array
+     e.g.
+	 $ declare -a indices
+  -f functions
+     e.g.
+	 $ declare -f func_name
+	 若 -f 后不加变量名，则会打印当前 shell 中定义的函数
+  -x export
+    e.g.
+	$ declare -x var
+	This declares a variable as available for exporting outside the environment
+    of the script itself
+  -x var=$value
+     e.g.
+	 $ declare -x var=373
+	 The *declare* command permits assigning a value to a variable in the same
+     statement as setting its properties
+* 数组
+  可用下面的形式定义数组:
+  $ array=(1 2 3 4)
+  访问该数组中的每个元素用如下的形式:
+  ${array[0]}   ${array[1]} ...
+  索引能够是负值.
+  
+  修改数组的值的方法如下:
+  $ array[0]=10
+* seq
+  产生序列数，如
+  
+  $ seq 10    // 打印从 1 到 10 的数
+  $ seq 5 10  // 打印从 5 到 10 的数
