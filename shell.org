@@ -261,6 +261,60 @@
 	   If the $string parameter is "*" or "@", then this extracts the positional
 	   parameters starting at $position
    ${string:position:length}
-       Extracts $length characters of substring from $string at $position
+       Extracts $length characters of substring from $string at $position (索引
+	   从 0 开始)
 	   length 可以是负值,作用和 python 中的一样,但需要在 length 和 ':' 中加个空
 	   格.
+   expr match "$string" '\($substring\)'
+       Extracts $substring at beginnign of $string, where $substring is a
+	   regular expression.
+   expr "$string":'\($substring\)'
+       Extracts $substring at beginnig of $string, where $substring is a regular
+	   expression.
+   expr match "$string"'.*\($substring\)'
+       Extracts $substring at end of $string, where $substring is a regular
+	   expression.
+   expr "$string":'.*\($substring\)'
+       Extracts $substring at end of $string, where $substring is a regular
+	   expression.
+** substring removal
+   ${string#substring}
+       Deletes shortest match of $substring from front of $string
+   ${string##substring}
+       Deletes longest match of $substring from front of $string.
+   ${string%substring}
+       Deletes shortest match of $substring from back of $string.
+   ${string%%substring}
+       Deletes longest match of $substring from back of $string.
+
+** substring replacement
+   ${string/substring/replacement}
+       Replace first match of $substring with $replacement.
+   ${string//substring/replacement}
+       Replace all matches of $substring with $replacement.
+   ${string/#substring/replacement}
+       If $substring matches front end of $string, substitue $replacement for
+       Deletes shortest match of $substring from back of $string$substring
+   ${string/%substring/replacement}
+       If $substring matches back end of $string, substitute $replacement for
+       Deletes shortest match of $substring from back of $string$substring
+** Manipulating and/or expannding variables
+   + ${parameter-default}, ${parameter:-default}
+	 If /parameter/ not set, use /default/.
+	 若 parmeter 已经声明了但没有赋值,则 ${parameter-default} 打印为 null,而 
+     {parameter:-default} 会打印 /default/.
+	 e.g:
+	 $ var1=1
+	 $ var2=2
+	 $ echo ${var1-$var2}
+	 $ echo ${var3-$var2}
+	 $ echo ${name-$(whoami)}
+   + ${parameter=default}, ${parameter:=default}
+	 If /parameter/ not set, set it to /default/.
+	 二者的区别同上.
+   + ${parameter+alt_value}, ${parameter:+alt_value}
+	 If /parameter/ set, use /alt_value/, else use null string.
+	 二者的区别同上.
+   + ${parameter?err_msg}, ${parameter:?err_msg}
+	 If parameter set, use it, else print err_msg
+	 区别同上
