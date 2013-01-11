@@ -211,3 +211,56 @@
   
   $ seq 10    // 打印从 1 到 10 的数
   $ seq 5 10  // 打印从 5 到 10 的数
+* 脚本中使用 '~' 时需要注意的
+  在 bash 脚本中，有时如下的命令会执行错误，提示没有那个文件:
+  
+  LOGFILE="~/log.txt"
+  echo 'flyer' >> $LOGFILE
+
+  最佳实践是，用 $HOME 环境变量代替 '~'
+* 字符串操作
+** 获取字符串长度
+   格式为:
+   ${#string}
+   expr length $string
+   expr "$string" : '.*'
+
+   如
+
+   $ name='flyer'
+   
+   $ echo ${#name}    // 打印为 5
+   或
+   $ expr length $name
+   或
+   $ expr "$name" : '.*'
+** length of matching substring at beginning of string
+   格式为:
+   expr match "$string" '$substring'
+   expr "$string":'$substring'
+
+   如
+
+   $ stringZ=abcABC123ABCabc
+   $ echo $(expr match "stringZ" 'abc[A-Z]*.2') // 打印 8
+   或
+   $ echo $(expr "$stringZ" : 'abc[A-Z]*.2')
+
+** index
+   格式为:
+   expr index $string $substring
+
+   返回 $substring 第一次出现的索引位置,从 1 开始算.
+   原理是,对 $string 从左到右匹配,遇到第一个与 $substring 中的第一个字符相同时开
+   始匹配,若紧接着的字符串和 $substring 的相同,则返回第一个匹配的字符的索引位置.
+   若从第二个后不匹配,则对 $substring 从第二个字符开始按上述的进行匹配.
+** substring extraction
+   格式为:
+   ${string:position}
+       Extracts substring from $string at $position (索引从 0 开始)
+	   If the $string parameter is "*" or "@", then this extracts the positional
+	   parameters starting at $position
+   ${string:position:length}
+       Extracts $length characters of substring from $string at $position
+	   length 可以是负值,作用和 python 中的一样,但需要在 length 和 ':' 中加个空
+	   格.

@@ -106,3 +106,5 @@
 * TODO 学习如何查看当前使用的网络端口、如何关闭某个端口
 * TODO 查找什么情况下会大量启动 mysqld 进程
 * TODO 写个 Linux 下的豆瓣 FM 客户端
+* TODO 查找 cut 命令如何获取截取后的最后一个字段
+* TODO 编写 shell 工具,在 cd 后打印当前目录名称,可考虑使用 shell 或 C 来写
