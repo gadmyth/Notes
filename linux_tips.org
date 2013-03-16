@@ -932,3 +932,13 @@
 
 * 判断库是 32 位还是 64 位
   $ file 库名
+* 安装 httpd-2.2.24
+  要注意下的是 httpd 版本，而不是 (apache 和 httpd)。configure 时可能会提示与 apr 相关的错误，
+  在解压后的 httpd 目录下，按如下方式进行:
+  ./configure --with-apr=srclib/ --with-apr-util=srclib/ --with-included-apr
+  即可。
+* chromium 不能使用 java plugin
+  先确保机器中已经安装 java 并配置好了环境变量，找到 chromium 的 plugins 目录，
+  在这个目录下，执行:
+  $ sudo ln -s /PATH/TO/JDK/lib/i386/libnpjp2.so libnpjp2.so
+  重启 chromium 即可.
