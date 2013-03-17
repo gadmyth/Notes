@@ -466,41 +466,49 @@
 * 63、与环境变量相关的程序
   set、unset、export
 * 64、screen
-  It's a terminal emulator that has virtual terminal like capabilities.
-  All *screen* commands are prefixed with a CTRL+A keystroke, e.g., CTRL+A+C
-  creating a new terminal session, CTRL+A+N switching to the next terminal,
-  CTRL+A+P switching to the previous terminal.
+** 常用
+   It's a terminal emulator that has virtual terminal like capabilities.
+   All *screen* commands are prefixed with a CTRL+A keystroke, e.g., CTRL+A+C
+   creating a new terminal session, CTRL+A+N switching to the next terminal,
+   CTRL+A+P switching to the previous terminal.
   
-  添加新窗口: C-a c
-  杀掉当前窗口: C-a k
-  切换到下一个窗口: C-a n
-  切换到前一个窗口: C-a p
+   添加新窗口: C-a c
+   杀掉当前窗口: C-a k
+   切换到下一个窗口: C-a n
+   切换到前一个窗口: C-a p
+   
+   若需要长时间在开发机上运行一个程序，但担心 ssh 断后程序中断，可通过 screen 的
+   会话控制功能来控制.
+   先执行
+   $ screen
+   在当前的会话中运行程序。若此时想退出该会话，按下组合键 "C-a d" 退出该会话，此
+   时即使中断了 ssh 也不会担心程序被终止.通过
+   $ screen -ls
+   可查看当前有多少个会话，假如其中有如下的会话
+   25566.pts-56.dev-flyer
+   要转到该会话下，通过如下命令运行
+   $ screen -r 25566
+   若想关闭该 session，通过
+   $ screen -X -S 25566 kill
+   
+   给会话起个名字。在新建窗口时，通过如下命令:
+   $ screen -S session名字
+   
+   若需要频繁使用 screen 的该功能，可建立别名来减少输入
+   
+   alias sls='screen -ls'
+   alias srun='screen -r'
+   alias sname='screen -S'
+   
+   在 session 下，若想滚屏，先按下 'C-a [' 进入滚屏模式，可通过 'C-u' 'C-d' 向上、
+   向下翻屏，'/' 是查找.
+** 防止闪屏
+   进入 screen 会话后，可能会出现闪屏的现象，修改方法是，在 ~/.screenrc 文件中加
+   入如下语句:
+   
+   vbell off
 
-  若需要长时间在开发机上运行一个程序，但担心 ssh 断后程序中断，可通过 screen 的
-  会话控制功能来控制.
-  先执行
-  $ screen
-  在当前的会话中运行程序。若此时想退出该会话，按下组合键 "C-a d" 退出该会话，此
-  时即使中断了 ssh 也不会担心程序被终止.通过
-  $ screen -ls
-  可查看当前有多少个会话，假如其中有如下的会话
-  25566.pts-56.dev-flyer
-  要转到该会话下，通过如下命令运行
-  $ screen -r 25566
-  若想关闭该 session，通过
-  $ screen -X -S 25566 kill
-  
-  给会话起个名字。在新建窗口时，通过如下命令:
-  $ screen -S session名字
-
-  若需要频繁使用 screen 的该功能，可建立别名来减少输入
-
-  alias sls='screen -ls'
-  alias srun='screen -r'
-  alias sname='screen -S'
-
-  在 session 下，若想滚屏，先按下 'C-a [' 进入滚屏模式，可通过 'C-u' 'C-d' 向上、
-  向下翻屏，'/' 是查找.
+   重启 screen 会话即可.
 * 65、查询指定用户信息(可以是远程用户)
   $ finger 用户或邮箱
 * 66、网络工具
