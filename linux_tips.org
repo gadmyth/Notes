@@ -950,3 +950,8 @@
   在这个目录下，执行:
   $ sudo ln -s /PATH/TO/JDK/lib/i386/libnpjp2.so libnpjp2.so
   重启 chromium 即可.
+* 创建目录而不覆盖之前存在的目录
+  可通过 "mkdir -p" 来实现，如
+  $ make -p /home/flyer/Programming/
+  假设已经存在 /home/flyer/Programming/ 目录，且这个目录下有文件，执行上述命令后
+  不会对该目录造成影响。
