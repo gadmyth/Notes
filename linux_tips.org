@@ -958,8 +958,10 @@
   不会对该目录造成影响。
 * tmux
 ** 常见概念
-   窗口: 可以把每个打开的 terminal 看作一个窗口
-   会话: 在一个窗口中的分屏
+   | server  | 输入 tmux 命令就打开了一个服务器 |
+   | session | 一个 server 可以包含多个 session |
+   | window  | 一个 session 可以包含多个 window |
+   | pane    | 一个 window 可以包含多个 pane    |
 ** 常用快捷键
    # 运行 tmux
    $ tmux
