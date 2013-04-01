@@ -23,3 +23,10 @@
    用法和 C 中的一样
 * BEGIN 和 END
   BEGIN 在读取文本的内容前执行，END 在读取完文本的内容后执行.
+* 使用 shell 中的变量
+  常用的方法是:
+
+  $ test='flyer'
+  $ awk '{print "'${test}'"}' 某个文件
+  
+  注意其中 如何引用 shell 中的变量.
