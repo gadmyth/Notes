@@ -30,3 +30,22 @@
   $ awk '{print "'${test}'"}' 某个文件
   
   注意其中 如何引用 shell 中的变量.
+* 字符串连接
+  如下形式:
+
+  $ awk '{names = names $1} END {print names}' 文件
+
+  字符串的连接是通过如上形式实现的，没有初始化的字符串默认是 null.注意在此不能使
+  用 
+  
+  names += $1
+  
+  的形式，不然 awk 会认为 names 是数字类型.
+* 内置函数
+** length()
+   计算字符串的长度，如
+   
+   awk '{print $1, length($1)}' 文本
+* 控制语句
+** if
+   用法同 C 中的一样.
