@@ -5,11 +5,11 @@
   $ awk '[BEGIN {action}] [pattern] [{action}] [END {action}]'
 * actoin
 ** 内置变量
-  | *变量名*   | *含义*                                           |
-  | NR         | number of records, 记录已经读取的行数，从 1 开始 |
-  | NF         | number of fields, 记录当前行中的字段数           |
-  | $0         | 当前行内容                                       |
-  | $1,$2,..$9 | 当前行的不同字段内容                             |
+ | *变量名*   | *含义*                                           |
+ | NR         | number of records, 记录已经读取的行数，从 1 开始 |
+ | NF         | number of fields, 记录当前行中的字段数           |
+ | $0         | 当前行内容                                       |
+ | $1,$2,..$9 | 当前行的不同字段内容                             |
 
   NOTE:
   + NR 也可能是 0，如在 BEGIN 中使用时

@@ -1096,6 +1096,9 @@
 ** pear 安装 syck-beta 时错误
    可先去 http://rubyforge.org/frs 下载 syck 来安装，然后再通过 pear 安装
    syck-beta.
+** configure 时常用的参数
+   ./configure --prefix=/usr/local/php --with-mysql=mysql安装到的目录
+   --with-apxs=apxs的路径 --with-pdo-mysql --with-mysqli --with-mcrypt
 * GUI 编程
 ** Brief
    如果想要在 panel 上编程显示程序图标的功能，首先要明白 *系统托盘(system
