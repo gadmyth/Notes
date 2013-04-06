@@ -1,0 +1,248 @@
+* Model
+** 综述
+   Backbone models contain interactive data for an application as well as the
+   logic around this data.
+
+   例:
+
+   var Photo = Backbone.Model.extend({
+     defaults: {
+	   src: 'placeholder.jpg',
+	   title: 'an image placeholder',
+	   coordinate: [0, 0],
+	 },
+
+	 initialize: function() {
+	   this.on("change:src", function() {
+	     var src = this.get("src");
+		 console.log("Image source updated to " + src);
+	   });
+	 },
+
+	 changeSrc: function(source) {
+	   this.set(
+	     src: source,
+	   );
+	 },
+   });
+** obj.get()
+   *obj.get()* provides easy access to a model's attributes.
+** obj.set()
+   设置属性.
+** obj.attributes (不建议使用)
+   可通过 Model 对象实例的 *attributes* 属性获得该对象的所有属性.
+** obj.toJSON()
+   使用方法:
+
+   var myAttributes = Model对象.toJSON();
+
+   返回 json 格式的 Model对象 的全部属性.
+** obj.defaults 属性
+   可在初始化 Model 时设置默认该 Model 默认的属性值.
+   
+   类似于 Python class 的 __init__() 中设置默认的值.
+** obj.initialize 属性 (值是函数)
+   类似于 Python class 的 __init__() 作用.
+** listening for changes to your model
+   Any and all of the attributes in a Backbone model can have listeners bound
+   to them which detect when their values change. Listeners can be added to the
+   initialize() function.
+** obj.validate 属性 (值是函数)
+   It allows checking the attribute values for a model prior to them being set.
+   If the attributes provided are valid, nothing should be returned
+   from *.validate()* . If they are invalid, a custom error can be returned
+   instead.
+
+   例:
+
+   var Photo = Backbone.Model.extend({
+     validate: function(attribs) {
+	   if (attribs.src === undefined) {
+	     return "Remember to set a source for your image!";
+	   }
+	 },
+
+	 initialize: function() {
+	   console.log("this model has been initialized");
+	   this.on("error", function(model, error) {
+	     console.log(error);
+	   });
+	 },
+   });
+
+   var myPhoto = new Photo();
+   myPhoto.set({
+     title: "On the beach",
+   });
+   // 会报出这样错误: 'Rember to set a source for your image!'
+* View
+** 综述
+   Views in Backbone don't contain the markup for your application, but rather
+   they are to support models by defining the logic for how they should be
+   represented to the user. This is usually achieved using JavaScript
+   templating (e.g. Mustache, jQuerytmpl, etc.). A view's *render()* function
+   can be bound to a model's *change()* event, allowing the view to always be
+   up to date without requiring a full page refresh.
+
+   例:
+
+   var PhotoSearch = Backbone.View.extend({
+     el: $("#results");
+
+	 render: function(event) {
+	   var compiled_template = _.template($("#results-template").html());
+	   this.$el.html(compiled_template(this.model.toJSON()));
+
+	   // recommended as this enables calls to be chained
+	   return this;
+	 },
+
+	 events: {
+	   "submit #searchForm": "search",
+	   "click .reset": "reset",
+	   "click .advanced": "switchContext",
+	 },
+
+	 search: function(event) {
+	   // executed when a form '#searchForm' has been submitted
+	 },
+
+	 reset: function(event) {
+	   // executed when an element with class "reset" has been clicked
+	 },
+
+	 switchContext: function(event) {
+	   // executed when an element with class "advanced" has been clicked
+	 },
+   });
+** obj.el
+   *el* is basically a reference to a DOM element and all views must have
+   one. It allows for all of the contents of a veiw to be inserted into the DOM
+   at once, which makes for faster rendering as browser performs the minimum
+   required reflows and repaints.
+   
+   There are two ways to attach a DOM element to a view: the element already
+   exists in the page or a new element is created for the view and added
+   manually by the developer. If the element already exists in the page, you
+   can set *el* as either a CSS selector that matches the element or a simple
+   reference to the DOM element.
+** obj.render (值是函数)
+   *render()* is an optional function that defines the logic for rendering a
+   template.
+
+   The *.template()* method in Underscore compiles JavaScript templates into
+   functions which can be evaluated for rendering.
+** obj.events
+   The Backbone *events* attribute allows us to attach event listeners to
+   either custom selectors, or directly to *el* if no selector is provided. An
+   event takes the form 
+   *{"eventName selector": "callbackFunction"}*
+   and a number of event-types are supported.
+
+   The only thing to really keep in mind is that any string callback supplied
+   to the events attribute must have a corresponding function with the same
+   name within the scope of your view.
+   
+* Collections
+** 综述
+   Collections are sets of Models and are created by
+   extending *Backbone.Collection*.
+   
+   Normally, when creating a collection you'll also want to pass through a
+   property specifying the model that your collection will contain, as well as
+   any instance properties required.
+** Getters and Setters
+*** obj.get(id)
+	e.g.
+	var skiingEpicness = PhotoCllection.get(2);
+*** obj.getByCid(cid)
+	The client id is a property that Backbone automatically assigns models that
+	have not yet been saved.
+	You can get a model's client id from its *.cid* property.
+
+	e.g.
+	var mySkiingCrash = PhotoCollection.getByCid(456);
+*** obj.add() and obj.remove()
+	e.g.
+	var a = new Backbone.Model({title: 'my vacation'}),
+	    b = new Backbone.Model({title: 'my holiday'});
+		
+    var photoCollection = new PhotoCollection([a, b]);
+	photoCollection.remove([a, b]);
+*** listening for events
+	As collections represent a group of items, we're also able to listen
+	for *add* and *remove* events for when new models are added or removed from
+	the collection.
+*** fetching models from the server
+	*Collections.fetch()* retrieves a default set of models from the server in
+	the form of a JSON array. When this data returns, the current collection's
+	contents will be replaced with the contents of the array.
+*** resetting/refreshing collections
+	Rather than adding or removing models individually, you might occasionally
+	wish to update an entire collection at once. 
+	*Collection.reset()* allows us to replace an entire collection with new
+	models.
+* Underscore utility functions
+** 综述
+   Backbone 依赖于 Underscore.js，所以可以直接使用 Underscore.js 的方法.
+* Routers
+** 综述
+   In Backbone, routers are used to help manage application state and for
+   connecting URLs to application events. This is achieved using hash-tags with
+   URL fragments, or using the browser's pushState and History API.
+   e.g.
+       http://unicorns.com/#whatsup
+	   http://unicorns.com/#search/seaonal-horns/page2
+   
+   Note: An application will usually have at least one route mapping a URL
+   route to a function that determines what happens when a user reaches that
+   particular route.
+* Backbone.history (不太理解作用)
+  It handles *hashchange* events in our application. This will automatically
+  handle routes that have been defined and trigger callbacks when they've been
+  accessed.
+
+  The *Backbone.history.start()* method will simply tell Backbone that it's OK
+  to begin monitoring all *hashchange* events.
+  
+  As an aside, if you would like to save application state to the URL at a
+  particular point, you can use the *.navigate()* method to achieve this. It
+  simply updates your URL fragment without the need to trigger the *hashchange*
+  event.
+
+  It is also possible for *Router.navigate()* to trigger the route as well as
+  updating the URL fragment.
+* Namespacing
+** 避免命名冲突的几种方式
+*** 变量添加前缀
+	e.g.
+	
+	var db_host,
+	    db_user,
+		db_passwd;
+*** 在对象中命名变量
+	e.g.
+
+	var my_profile = my_profile || {};
+	my_profile.name = 'flyer';
+	my_profile.sex = 'male';
+*** nested namespacing
+	注意其中的大小写.
+	e.g.
+
+	var galleryApp = galleryApp || {};
+
+	galleryApp.routers = galleryApp.routers || {};
+	galleryApp.model = galleryApp.model || {};
+	galleryApp.model.special = galleryApp.model.special || {};
+
+	// routers
+	galleryApp.routers.Workspace = Backbone.Router.extend({});
+	galleryApp.routers.PhotoSearch = Backbone.Router.extend({});
+	
+	// models
+	galleryApp.model.Photo = Backbone.Model.extend({});
+	galleryApp.model.Comment = Backbone.Model.extend({});
+	
+	// special models
+	galleryApp.model.spider.Admin = Backbone.Model.extend({});
