@@ -16,19 +16,29 @@
    .git/config
    当前工作目录下的配置文件，只对此项目有用.
 * 基本配置
-  $ git config --global user.name "用户名"
-  $ git config --global user.email "用户邮箱"
-  前两个是必需的，下面的是可选的.
-  $ git config --global core.editor 你喜欢的编辑器
-  默认的编辑器是 vi/vim.
-  $ git config --global merge.tool 差异分析工具
-  可使用 vimdiff、kdiff3、tkdiff、meld、xxdiff、emerge、gvimdiff、ecmerge、
-  opendiff 等合并工具。
-  $ git config --list
-  查看配置信息.
-  $ git config 配置信息名
-  可查看某个具体的配置信息，如
-  $ git config user.name
+** 全局配置
+   配置的信息可在 ~/.git/config 中找到.
+
+   $ git config --global user.name "用户名"
+   $ git config --global user.email "用户邮箱"
+   前两个是必需的，下面的是可选的.
+   $ git config --global core.editor 你喜欢的编辑器
+   默认的编辑器是 vi/vim.
+   $ git config --global merge.tool 差异分析工具
+   可使用 vimdiff、kdiff3、tkdiff、meld、xxdiff、emerge、gvimdiff、ecmerge、
+   opendiff 等合并工具。
+   $ git config --list
+   查看配置信息.
+   $ git config 配置信息名
+   可查看某个具体的配置信息，如
+   $ git config user.name
+** 局部配置
+   在当前的工程下:
+
+   $ git config user.name "用户名"
+   $ git config user.email "用户邮箱"
+   
+   可在当前工程的 .git/config 目录下找到这些配置信息.
 * 获取帮助
   $ git help 命令
   $ git 命令 --help
@@ -299,3 +309,7 @@
   打包成 tar:
   $ git archive master --prefix='project/' --format=tar > project.tar
 
+* BEST PRACTICE
+** 初始化工程前
+   先建立好 README、.gitignore 文件后再 *git init* ，这样可以免去一些不必要的操
+   作，如处理那些不想要 git 管理的文件.
