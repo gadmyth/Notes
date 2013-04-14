@@ -246,3 +246,20 @@
 	
 	// special models
 	galleryApp.model.spider.Admin = Backbone.Model.extend({});
+* <script type="text/template">
+  By setting the type to "text/tempalte", it's not a script that the browser
+  can understand, and so the browser will simply ignore it. This allows you to
+  put anything in there, which can be then be extracted later and used by a
+  templating library to generate HTML snippets.
+* 我对 MVC 的理解
+  它的含义不再解释了,资料很多,想说的是它对 web 开发的理解.
+  
+  web 开发(侧重前端) 主要回答三个问题:
+  + 有哪些数据,能在数据层面上操作什么
+  + 何时展示这些数据
+  + 如何展示这些数据
+
+  MVC 模式对此的回答很好.
+  + Model 回答了第一个问题
+  + Controller 回答了第二个问题
+  + View 回答了第三个问题
