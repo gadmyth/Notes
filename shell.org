@@ -318,3 +318,6 @@
    + ${parameter?err_msg}, ${parameter:?err_msg}
 	 If parameter set, use it, else print err_msg
 	 区别同上
+* 查看当前目录下各个目录的 inode 数
+  $ for dir in $(find . -type d -maxdepth 1); do find ${dir} | wc -l | awk
+  '{print $0 "\t'${dir}'"}'; done
