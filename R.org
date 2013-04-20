@@ -1,0 +1,18 @@
+* 语法基础
+** 注释
+   以 '#' 开头.
+** 赋值
+   常用 '<-' 表示赋值,如
+
+   x <- norm(5)
+** 帮助文档
+   | 函数                            | 功能                                       |
+   | help.start()                    | web 形式打开文档首页                       |
+   | help(函数名)                    | 查看函数的帮助手册                         |
+   | help.search('foo')              | 以 'foo' 为关键词搜索本地帮助文档          |
+   | example(函数名)                 | 函数的使用示例                             |
+   | RSiteSearch('foo')              | 以'foo' 为关键词搜索在线文档和邮件列表存档 |
+   | apropos('foo', mode='function') | 列出名称中含有 'foo' 的所有可用函数        |
+   | data()                          | 列出当前已加载包中所含的所有可用示例数据集 |
+   | vignette()                      | 列出当前已安装包中所有可用的 vignette 文档 |
+   | vignette('foo')                 | 为主题 'foo' 显示指定的 vignette 文档 |
