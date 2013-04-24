@@ -531,6 +531,11 @@
 ** bzip2
    用法同 gzip,压缩率也比 gzip 好,但压缩时比较占 CPU.
 ** tar
+*** 打包压缩文件时忽略某些目录或文件
+	假如 test/ 下有 log/ 目录和一些 *.test 文件且这些目录和文件都在 test/ 下,打
+	包压缩时不想包含这个目录和这些文件,在 test 父目录下:
+
+	$ tar czvf test.tar.gz test/ --exclude test/log/ --exclude test/*.test
 ** zip
 ** unzip
 ** p7zip
