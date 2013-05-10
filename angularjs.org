@@ -1,0 +1,64 @@
+* angular.js 应用的应用流程
+  + A user requests the first page of your application
+  + The user's browser makes an HTTP connection to your server and loads
+    the *index.html* page containing your template
+  + Angular loads into the page, waits for the page to be fully loaded, and
+    then looks for *ng-app* to define its template boundaries
+  + Angular traverses the template and looks for directives and bindings. This
+    results in registration of listeners and DOM manipulation, as well as
+    fetching initial data from the server. The end result of this work is that
+    the app is bootstrapped and the template is converted into view as a DOM
+  + You connect to your server to load additional data you need to show the
+    user as needed.
+* 我的理解
+  我对 angular.js 的理解是:
+  + 限定作用域
+  + 数据绑定
+* 常用的 directive 和一些概念
+** ng-app
+   The *ng-app* directive lets you tell Angular which part of your page it
+   should expect to manage. If you're building an all-Angular application, you
+   should include *ng-app* as part of the <html> tag.
+** ng-controller
+** ng-repeat
+** $scope
+   连接 controller 和 view 的全局变量.
+** template
+   Templates in Angular applications are just HTML documents that we load from
+   the server or define in a <script> tag like any other static resource.
+   You define your UI in the template, using standard HTML plus Angular
+   directives where you need UI components.
+** template 和 data 分离的好处
+   + By structuring your application with Angular, your application's templates
+     are kept separate from the data that populates them. The result of this is
+     that these templates are now *cacheable* . Only new data need come down to
+     the browser after the first load. Just as with JavaScript, images, CSS,
+     and other resources, caching these templates can give your application
+     even better performance.
+* Best Practices
+** 使用 module
+   目的是: Keeping things out of the global namespace is a good thing.
+   通过以下例子,可以学习 module 的用法:
+
+   <html ng-app="myApp">
+     <head>
+	   <script src="js/angular.min.js">
+	 </head>
+
+	 <body ng-controller="TextController">
+	   <p ng-bind="someText.msg"></p>
+
+	   <script>
+	     var myAppModule = angular.module('myApp', []);
+		 
+		 myAppModule.controller('TextController', function($scope) {
+		   var someText = {};
+		   
+		   someText.msg = 'Just a test';
+		   
+		   $scope.someText = someText;
+		 });
+	   </script>
+	 </body>
+   </html>
+** ng-bind 和 {{}}
