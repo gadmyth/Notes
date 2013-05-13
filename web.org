@@ -1,0 +1,19 @@
+* server 端控制清除缓存
+** 通过 html 解决
+   在 <head> 中添加如下标签
+
+   <meta http-equiv="pragma" content="no-cache" />
+   <meta http-equiv="Cache-Control" content="no-cache,must-revalidate" />
+   <meta http-equiv="expires" content="0">
+** ajax 清除缓存 (即通过 jquery 进行 ajax 调用时不使用浏览器的缓存)
+   jQuery.ajaxSetup({cache: false;})
+   或每次使用 $.ajax() 时加入参数 'cache: false;'
+
+   还可以在每次请求时加上一个随机数:
+   $.ajax({
+     url: 'test.php?' + parseInt(Math.random()*100000),
+   });
+** php 清除缓存
+   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+   header("Cache-Control: no-cache,must-revalidate");
+   header("Pragma: no-cache");
