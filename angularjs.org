@@ -21,8 +21,52 @@
    should include *ng-app* as part of the <html> tag.
 ** ng-controller
 ** ng-repeat
+
+   如
+   
+   <ul ng-controller="RepeatItems">
+     <li ng-repeat="friend in friends">
+	   {{$index}} of firend is {{friend.name}}, age is {{friend.age}}
+	 </li>
+   </ul>
+
+   function RepeatItems($scope) {
+     $scope.friends = [
+	   {name: 'flyer', age: 24},
+	   {name: 'flx', age: 22},
+	   {name: 'test', age: 3}
+	 ];
+   }
 ** $scope
-   连接 controller 和 view 的全局变量.
+*** 作用
+	连接 controller 和 view 的全局变量.
+*** $watch() 方法
+	可用它来监视 *angular expression* 的变化,如
+
+	function StartUpController($scope) {
+	  $scope.funding = {
+	    startingEstimate: 0,
+	  };
+
+	  computeNeeded = function() {
+	    $scope.funding.needed = $scope.funding.startingEstimate * 10;
+	  };
+
+	  $scope.$watch('funding.startingEstimate', computeNeeded);
+	}
+
+	注意 $watch() 的第一个参数,是个 string. This string is evaluated as
+	something called an *Angular expression*. Expression can do simple
+	operations and have access to the properties in the *$scope* object.
+x** event-handling directives
+   如 ng-change, ng-submit, ng-click, ng-dbclick ...
+
+   使用 angular.js 中的这些 directive 的好处:
+   + Behave the same in every browser. Angular takes care of the differences
+     for you
+   + Do not operate on the global namespace. The expressions you specify can
+     only access functions and data that is in the scope of the element's
+     controller
 ** template
    Templates in Angular applications are just HTML documents that we load from
    the server or define in a <script> tag like any other static resource.
@@ -62,3 +106,14 @@
 	 </body>
    </html>
 ** ng-bind 和 {{}}
+   绑定数据可用如下两种形式:
+   
+   <p>{{item}}</p>
+   或 
+   <p ng-bind="item"></p>
+
+   二者是等价的.
+   在 web 应用中第一个载入的页面中，最好使用第二中形式，因为若载入慢，用户可能会
+   看到 '{{item}}' 这样的语句.原因是: The browser loads the HTML pages, renders
+   it, and only then does Angular get a chance to interpret it as you intended.
+   而第二种形式则不会.在除此之外的页面中，常用第一种形式.
