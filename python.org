@@ -1935,3 +1935,9 @@ XS
    ',' 是 tuple 的 construtor,而不是 '()'
 
 
+* BEST PRACTICE
+** 字符串处理
+   在 python 脚本内部统一使用 unicode 处理文本,即读入文本时 decode 为 unicode 形
+   式，写出时转换成指定的编码.
+** 文本处理
+   文本写入完后,立即通过 flush() 方法把数据从缓存中写入到文本.
