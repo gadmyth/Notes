@@ -1,0 +1,5 @@
+* minSdkVersion, targetSdkVersion
+** project.properties
+   target=11, 决定了编译项目时使用哪一个Sdk
+** AndroidManifest.xml
+   android:minSdkVersion="4", 决定了最小兼容
